@@ -1,0 +1,54 @@
+@page "/admin"
+@attribute [Authorize(Roles = "Admin")]
+@inherits MvvmOwningComponentBase<AdminViewModel>
+
+<PageTitle>Admin Panel</PageTitle>
+
+<h1>Admin Panel</h1>
+
+@if (!ViewModel.IsAdmin)
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>Access Denied.</strong> This page is restricted to administrators.
+    </div>
+}
+else
+{
+    <div class="alert alert-success">
+        <h4>&#x1F6E1; Admin Access Granted</h4>
+        <p>Welcome, <strong>@ViewModel.UserName</strong>. You have administrator privileges.</p>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Admin Dashboard</h5>
+        </div>
+        <div class="card-body">
+            <p>This is a dummy admin panel demonstrating role-based access control. Only users in the <strong>Admin</strong> role can view this page.</p>
+            <ul>
+                <li>Manage users and permissions</li>
+                <li>View system logs</li>
+                <li>Configure application settings</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>Your Claims</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Claim Type</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var claim in ViewModel.Claims)
+            {
+                <tr>
+                    <td>@claim.Type</td>
+                    <td>@claim.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
