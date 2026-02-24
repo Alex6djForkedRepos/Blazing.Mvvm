@@ -12,7 +12,7 @@ namespace Blazing.Mvvm.Security.Wasm.ViewModels.Auth;
 /// </summary>
 [ViewModelDefinition(Lifetime = ServiceLifetime.Transient)]
 public sealed partial class SignOutViewModel(LocalAuthStateProvider authProvider, NavigationManager navigation)
-    : ViewModelBase, IDisposable
+    : ViewModelBase
 {
     private System.Timers.Timer? _countdownTimer;
     private int _remainingSeconds = 5;

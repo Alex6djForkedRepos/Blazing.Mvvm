@@ -68,18 +68,12 @@ public sealed class SessionLockService : ObservableObject, IAsyncDisposable
     /// <summary>
     /// Handles authentication state changes and updates the lock navigation flag.
     /// </summary>
-    /// <summary>
-    /// Handles authentication state changes and updates the lock navigation flag.
-    /// </summary>
     /// <param name="task">The authentication state task.</param>
     private async void OnAuthenticationStateChanged(Task<AuthenticationState> task)
     {
         await UpdateShouldLockNavigationAsync();
     }
 
-    /// <summary>
-    /// Updates the ShouldLockNavigation state based on current authentication and RememberMe state.
-    /// </summary>
     /// <summary>
     /// Updates the <see cref="ShouldLockNavigation"/> state based on current authentication and RememberMe state.
     /// </summary>
@@ -130,10 +124,6 @@ public sealed class SessionLockService : ObservableObject, IAsyncDisposable
     /// Shows a confirmation dialog asking if the user wants to leave the site.
     /// </summary>
     /// <returns>True if user confirmed; false if user canceled.</returns>
-    /// <summary>
-    /// Shows a confirmation dialog asking if the user wants to leave the site.
-    /// </summary>
-    /// <returns>True if user confirmed; false if user canceled.</returns>
     public async Task<bool> ConfirmLeavingSiteAsync()
     {
         try
@@ -149,9 +139,6 @@ public sealed class SessionLockService : ObservableObject, IAsyncDisposable
         }
     }
 
-    /// <summary>
-    /// Cleans up resources and unsubscribes from authentication state changes.
-    /// </summary>
     /// <summary>
     /// Cleans up resources and unsubscribes from authentication state changes.
     /// </summary>
