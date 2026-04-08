@@ -1,0 +1,104 @@
+@page "/login"
+@inherits MvvmComponentBase<LoginViewModel>
+
+<PageTitle>Login</PageTitle>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">
+                        <i class="bi bi-person-circle"></i> Login
+                    </h2>
+
+                    @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> @ViewModel.ErrorMessage
+                        </div>
+                    }
+
+                    <EditForm Model="ViewModel.LoginRequest" OnSubmit="ViewModel.SubmitCommand.Execute">
+                        <DataAnnotationsValidator />
+
+                        <div class="mb-3">
+                            <label class="form-label" for="username">
+                                <i class="bi bi-person"></i> Username or Email
+                            </label>
+                            <InputText id="username" 
+                                       @bind-Value="ViewModel.LoginRequest.UserName" 
+                                       class="form-control" 
+                                       placeholder="Enter your username or email"
+                                       disabled="@ViewModel.IsLoggingIn" />
+                            <ValidationMessage For="() => ViewModel.LoginRequest.UserName" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="password">
+                                <i class="bi bi-lock"></i> Password
+                            </label>
+                            <InputText id="password" 
+                                       type="password" 
+                                       @bind-Value="ViewModel.LoginRequest.Password" 
+                                       class="form-control" 
+                                       placeholder="Enter your password"
+                                       disabled="@ViewModel.IsLoggingIn" />
+                            <ValidationMessage For="() => ViewModel.LoginRequest.Password" />
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <InputCheckbox id="rememberMe" 
+                                           @bind-Value="ViewModel.LoginRequest.RememberMe" 
+                                           class="form-check-input"
+                                           disabled="@ViewModel.IsLoggingIn" />
+                            <label class="form-check-label" for="rememberMe">
+                                Remember me
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" 
+                                    class="btn btn-primary btn-lg" 
+                                    disabled="@ViewModel.IsLoggingIn">
+                                @if (ViewModel.IsLoggingIn)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    <span>Logging in...</span>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-box-arrow-in-right"></i>
+                                    <span>Login</span>
+                                }
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-secondary" 
+                                    @onclick="ViewModel.ClearFormCommand.Execute"
+                                    disabled="@ViewModel.IsLoggingIn">
+                                <i class="bi bi-arrow-counterclockwise"></i> Clear
+                            </button>
+                        </div>
+                    </EditForm>
+
+                    <div class="mt-4 alert alert-info">
+                        <strong>Demo Accounts:</strong>
+                        <ul class="mb-0">
+                            <li>Username: <code>admin</code> or Email: <code>admin@example.com</code> / Password: <code>Password123!</code></li>
+                            <li>Username: <code>user</code> or Email: <code>user@example.com</code> / Password: <code>User123!</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>RETURN URL: @ReturnUrl</p>
+</div>
+
+@code {
+
+    // Capture the returnUrl query parameter if present
+    [SupplyParameterFromQuery]
+    [Parameter]
+    public string? ReturnUrl { get; set; }
+}

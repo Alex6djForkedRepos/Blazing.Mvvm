@@ -1,0 +1,58 @@
+@page "/secure"
+@inherits MvvmOwningComponentBase<SecureViewModel>
+
+<PageTitle>Secure Page</PageTitle>
+
+<h1>Secure Page</h1>
+
+@if (ViewModel.IsAuthenticated)
+{
+    <div class="alert alert-success">
+        <h4>Access Granted</h4>
+        <p>This page requires authentication. You are logged in as <strong>@ViewModel.UserName</strong></p>
+    </div>
+
+    <h3>Your Claims</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Claim Type</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ViewModel.Claims is not null)
+            {
+                @foreach (var claim in ViewModel.Claims)
+                {
+                    <tr>
+                        <td>@claim.Type</td>
+                        <td>@claim.Value</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        <h3>Authentication Info</h3>
+        <dl class="row">
+            <dt class="col-sm-3">Authenticated</dt>
+            <dd class="col-sm-9">@ViewModel.IsAuthenticated</dd>
+
+            <dt class="col-sm-3">Authentication Type</dt>
+            <dd class="col-sm-9">@ViewModel.AuthenticationType</dd>
+
+            <dt class="col-sm-3">Name</dt>
+            <dd class="col-sm-9">@ViewModel.UserName</dd>
+        </dl>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <h4>? Access Denied</h4>
+        <p>You must be logged in to view this page.</p>
+        <a href="login" class="btn btn-primary">Login</a>
+    </div>
+}
