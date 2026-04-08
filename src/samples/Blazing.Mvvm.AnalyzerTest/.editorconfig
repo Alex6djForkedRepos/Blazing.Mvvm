@@ -1,0 +1,25 @@
+# Project-scoped analyzer severity overrides for demo visibility.
+# Apply to all C# files (including generated Razor .g.cs under obj/).
+
+[**/*.cs]
+dotnet_diagnostic.BLAZMVVM0001.severity = warning
+dotnet_diagnostic.BLAZMVVM0002.severity = warning
+dotnet_diagnostic.BLAZMVVM0003.severity = warning
+dotnet_diagnostic.BLAZMVVM0004.severity = warning
+dotnet_diagnostic.BLAZMVVM0005.severity = warning
+dotnet_diagnostic.BLAZMVVM0006.severity = warning
+dotnet_diagnostic.BLAZMVVM0007.severity = warning
+dotnet_diagnostic.BLAZMVVM0008.severity = warning
+dotnet_diagnostic.BLAZMVVM0009.severity = warning
+dotnet_diagnostic.BLAZMVVM0010.severity = warning
+dotnet_diagnostic.BLAZMVVM0011.severity = warning
+dotnet_diagnostic.BLAZMVVM0012.severity = warning
+dotnet_diagnostic.BLAZMVVM0013.severity = warning
+dotnet_diagnostic.BLAZMVVM0014.severity = warning
+dotnet_diagnostic.BLAZMVVM0015.severity = warning
+dotnet_diagnostic.BLAZMVVM0016.severity = warning
+dotnet_diagnostic.BLAZMVVM0017.severity = warning
+dotnet_diagnostic.BLAZMVVM0018.severity = warning
+dotnet_diagnostic.BLAZMVVM0019.severity = warning
+dotnet_diagnostic.BLAZMVVM0020.severity = warning
+dotnet_diagnostic.BLAZMVVM0021.severity = warning
