@@ -439,7 +439,7 @@ namespace Blazing.Mvvm.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ViewModels that use disposable resources such as subscriptions, timers, or unmanaged resources should implement IDisposable to ensure proper cleanup and prevent memory leaks..
+        ///   Looks up a localized string similar to ViewModels that use disposable resources such as subscriptions, timers, or unmanaged resources should override Dispose(bool disposing) to ensure proper cleanup and prevent memory leaks..
         /// </summary>
         internal static string BLAZMVVM0015_Description {
             get {
@@ -448,7 +448,7 @@ namespace Blazing.Mvvm.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ViewModel &apos;{0}&apos; uses disposable resources but does not implement IDisposable pattern.
+        ///   Looks up a localized string similar to ViewModel &apos;{0}&apos; uses disposable resources but does not override Dispose(bool disposing).
         /// </summary>
         internal static string BLAZMVVM0015_MessageFormat {
             get {
@@ -457,7 +457,7 @@ namespace Blazing.Mvvm.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ViewModel should implement IDisposable.
+        ///   Looks up a localized string similar to ViewModel should override Dispose(bool).
         /// </summary>
         internal static string BLAZMVVM0015_Title {
             get {
@@ -466,7 +466,7 @@ namespace Blazing.Mvvm.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Messenger registrations should be unregistered when the ViewModel is disposed to prevent memory leaks. Consider using RecipientViewModelBase which handles registration lifetime automatically..
+        ///   Looks up a localized string similar to Messenger registrations should be unregistered in Dispose(bool disposing) to prevent memory leaks. Consider using RecipientViewModelBase which handles registration lifetime automatically..
         /// </summary>
         internal static string BLAZMVVM0016_Description {
             get {
@@ -475,7 +475,7 @@ namespace Blazing.Mvvm.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Messenger.Register call in &apos;{0}&apos; is not unregistered - consider calling Unregister in Dispose or use RecipientViewModelBase.
+        ///   Looks up a localized string similar to Messenger.Register call in &apos;{0}&apos; is not unregistered - consider calling Unregister in Dispose(bool disposing) or use RecipientViewModelBase.
         /// </summary>
         internal static string BLAZMVVM0016_MessageFormat {
             get {
