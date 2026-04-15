@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Apps/">
+    <Project Path="HybridSample.Avalonia/HybridSample.Avalonia.csproj" />
+    <Project Path="HybridSample.MAUI/HybridSample.MAUI.csproj">
+      <Deploy />
+    </Project>
+    <Project Path="HybridSample.WinForms/HybridSample.WinForms.csproj" />
+    <Project Path="HybridSample.Wpf/HybridSample.Wpf.csproj" />
+  </Folder>
+  <Folder Name="/core/">
+    <Project Path="core/HybridSample.Blazor.Core/HybridSample.Blazor.Core.csproj" />
+    <Project Path="core/HybridSample.Core/HybridSample.Core.csproj" />
+  </Folder>
+  <Folder Name="/libs/">
+    <Project Path="libs/Baksteen.Avalonia.Blazor/Baksteen.Avalonia.Blazor.csproj" />
+  </Folder>
+</Solution>

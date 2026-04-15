@@ -87,6 +87,7 @@
     <!-- HybridSamples packages - use latest compatible versions -->
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
     <PackageVersion Include="Refit" Version="7.2.22" />
+    <PackageVersion Include="Tmds.DBus.Protocol" Version="0.21.3" />
     <PackageVersion Include="Markdig" Version="0.37.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
