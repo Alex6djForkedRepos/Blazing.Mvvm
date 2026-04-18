@@ -7,6 +7,8 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
 	<RootNamespace>HybridSample.Avalonia</RootNamespace>
+    <!-- Suppress Tmds.DBus.Protocol vulnerability advisory: transitive Avalonia.Desktop dep, Windows-only sample -->
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <!--This helps with theme dll-s trimming.

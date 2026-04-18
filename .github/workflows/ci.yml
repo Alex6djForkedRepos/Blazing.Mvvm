@@ -1,0 +1,78 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - develop
+            - "feature/**"
+            - "fix/**"
+    pull_request:
+        branches:
+            - develop
+            - master
+
+jobs:
+    validate-branch:
+        name: Validate Branch Name
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+        steps:
+            - name: Check branch naming convention
+              env:
+                  BRANCH: ${{ github.head_ref }}
+              run: |
+                  if [[ ! "$BRANCH" =~ ^(feature|fix)/.+ ]]; then
+                    echo "::error::Branch '$BRANCH' does not follow naming conventions."
+                    echo "::error::PR source branches must be prefixed with 'feature/' or 'fix/'."
+                    exit 1
+                  fi
+                  echo "Branch '$BRANCH' follows naming conventions."
+
+    build-and-test:
+        name: Build & Test (${{ matrix.framework }})
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false # run all TFMs even if one fails
+            matrix:
+                framework: ["net8.0", "net9.0", "net10.0"]
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: |
+                      8.0.x
+                      9.0.x
+                      10.0.x
+
+            - name: Restore
+              run: dotnet restore src/Blazing.Mvvm.CI.slnf
+
+            - name: Build
+              run: dotnet build src/Blazing.Mvvm.CI.slnf --no-restore --configuration Release -p:GeneratePackageOnBuild=false
+
+            - name: Test (${{ matrix.framework }})
+              run: |
+                  dotnet test src/Blazing.Mvvm.Tests/Blazing.Mvvm.Tests.csproj \
+                    --no-build \
+                    --configuration Release \
+                    --framework ${{ matrix.framework }} \
+                    --logger "trx;LogFileName=test-results-${{ matrix.framework }}.trx"
+
+            - name: Test Analyzers (${{ matrix.framework }})
+              run: |
+                  dotnet test src/Blazing.Mvvm.Analyzers.Tests/Blazing.Mvvm.Analyzers.Tests.csproj \
+                    --no-build \
+                    --configuration Release \
+                    --framework ${{ matrix.framework }} \
+                    --logger "trx;LogFileName=analyzer-test-results-${{ matrix.framework }}.trx"
+
+            - name: Upload test results
+              uses: actions/upload-artifact@v4
+              if: always()
+              continue-on-error: true # artifact upload unavailable in local act runs
+              with:
+                  name: test-results-${{ matrix.framework }}
+                  path: "**/*.trx"
