@@ -16,8 +16,11 @@ internal static class AnalyzerConstants
         public const string IViewModelBase = "Blazing.Mvvm.ComponentModel.IViewModelBase";
         
         public const string MvvmComponentBase = "Blazing.Mvvm.Components.MvvmComponentBase";
+        public const string MvvmComponentBaseMetadataName = "Blazing.Mvvm.Components.MvvmComponentBase`1";
         public const string MvvmOwningComponentBase = "Blazing.Mvvm.Components.MvvmOwningComponentBase";
+        public const string MvvmOwningComponentBaseMetadataName = "Blazing.Mvvm.Components.MvvmOwningComponentBase`1";
         public const string MvvmLayoutComponentBase = "Blazing.Mvvm.Components.MvvmLayoutComponentBase";
+        public const string MvvmLayoutComponentBaseMetadataName = "Blazing.Mvvm.Components.MvvmLayoutComponentBase`1";
         
         public const string ViewModelDefinitionAttribute = "Blazing.Mvvm.ComponentModel.ViewModelDefinitionAttribute";
         public const string ViewParameterAttribute = "Blazing.Mvvm.ComponentModel.ViewParameterAttribute";
@@ -29,7 +32,9 @@ internal static class AnalyzerConstants
         
         // Blazor types
         public const string ComponentBase = "Microsoft.AspNetCore.Components.ComponentBase";
+        public const string EventCallback = "Microsoft.AspNetCore.Components.EventCallback`1";
         public const string ParameterAttribute = "Microsoft.AspNetCore.Components.ParameterAttribute";
+        public const string PropertyChangedEventArgs = "System.ComponentModel.PropertyChangedEventArgs";
         
         // CommunityToolkit.Mvvm types
         public const string ObservablePropertyAttribute = "CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute";
@@ -45,6 +50,7 @@ internal static class AnalyzerConstants
         public const string ViewModelSuffix = "ViewModel";
         public const string ViewSuffix = "View";
         public const string PageSuffix = "Page";
+        public const string ChangedSuffix = "Changed";
     }
 
     /// <summary>
@@ -60,6 +66,8 @@ internal static class AnalyzerConstants
         public const string OnParametersSetAsync = "OnParametersSetAsync";
         public const string OnAfterRender = "OnAfterRender";
         public const string OnAfterRenderAsync = "OnAfterRenderAsync";
+        public const string Dispose = "Dispose";
+        public const string InvokeAsync = "InvokeAsync";
     }
 
     /// <summary>

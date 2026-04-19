@@ -599,5 +599,68 @@ namespace Blazing.Mvvm.Analyzers {
                 return ResourceManager.GetString("BLAZMVVM0020_Title", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Manual PropertyChanged subscription code for a single [ViewParameter]-backed EventCallback binding should be removed in favor of the automatic two-way binding built into MvvmComponentBase, MvvmOwningComponentBase, and MvvmLayoutComponentBase..
+        /// </summary>
+        internal static string BLAZMVVM0021_ManualPattern_Description {
+            get {
+                return ResourceManager.GetString("BLAZMVVM0021_ManualPattern_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Manual PropertyChanged subscription for '{0}' is obsolete because automatic EventCallback two-way binding is available.
+        /// </summary>
+        internal static string BLAZMVVM0021_ManualPattern_MessageFormat {
+            get {
+                return ResourceManager.GetString("BLAZMVVM0021_ManualPattern_MessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Components with a [Parameter] property that matches a public [ViewParameter] property on the ViewModel should expose a matching EventCallback&lt;T&gt; '{Property}Changed' parameter to enable automatic two-way binding..
+        /// </summary>
+        internal static string BLAZMVVM0021_MissingCallback_Description {
+            get {
+                return ResourceManager.GetString("BLAZMVVM0021_MissingCallback_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Property '{0}' can use automatic two-way binding; add [Parameter] EventCallback&lt;T&gt; '{1}'.
+        /// </summary>
+        internal static string BLAZMVVM0021_MissingCallback_MessageFormat {
+            get {
+                return ResourceManager.GetString("BLAZMVVM0021_MissingCallback_MessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Use automatic EventCallback two-way binding.
+        /// </summary>
+        internal static string BLAZMVVM0021_Title {
+            get {
+                return ResourceManager.GetString("BLAZMVVM0021_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Automatic two-way binding requires the EventCallback&lt;T&gt; parameter to use the same generic type as the matching component [Parameter] property..
+        /// </summary>
+        internal static string BLAZMVVM0021_TypeMismatch_Description {
+            get {
+                return ResourceManager.GetString("BLAZMVVM0021_TypeMismatch_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to EventCallback '{0}' must use component parameter type '{1}' to match '{2}' for automatic two-way binding.
+        /// </summary>
+        internal static string BLAZMVVM0021_TypeMismatch_MessageFormat {
+            get {
+                return ResourceManager.GetString("BLAZMVVM0021_TypeMismatch_MessageFormat", resourceCulture);
+            }
+        }
     }
 }

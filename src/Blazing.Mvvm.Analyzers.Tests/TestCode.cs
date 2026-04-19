@@ -13,11 +13,23 @@ public static class TestCode
 namespace Blazing.Mvvm.ComponentModel
 {
     using System;
+    using System.ComponentModel;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using CommunityToolkit.Mvvm.Messaging;
 
-    public abstract class ViewModelBase : System.ComponentModel.INotifyPropertyChanged, IDisposable
+    public interface IViewModelBase : INotifyPropertyChanged, IDisposable
+    {
+        void OnInitialized();
+        Task OnInitializedAsync();
+        void OnParametersSet();
+        Task OnParametersSetAsync();
+        void OnAfterRender(bool firstRender);
+        Task OnAfterRenderAsync(bool firstRender);
+        bool ShouldRender();
+    }
+
+    public abstract class ViewModelBase : IViewModelBase
     {
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
@@ -35,7 +47,8 @@ namespace Blazing.Mvvm.ComponentModel
             return true;
         }
 
-        // Lifecycle methods - protected to match Blazor ComponentBase pattern
+        // Lifecycle methods remain protected so existing analyzer tests can override them,
+        // while explicit interface implementations satisfy the IViewModelBase contract.
         protected virtual void OnInitialized() { }
         protected virtual Task OnInitializedAsync() => Task.CompletedTask;
         protected virtual void OnParametersSet() { }
@@ -43,6 +56,14 @@ namespace Blazing.Mvvm.ComponentModel
         protected virtual void OnAfterRender(bool firstRender) { }
         protected virtual Task OnAfterRenderAsync(bool firstRender) => Task.CompletedTask;
         protected virtual bool ShouldRender() => true;
+
+        void IViewModelBase.OnInitialized() => OnInitialized();
+        Task IViewModelBase.OnInitializedAsync() => OnInitializedAsync();
+        void IViewModelBase.OnParametersSet() => OnParametersSet();
+        Task IViewModelBase.OnParametersSetAsync() => OnParametersSetAsync();
+        void IViewModelBase.OnAfterRender(bool firstRender) => OnAfterRender(firstRender);
+        Task IViewModelBase.OnAfterRenderAsync(bool firstRender) => OnAfterRenderAsync(firstRender);
+        bool IViewModelBase.ShouldRender() => ShouldRender();
 
         protected virtual void Dispose(bool disposing)
         {
@@ -108,11 +129,25 @@ namespace Blazing.Mvvm.Components
         where TViewModel : ViewModelBase
     {
         public TViewModel ViewModel { get; set; }
+
+        protected virtual void Dispose(bool disposing)
+        {
+        }
     }
 
     public abstract class MvvmOwningComponentBase<TViewModel> : MvvmComponentBase<TViewModel>
         where TViewModel : ViewModelBase
     {
+    }
+
+    public abstract class MvvmLayoutComponentBase<TViewModel> : LayoutComponentBase
+        where TViewModel : ViewModelBase
+    {
+        public TViewModel ViewModel { get; set; }
+
+        protected virtual void Dispose(bool disposing)
+        {
+        }
     }
 
     public class MvvmNavLink<TViewModel> where TViewModel : ViewModelBase

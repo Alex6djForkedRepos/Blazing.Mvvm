@@ -17,7 +17,8 @@
     [Parameter]
     public EventCallback<int> CounterChanged { get; set; }
 
-    // BLAZMVVM0021: Manual PropertyChanged subscription (obsolete pattern)
+    // BLAZMVVM0021: canonical obsolete manual two-way binding pattern.
+    // The analyzer also covers missing/mismatched EventCallback<T> members in C# component sources and code-behind files.
     protected override void OnInitialized()
     {
         base.OnInitialized();

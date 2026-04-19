@@ -22,7 +22,7 @@ Install-Package Blazing.Mvvm.Analyzers
 
 ## Analyzers
 
-This package includes **20 analyzers** to help you write better Blazing.Mvvm code:
+This package includes **21 analyzers** to help you write better Blazing.Mvvm code:
 
 ### Phase 1: Core MVVM Pattern (High Priority)
 
@@ -41,6 +41,7 @@ This package includes **20 analyzers** to help you write better Blazing.Mvvm cod
 - **[BLAZMVVM0016](../../docs/analyzers/BLAZMVVM0016.md)**: Messenger Registration Lifetime - Detects messenger registrations without cleanup
 - **[BLAZMVVM0018](../../docs/analyzers/BLAZMVVM0018.md)**: NotifyPropertyChangedFor - Suggests notifications for computed properties
 - **[BLAZMVVM0020](../../docs/analyzers/BLAZMVVM0020.md)**: Route Parameter Binding - Validates route parameters have corresponding properties
+- **[BLAZMVVM0021](../../docs/analyzers/BLAZMVVM0021.md)**: EventCallback Two-Way Binding - Detects obsolete manual bindings, missing callbacks, and callback type mismatches
 
 ### Phase 3: Code Quality (Info Level)
 
@@ -58,9 +59,10 @@ This package includes **20 analyzers** to help you write better Blazing.Mvvm cod
 
 ## Code Fix Providers
 
-The package includes **13 code fix providers** for automatic corrections:
+The package includes **14 code fix providers** for automatic corrections:
 
 ### Core MVVM Pattern Fixes
+
 1. **ViewModelBaseInheritanceCodeFixProvider** - Adds ViewModelBase inheritance
 2. **ViewModelDefinitionAttributeCodeFixProvider** - Adds [ViewModelDefinition] attribute
 3. **MvvmComponentBaseUsageCodeFixProvider** - Replaces ComponentBase with MvvmComponentBase<TViewModel>
@@ -68,22 +70,26 @@ The package includes **13 code fix providers** for automatic corrections:
 5. **RelayCommandAsyncPatternCodeFixProvider** - Converts async void to async Task
 
 ### Best Practices Fixes
+
 6. **RouteParameterBindingCodeFixProvider** - Generates missing [Parameter] or [ViewParameter] properties
-7. **DisposePatternCodeFixProvider** - Adds IDisposable implementation with cleanup
-8. **MessengerRegistrationLifetimeCodeFixProvider** - Adds Dispose with Unregister or OnActivated pattern
-9. **NotifyPropertyChangedForCodeFixProvider** - Adds [NotifyPropertyChangedFor] attribute
+2. **DisposePatternCodeFixProvider** - Adds IDisposable implementation with cleanup
+3. **MessengerRegistrationLifetimeCodeFixProvider** - Adds Dispose with Unregister or OnActivated pattern
+4. **NotifyPropertyChangedForCodeFixProvider** - Adds [NotifyPropertyChangedFor] attribute
 
 ### Code Quality Fixes
+
 10. **LifecycleMethodOverrideCodeFixProvider** - Adds OnInitializedAsync override method
-11. **CommandPatternCodeFixProvider** - Adds [RelayCommand] attribute and makes method private
-12. **StateHasChangedOveruseCodeFixProvider** - Removes unnecessary StateHasChanged() calls
-13. **CascadingParameterVsInjectCodeFixProvider** - Replaces [CascadingParameter] with [Inject]
+2. **CommandPatternCodeFixProvider** - Adds [RelayCommand] attribute and makes method private
+3. **StateHasChangedOveruseCodeFixProvider** - Removes unnecessary StateHasChanged() calls
+4. **CascadingParameterVsInjectCodeFixProvider** - Replaces [CascadingParameter] with [Inject]
+5. **EventCallbackTwoWayBindingCodeFixProvider** - Removes canonical manual two-way binding code and fixes EventCallback two-way binding parameters
 
 ## Severity Levels
 
 - **Error**: Must be fixed (BLAZMVVM0003, 0005, 0011)
 - **Warning**: Should be addressed (BLAZMVVM0001, 0002, 0004, 0013, 0015, 0016, 0017, 0020)
-- **Info**: Consider improvements (BLAZMVVM0006, 0007, 0008, 0009, 0010, 0012, 0014, 0018, 0019)
+- **Info**: Consider improvements (BLAZMVVM0006, 0007, 0008, 0009, 0010, 0012, 0014, 0018, 0019, 0021 manual/missing callback)
+- **Warning**: Type mismatch validation also applies to BLAZMVVM0021 when the EventCallback generic argument does not match the component parameter type
 
 ## Quick Start
 

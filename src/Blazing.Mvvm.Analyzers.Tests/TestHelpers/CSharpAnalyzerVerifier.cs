@@ -29,6 +29,10 @@ public static class CSharpAnalyzerVerifier<TAnalyzer>
                 )),
             TestState =
             {
+                AdditionalReferences =
+                {
+                    MetadataReference.CreateFromFile(ResolveFrameworkAssembly("Microsoft.AspNetCore.App.Ref", "net8.0", "Microsoft.AspNetCore.Components.dll"))
+                },
                 // Add Blazing.Mvvm type stubs to every test
                 Sources = { TestCode.BlazingMvvmStubs }
             }
@@ -99,15 +103,5 @@ public static class CSharpAnalyzerVerifier<TAnalyzer>
 
         // Linux default install location
         return "/usr/share/dotnet/packs";
-    }
-
-    private static string ResolveLatestPackageAssembly(string packageId, params string[] relativePath)
-    {
-        var packageRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", packageId);
-        var latestPackage = Directory.GetDirectories(packageRoot)
-            .OrderByDescending(static directory => directory, StringComparer.OrdinalIgnoreCase)
-            .First(directory => File.Exists(Path.Combine(new[] { directory }.Concat(relativePath).ToArray())));
-
-        return Path.Combine(new[] { latestPackage }.Concat(relativePath).ToArray());
     }
 }

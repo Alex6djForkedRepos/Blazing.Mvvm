@@ -210,4 +210,37 @@ public static class DiagnosticDescriptors
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0020_Description), Resources.ResourceManager, typeof(Resources)),
         helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0020.md",
         customTags: WellKnownDiagnosticTags.CompilationEnd);
+
+    // BLAZMVVM0021: EventCallback Two-Way Binding Analyzer
+#pragma warning disable RS2001 // Release tracking cannot represent mixed severities for one diagnostic ID.
+    public static readonly DiagnosticDescriptor EventCallbackTwoWayBindingManualPattern = new(
+        id: "BLAZMVVM0021",
+        title: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_Title), Resources.ResourceManager, typeof(Resources)),
+        messageFormat: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_ManualPattern_MessageFormat), Resources.ResourceManager, typeof(Resources)),
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Info,
+        isEnabledByDefault: true,
+        description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_ManualPattern_Description), Resources.ResourceManager, typeof(Resources)),
+        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0021.md");
+
+    public static readonly DiagnosticDescriptor EventCallbackTwoWayBindingMissingCallback = new(
+        id: "BLAZMVVM0021",
+        title: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_Title), Resources.ResourceManager, typeof(Resources)),
+        messageFormat: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_MissingCallback_MessageFormat), Resources.ResourceManager, typeof(Resources)),
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Info,
+        isEnabledByDefault: true,
+        description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_MissingCallback_Description), Resources.ResourceManager, typeof(Resources)),
+        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0021.md");
+
+    public static readonly DiagnosticDescriptor EventCallbackTwoWayBindingTypeMismatch = new(
+        id: "BLAZMVVM0021",
+        title: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_Title), Resources.ResourceManager, typeof(Resources)),
+        messageFormat: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_TypeMismatch_MessageFormat), Resources.ResourceManager, typeof(Resources)),
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_TypeMismatch_Description), Resources.ResourceManager, typeof(Resources)),
+        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0021.md");
+#pragma warning restore RS2001
 }

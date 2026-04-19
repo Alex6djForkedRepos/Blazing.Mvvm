@@ -10,6 +10,7 @@ This sample is configured to remain buildable while still surfacing most analyze
 
 - Project-local `.editorconfig` overrides downgrade selected demo diagnostics to warnings.
 - `BLAZMVVM0003` and `BLAZMVVM0011` are suppressed at project build time because they are emitted from generated Razor `.g.cs` files and would otherwise block the demo build.
+- `BLAZMVVM0021` code fixes intentionally target `.cs` and `.razor.cs` sources; the inline `.razor` sample is diagnostic-only.
 - The dedicated project `Blazing.Mvvm.Analyzers.Tests` is the source of truth for validating analyzer behavior, including build-blocking diagnostics.
 
 ## Project Structure
@@ -37,7 +38,7 @@ This sample is configured to remain buildable while still surfacing most analyze
 | **Test014ViewModel.cs**       | BLAZMVVM0014               | Unnecessary StateHasChanged() calls                                                 |
 | **Test015And016ViewModel.cs** | BLAZMVVM0015, BLAZMVVM0016 | Missing IDisposable + Messenger registration without cleanup                        |
 | **Test018ViewModel.cs**       | BLAZMVVM0018               | Missing [NotifyPropertyChangedFor] for computed properties                          |
-| **Test021ViewModel.cs**       | BLAZMVVM0021               | Manual PropertyChanged subscription (obsolete pattern)                              |
+| **Test021ViewModel.cs**       | BLAZMVVM0021               | `[ViewParameter]` backing property for automatic EventCallback two-way binding       |
 | **IndexViewModel.cs**         | None                       | Properly configured ViewModel for home page                                         |
 
 ### Razor Components Created
@@ -54,7 +55,7 @@ This sample is configured to remain buildable while still surfacing most analyze
 | **Components/Pages/Test013.razor**                 | BLAZMVVM0013                         | Uses MvvmComponentBase with DbContext (should use MvvmOwningComponentBase) |
 | **Components/Pages/Test019.razor**                 | BLAZMVVM0019                         | Using [CascadingParameter] for DI services instead of [Inject]             |
 | **Components/Pages/Test021.razor**                 | None (child component triggers 0021) | Parent for EventCallback testing                                           |
-| **Components/Test021Component.razor**              | BLAZMVVM0021                         | Manual PropertyChanged subscription (obsolete pattern)                     |
+| **Components/Test021Component.razor**              | BLAZMVVM0021                         | Canonical obsolete manual two-way binding pattern (sample diagnostic case) |
 
 ## Analyzer Coverage Summary
 
@@ -82,7 +83,7 @@ The sample currently demonstrates 19 analyzers. `BLAZMVVM0007` and `BLAZMVVM0017
 | **BLAZMVVM0018** | NotifyPropertyChangedFor        | Info     | Test018ViewModel.cs                 | ? Covered |
 | **BLAZMVVM0019** | CascadingParameter vs Inject    | Info     | Test019.razor                       | ? Covered |
 | **BLAZMVVM0020** | Route Parameter Binding         | Warning  | Test004.razor                       | ? Covered |
-| **BLAZMVVM0021** | EventCallback Two-Way Binding   | Info     | Test021Component.razor              | ? Covered |
+| **BLAZMVVM0021** | EventCallback Two-Way Binding   | Info/Warning | Test021Component.razor + code-behind tests | ? Covered |
 
 ## Build status
 

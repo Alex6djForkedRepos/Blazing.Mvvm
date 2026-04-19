@@ -297,4 +297,25 @@
   <data name="BLAZMVVM0020_Description" xml:space="preserve">
     <value>Route parameters defined in @page directive should have corresponding [ViewParameter] properties in the ViewModel to ensure proper parameter binding and maintain MVVM data flow.</value>
   </data>
+  <data name="BLAZMVVM0021_Title" xml:space="preserve">
+    <value>Use automatic EventCallback two-way binding</value>
+  </data>
+  <data name="BLAZMVVM0021_ManualPattern_MessageFormat" xml:space="preserve">
+    <value>Manual PropertyChanged subscription for '{0}' is obsolete because automatic EventCallback two-way binding is available</value>
+  </data>
+  <data name="BLAZMVVM0021_ManualPattern_Description" xml:space="preserve">
+    <value>Manual PropertyChanged subscription code for a single [ViewParameter]-backed EventCallback binding should be removed in favor of the automatic two-way binding built into MvvmComponentBase, MvvmOwningComponentBase, and MvvmLayoutComponentBase.</value>
+  </data>
+  <data name="BLAZMVVM0021_MissingCallback_MessageFormat" xml:space="preserve">
+    <value>Property '{0}' can use automatic two-way binding; add [Parameter] EventCallback&lt;T&gt; '{1}'</value>
+  </data>
+  <data name="BLAZMVVM0021_MissingCallback_Description" xml:space="preserve">
+    <value>Components with a [Parameter] property that matches a public [ViewParameter] property on the ViewModel should expose a matching EventCallback&lt;T&gt; '{Property}Changed' parameter to enable automatic two-way binding.</value>
+  </data>
+  <data name="BLAZMVVM0021_TypeMismatch_MessageFormat" xml:space="preserve">
+    <value>EventCallback '{0}' must use component parameter type '{1}' to match '{2}' for automatic two-way binding</value>
+  </data>
+  <data name="BLAZMVVM0021_TypeMismatch_Description" xml:space="preserve">
+    <value>Automatic two-way binding requires the EventCallback&lt;T&gt; parameter to use the same generic type as the matching component [Parameter] property.</value>
+  </data>
 </root>

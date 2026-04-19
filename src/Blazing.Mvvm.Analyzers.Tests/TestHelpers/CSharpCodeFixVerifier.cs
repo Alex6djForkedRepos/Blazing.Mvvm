@@ -31,11 +31,19 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
                 )),
             TestState =
             {
+                AdditionalReferences =
+                {
+                    MetadataReference.CreateFromFile(ResolveFrameworkAssembly("Microsoft.AspNetCore.App.Ref", "net8.0", "Microsoft.AspNetCore.Components.dll"))
+                },
                 // Add Blazing.Mvvm type stubs to every test
                 Sources = { TestCode.BlazingMvvmStubs }
             },
             FixedState =
             {
+                AdditionalReferences =
+                {
+                    MetadataReference.CreateFromFile(ResolveFrameworkAssembly("Microsoft.AspNetCore.App.Ref", "net8.0", "Microsoft.AspNetCore.Components.dll"))
+                },
                 // Add Blazing.Mvvm type stubs to fixed code as well
                 Sources = { TestCode.BlazingMvvmStubs }
             }
@@ -48,8 +56,8 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
     public static Task VerifyCodeFixAsync(string source, string fixedSource, params DiagnosticResult[] expected)
     {
         var test = CreateTest();
-        test.TestCode = source;
-        test.FixedCode = fixedSource;
+        test.TestCode = NormalizeLineEndings(source);
+        test.FixedCode = NormalizeLineEndings(fixedSource);
         test.ExpectedDiagnostics.AddRange(expected);
         return test.RunAsync();
     }
@@ -60,10 +68,13 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
     public static Task VerifyAnalyzerAsync(string source, params DiagnosticResult[] expected)
     {
         var test = CreateTest();
-        test.TestCode = source;
+        test.TestCode = NormalizeLineEndings(source);
         test.ExpectedDiagnostics.AddRange(expected);
         return test.RunAsync();
     }
+
+    private static string NormalizeLineEndings(string text)
+        => text.Replace("\r\n", "\n");
 
     private static string ResolveFrameworkAssembly(string packName, string targetFramework, string assemblyName)
     {
@@ -98,7 +109,6 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
 
         throw new InvalidOperationException($"Could not find '{assemblyName}' for '{targetFramework}' in '{packRoot}'");
     }
-
     private static string GetDotNetPacksRoot()
     {
         var dotnetRoot = Environment.GetEnvironmentVariable("DOTNET_ROOT");
