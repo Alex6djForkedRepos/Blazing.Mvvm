@@ -71,14 +71,14 @@ The package includes **14 code fix providers** for automatic corrections:
 
 ### Best Practices Fixes
 
-6. **RouteParameterBindingCodeFixProvider** - Generates missing [Parameter] or [ViewParameter] properties
+1. **RouteParameterBindingCodeFixProvider** - Generates missing [Parameter] or [ViewParameter] properties
 2. **DisposePatternCodeFixProvider** - Adds IDisposable implementation with cleanup
 3. **MessengerRegistrationLifetimeCodeFixProvider** - Adds Dispose with Unregister or OnActivated pattern
 4. **NotifyPropertyChangedForCodeFixProvider** - Adds [NotifyPropertyChangedFor] attribute
 
 ### Code Quality Fixes
 
-10. **LifecycleMethodOverrideCodeFixProvider** - Adds OnInitializedAsync override method
+1. **LifecycleMethodOverrideCodeFixProvider** - Adds OnInitializedAsync override method
 2. **CommandPatternCodeFixProvider** - Adds [RelayCommand] attribute and makes method private
 3. **StateHasChangedOveruseCodeFixProvider** - Removes unnecessary StateHasChanged() calls
 4. **CascadingParameterVsInjectCodeFixProvider** - Replaces [CascadingParameter] with [Inject]

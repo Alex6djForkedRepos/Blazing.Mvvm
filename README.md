@@ -824,7 +824,7 @@ app.UseRouting();
 
 You can hard-code the path, eg: `<base href="/fu/bar/" />`, however, it's better to set it dynamically based on the incoming request's `PathBase`.
 
-***Host.cshtml (Razor Pages) Example:***
+***_Host.cshtml (Razor Pages) Example:***
 
 ```razor
 <!DOCTYPE html>
@@ -841,7 +841,7 @@ You can hard-code the path, eg: `<base href="/fu/bar/" />`, however, it's better
 }
 ```
 
-***App. razor (Razor Components) Example:***
+***App.razor (Razor Components) Example:***
 
 ```razor
 <!DOCTYPE html>
@@ -936,7 +936,7 @@ app.Use((ctx, next) =>
 
 Do not hard-code the path. Yarp will use a dynamic `PathBase` for `baseHref`, so set it based on the incoming request's `PathBase`.
 
-***Host.cshtml (Razor Pages) Example:***
+***_Host.cshtml (Razor Pages) Example:***
 
 ```razor
 <!DOCTYPE html>
@@ -953,7 +953,7 @@ Do not hard-code the path. Yarp will use a dynamic `PathBase` for `baseHref`, so
 }
 ```
 
-***App. razor (Razor Components) Example:***
+***App.razor (Razor Components) Example:***
 
 ```razor
 <!DOCTYPE html>
@@ -1253,8 +1253,8 @@ Modernises Microsoft's [Xamarin Sample](https://github.com/CommunityToolkit/MVVM
 
 #### Moved (Archived) Samples
 
-- **[ParameterResolution.Sample.Wasm](https://github.com/gragra33/Blazing.Mvvm/tree/master/samples/ParameterResolution.Sample.Wasm)** - **(Archived - now integrated into `Blazing.Mvvm.Sample.Shared`)** Demonstrates parameter resolution between Views and ViewModels using `ViewParameter` attribute, and automatic two-way binding with `@bind-` syntax
-- **[Blazing.Mvvm.ParentChildSample](https://github.com/gragra33/Blazing.Mvvm/tree/master/samples/ParentChildSample)** - **(Archived - now integrated into `Blazing.Mvvm.Sample.Shared`)** Demonstrates dynamic parent-child component communication using Messenger. [Original](https://github.com/gragra33/Blazing.Mvvm.ParentChildSample) repo is now archived.
+- **[ParameterResolution.Sample.Wasm](https://github.com/gragra33/Blazing.Mvvm/tree/master/samples/libs/Blazing.Mvvm.Sample.Shared/Pages/ParameterResolution)** - **(Archived - now integrated into `Blazing.Mvvm.Sample.Shared`)** Demonstrates parameter resolution between Views and ViewModels using `ViewParameter` attribute, and automatic two-way binding with `@bind-` syntax
+- **[Blazing.Mvvm.ParentChildSample](https://github.com/gragra33/Blazing.Mvvm/tree/master/samples/libs/Blazing.Mvvm.Sample.Shared/Pages/ParentChild)** - **(Archived - now integrated into `Blazing.Mvvm.Sample.Shared`)** Demonstrates dynamic parent-child component communication using Messenger. [Original](https://github.com/gragra33/Blazing.Mvvm.ParentChildSample) repo is now archived.
 
 #### Component Libraries
 
@@ -1357,7 +1357,7 @@ This release adds support for:
 
 **New Sample:**
 
-- **[ParameterResolution.Sample.Wasm](https://github.com/gragra33/Blazing.Mvvm/tree/master/samples/ParameterResolution.Sample.Wasm)** - Demonstrates parameter resolution between Views and ViewModels using `ViewParameter` attribute, and automatic two-way binding with `@bind-` syntax
+- **[ParameterResolution.Sample.Wasm](https://github.com/gragra33/Blazing.Mvvm/tree/master/samples/libs/Blazing.Mvvm.Sample.Shared/Pages/ParameterResolution)** - Demonstrates parameter resolution between Views and ViewModels using `ViewParameter` attribute, and automatic two-way binding with `@bind-` syntax
 
 **Updated Samples:**
 

@@ -77,7 +77,7 @@ This release adds support for:
 
 **New Sample:**
 
-- [ParameterResolution.Sample.Wasm](https://github.com/gragra33/Blazing.Mvvm/tree/master/samples/ParameterResolution.Sample.Wasm)** - Demonstrates parameter resolution between Views and ViewModels using `ViewParameter` attribute, and automatic two-way binding with `@bind-` syntax
+- [ParameterResolution.Sample.Wasm](https://github.com/gragra33/Blazing.Mvvm/tree/master/samples/libs/Blazing.Mvvm.Sample.Shared/Pages/ParameterResolution) - Demonstrates parameter resolution between Views and ViewModels using `ViewParameter` attribute, and automatic two-way binding with `@bind-` syntax
 
 **Updated Samples:**
 
@@ -108,7 +108,7 @@ This release adds automatic base path detection for YARP reverse proxy scenarios
 - For YARP scenarios, simply use `app.UseForwardedHeaders()` and optionally handle `X-Forwarded-Prefix` header
 - Existing code using `BasePath` is now marked `obsolete`, but continues to work without changes. Will be removed in a future release.
 
-See the [Subpath Hosting](../readme.md#subpath-hosting) section in the readme for updated configuration examples.
+See the [Subpath Hosting](README.md#subpath-hosting) section in the readme for updated configuration examples.
 
 ## V3.0.0 - 18 November 2025
 
