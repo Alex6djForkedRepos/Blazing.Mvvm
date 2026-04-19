@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Blazing.Mvvm\Blazing.Mvvm.csproj" />
-    <ProjectReference Include="..\..\src\Blazing.Mvvm.Base\Blazing.Mvvm.Base.csproj" />
-    <ProjectReference Include="..\..\src\Blazing.Mvvm.Analyzers\Blazing.Mvvm.Analyzers.csproj"
+    <ProjectReference Include="..\..\src\Libraries\Blazing.Mvvm\Blazing.Mvvm.csproj" />
+    <ProjectReference Include="..\..\src\Libraries\Blazing.Mvvm.Base\Blazing.Mvvm.Base.csproj" />
+    <ProjectReference Include="..\..\src\Libraries\Blazing.Mvvm.Analyzers\Blazing.Mvvm.Analyzers.csproj"
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false" />
   </ItemGroup>

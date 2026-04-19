@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Blazing.Mvvm\Blazing.Mvvm.csproj" />
+    <ProjectReference Include="..\..\..\src\Libraries\Blazing.Mvvm\Blazing.Mvvm.csproj" />
     <ProjectReference Include="..\..\libs\Blazing.Mvvm.Sample.Shared\Blazing.Mvvm.Sample.Shared.csproj" />
     <ProjectReference Include="..\Blazing.Mvvm.Sample.WebApp.Client\Blazing.Mvvm.Sample.WebApp.Client.csproj" />
   </ItemGroup>

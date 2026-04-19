@@ -25,7 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Blazing.Buttons\Blazing.Buttons.csproj" />
     <ProjectReference Include="..\Blazor.Common\Blazing.Common.csproj" />
-    <ProjectReference Include="..\..\..\src\Blazing.Mvvm\Blazing.Mvvm.csproj" />
+    <ProjectReference Include="..\..\..\src\Libraries\Blazing.Mvvm\Blazing.Mvvm.csproj" />
   </ItemGroup>
 
 </Project>

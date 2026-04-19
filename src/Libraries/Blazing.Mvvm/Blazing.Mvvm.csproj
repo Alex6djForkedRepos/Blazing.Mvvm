@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+		
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+		<Title>MVVM for Blazor using CommunityToolkit.Mvvm with Complex Route Support</Title>
+		<Description>A simple and easy-to-use MVVM implementation for Blazor wrapping CommunityToolkit.Mvvm. Features automatic ViewModel discovery, strongly-typed navigation with multi-parameter route support, parameter resolution, validation support, Automatic Two-Way Binding, and dynamic base path detection for YARP and subpath hosting scenarios.</Description>
+
+		<PackageId>Blazing.Mvvm</PackageId>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageTags>Blazor,Wasm,Web Assembly,Blazor Server,Blazor Web App,Blazor Hybrid MAUI,Mvvm,CommunityToolkit,YARP,Reverse Proxy,Subpath Hosting,Route Parameters,Navigation</PackageTags>
+		<PackageReleaseNotes>V3.2.1: Fixed IAsyncRelayCommand PropertyChanged event edge cases. ViewModelBase and ValidatorViewModelBase now implement IDisposable for automatic cleanup. Refactored samples to shared library. Added MvvmButton, Bootstrap components, and ConditionalSwitch. Enhanced RelayCommand examples.</PackageReleaseNotes>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\..\LICENSE" Link="LICENSE">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="..\..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Blazing.Mvvm.Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Blazing.Mvvm.Base\Blazing.Mvvm.Base.csproj" />
+	</ItemGroup>
+
+</Project>
