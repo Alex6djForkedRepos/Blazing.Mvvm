@@ -31,21 +31,11 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
                 )),
             TestState =
             {
-                AdditionalReferences =
-                {
-                    MetadataReference.CreateFromFile(ResolveFrameworkAssembly("Microsoft.AspNetCore.App.Ref", "net8.0", "Microsoft.AspNetCore.Components.dll")),
-                    MetadataReference.CreateFromFile(ResolveLatestPackageAssembly("microsoft.entityframeworkcore", "lib", "net8.0", "Microsoft.EntityFrameworkCore.dll"))
-                },
                 // Add Blazing.Mvvm type stubs to every test
                 Sources = { TestCode.BlazingMvvmStubs }
             },
             FixedState =
             {
-                AdditionalReferences =
-                {
-                    MetadataReference.CreateFromFile(ResolveFrameworkAssembly("Microsoft.AspNetCore.App.Ref", "net8.0", "Microsoft.AspNetCore.Components.dll")),
-                    MetadataReference.CreateFromFile(ResolveLatestPackageAssembly("microsoft.entityframeworkcore", "lib", "net8.0", "Microsoft.EntityFrameworkCore.dll"))
-                },
                 // Add Blazing.Mvvm type stubs to fixed code as well
                 Sources = { TestCode.BlazingMvvmStubs }
             }
@@ -77,21 +67,52 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
 
     private static string ResolveFrameworkAssembly(string packName, string targetFramework, string assemblyName)
     {
-        var packRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "dotnet", "packs", packName);
-        var latestPack = Directory.GetDirectories(packRoot)
-            .OrderByDescending(static directory => directory, StringComparer.OrdinalIgnoreCase)
-            .First(directory => File.Exists(Path.Combine(directory, "ref", targetFramework, assemblyName)));
+        var packRoot = Path.Combine(GetDotNetPacksRoot(), packName);
+        if (!Directory.Exists(packRoot))
+            throw new InvalidOperationException(
+                $"dotnet packs directory not found: '{packRoot}'. " +
+                $"Install the matching .NET SDK or set the DOTNET_ROOT environment variable.");
 
-        return Path.Combine(latestPack, "ref", targetFramework, assemblyName);
+        var packDirs = Directory.GetDirectories(packRoot)
+            .OrderByDescending(static directory => directory, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        var exactMatch = packDirs.FirstOrDefault(d => File.Exists(Path.Combine(d, "ref", targetFramework, assemblyName)));
+        if (exactMatch is not null)
+            return Path.Combine(exactMatch, "ref", targetFramework, assemblyName);
+
+        foreach (var packDir in packDirs)
+        {
+            var refRoot = Path.Combine(packDir, "ref");
+            if (!Directory.Exists(refRoot))
+                continue;
+
+            var fallback = Directory.GetDirectories(refRoot)
+                .OrderByDescending(static d => d, StringComparer.OrdinalIgnoreCase)
+                .Select(tfmDir => Path.Combine(tfmDir, assemblyName))
+                .FirstOrDefault(File.Exists);
+
+            if (fallback is not null)
+                return fallback;
+        }
+
+        throw new InvalidOperationException($"Could not find '{assemblyName}' for '{targetFramework}' in '{packRoot}'");
     }
 
-    private static string ResolveLatestPackageAssembly(string packageId, params string[] relativePath)
+    private static string GetDotNetPacksRoot()
     {
-        var packageRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", packageId);
-        var latestPackage = Directory.GetDirectories(packageRoot)
-            .OrderByDescending(static directory => directory, StringComparer.OrdinalIgnoreCase)
-            .First(directory => File.Exists(Path.Combine(new[] { directory }.Concat(relativePath).ToArray())));
+        var dotnetRoot = Environment.GetEnvironmentVariable("DOTNET_ROOT");
+        if (!string.IsNullOrEmpty(dotnetRoot))
+            return Path.Combine(dotnetRoot, "packs");
 
-        return Path.Combine(new[] { latestPackage }.Concat(relativePath).ToArray());
+        if (Path.DirectorySeparatorChar == '\\')
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "dotnet", "packs");
+
+        // macOS official installer and Homebrew location
+        if (Directory.Exists("/usr/local/share/dotnet/packs"))
+            return "/usr/local/share/dotnet/packs";
+
+        // Linux default install location
+        return "/usr/share/dotnet/packs";
     }
 }

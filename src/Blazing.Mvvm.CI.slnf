@@ -1,0 +1,12 @@
+{
+  "solution": {
+    "path": "Blazing.Mvvm.sln",
+    "projects": [
+      "Blazing.Mvvm.Base\\Blazing.Mvvm.Base.csproj",
+      "Blazing.Mvvm\\Blazing.Mvvm.csproj",
+      "Blazing.Mvvm.Analyzers\\Blazing.Mvvm.Analyzers.csproj",
+      "Blazing.Mvvm.Tests\\Blazing.Mvvm.Tests.csproj",
+      "Blazing.Mvvm.Analyzers.Tests\\Blazing.Mvvm.Analyzers.Tests.csproj"
+    ]
+  }
+}

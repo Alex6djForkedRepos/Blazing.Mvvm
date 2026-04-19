@@ -109,12 +109,57 @@ public static class CompilationEndAnalyzerVerifier<TAnalyzer>
 
     private static string ResolveFrameworkAssembly(string packName, string targetFramework, string assemblyName)
     {
-        var packRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "dotnet", "packs", packName);
-        var latestPack = Directory.GetDirectories(packRoot)
-            .OrderByDescending(static directory => directory, StringComparer.OrdinalIgnoreCase)
-            .First(directory => File.Exists(Path.Combine(directory, "ref", targetFramework, assemblyName)));
+        var packRoot = Path.Combine(GetDotNetPacksRoot(), packName);
+        if (!Directory.Exists(packRoot))
+            throw new InvalidOperationException(
+                $"dotnet packs directory not found: '{packRoot}'. " +
+                $"Install the matching .NET SDK or set the DOTNET_ROOT environment variable.");
 
-        return Path.Combine(latestPack, "ref", targetFramework, assemblyName);
+        var packDirs = Directory.GetDirectories(packRoot)
+            .OrderByDescending(static directory => directory, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        // Try the requested TFM first
+        var exactMatch = packDirs.FirstOrDefault(d => File.Exists(Path.Combine(d, "ref", targetFramework, assemblyName)));
+        if (exactMatch is not null)
+            return Path.Combine(exactMatch, "ref", targetFramework, assemblyName);
+
+        // Fallback: find the assembly in any available TFM (e.g. only .NET 10 SDK installed)
+        foreach (var packDir in packDirs)
+        {
+            var refRoot = Path.Combine(packDir, "ref");
+            if (!Directory.Exists(refRoot))
+                continue;
+
+            var fallback = Directory.GetDirectories(refRoot)
+                .OrderByDescending(static d => d, StringComparer.OrdinalIgnoreCase)
+                .Select(tfmDir => Path.Combine(tfmDir, assemblyName))
+                .FirstOrDefault(File.Exists);
+
+            if (fallback is not null)
+                return fallback;
+        }
+
+        throw new InvalidOperationException($"Could not find '{assemblyName}' for '{targetFramework}' in '{packRoot}'");
+    }
+
+    private static string GetDotNetPacksRoot()
+    {
+        // DOTNET_ROOT is set by actions/setup-dotnet and most CI/Docker environments
+        var dotnetRoot = Environment.GetEnvironmentVariable("DOTNET_ROOT");
+        if (!string.IsNullOrEmpty(dotnetRoot))
+            return Path.Combine(dotnetRoot, "packs");
+
+        // Windows: C:\Program Files\dotnet\packs
+        if (Path.DirectorySeparatorChar == '\\')
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "dotnet", "packs");
+
+        // macOS official installer and Homebrew location
+        if (Directory.Exists("/usr/local/share/dotnet/packs"))
+            return "/usr/local/share/dotnet/packs";
+
+        // Linux default install location
+        return "/usr/share/dotnet/packs";
     }
 
     private static string ResolvePackageAssembly(string packageId, string version, params string[] relativePath)

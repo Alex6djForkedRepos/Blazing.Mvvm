@@ -3,25 +3,23 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>12.0</LangVersion>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Nullable and ImplicitUsings inherited from Directory.Build.props -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsPackable>true</IsPackable>
     <DevelopmentDependency>true</DevelopmentDependency>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <NoWarn>$(NoWarn);NU5128;CS1591</NoWarn>
     
     <!-- Package Information -->
     <PackageId>Blazing.Mvvm.Analyzers</PackageId>
     <Title>Blazing.Mvvm Roslyn Analyzers</Title>
     <Description>Roslyn analyzers for Blazing.Mvvm to help developers follow MVVM best practices and catch common mistakes at compile time.</Description>
     <PackageTags>blazor;mvvm;analyzers;roslyn;code-analysis;blazing-mvvm</PackageTags>
-    <PackageProjectUrl>https://github.com/gragra33/Blazing.Mvvm</PackageProjectUrl>
+    <!-- PackageProjectUrl, RepositoryUrl, RepositoryType inherited from Directory.Build.props -->
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/gragra33/Blazing.Mvvm</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <Authors>Graeme Grant</Authors>
     <Company>Graeme Grant</Company>
     <Copyright>Copyright (c) Graeme Grant 2025</Copyright>
