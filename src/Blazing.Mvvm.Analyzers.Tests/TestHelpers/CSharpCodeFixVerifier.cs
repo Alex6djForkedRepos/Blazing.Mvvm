@@ -68,6 +68,11 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
     private static string ResolveFrameworkAssembly(string packName, string targetFramework, string assemblyName)
     {
         var packRoot = Path.Combine(GetDotNetPacksRoot(), packName);
+        if (!Directory.Exists(packRoot))
+            throw new InvalidOperationException(
+                $"dotnet packs directory not found: '{packRoot}'. " +
+                $"Install the matching .NET SDK or set the DOTNET_ROOT environment variable.");
+
         var packDirs = Directory.GetDirectories(packRoot)
             .OrderByDescending(static directory => directory, StringComparer.OrdinalIgnoreCase)
             .ToArray();
@@ -103,6 +108,11 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
         if (Path.DirectorySeparatorChar == '\\')
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "dotnet", "packs");
 
+        // macOS official installer and Homebrew location
+        if (Directory.Exists("/usr/local/share/dotnet/packs"))
+            return "/usr/local/share/dotnet/packs";
+
+        // Linux default install location
         return "/usr/share/dotnet/packs";
     }
 }

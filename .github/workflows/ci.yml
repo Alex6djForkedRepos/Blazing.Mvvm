@@ -30,6 +30,9 @@ jobs:
 
     build-and-test:
         name: Build & Test (${{ matrix.framework }})
+        needs: validate-branch
+        # Run on push events (validate-branch skipped) OR on valid PRs (validate-branch succeeded)
+        if: always() && (needs.validate-branch.result == 'success' || needs.validate-branch.result == 'skipped')
         runs-on: ubuntu-latest
         strategy:
             fail-fast: false # run all TFMs even if one fails
