@@ -71,12 +71,10 @@
     <PackageReference Include="Microsoft.Maui.Controls" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
-    <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Refit" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Libraries\Blazing.Mvvm.Base\Blazing.Mvvm.Base.csproj" />
     <ProjectReference Include="..\..\..\src\Libraries\Blazing.Mvvm\Blazing.Mvvm.csproj" />
     <ProjectReference Include="..\core\HybridSample.Blazor.Core\HybridSample.Blazor.Core.csproj" />
     <ProjectReference Include="..\core\HybridSample.Core\HybridSample.Core.csproj" />

@@ -9,7 +9,6 @@
     <Compile Remove="ViewModels\Widgets\ValidatorViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Nito.AsyncEx.Coordination" />
     <PackageReference Include="Refit" />
   </ItemGroup>

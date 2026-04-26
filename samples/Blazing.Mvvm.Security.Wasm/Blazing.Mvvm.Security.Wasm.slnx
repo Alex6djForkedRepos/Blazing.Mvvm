@@ -1,3 +1,12 @@
 <Solution>
+  <Folder Name="/libs/">
+    <Project Path="..\libs\Blazing.Buttons\Blazing.Buttons.csproj" />
+    <Project Path="..\libs\Blazing.Mvvm.Sample.Shared\Blazing.Mvvm.Sample.Shared.csproj" />
+    <Project Path="..\libs\Blazor.Common\Blazing.Common.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="..\..\src\Libraries\Blazing.Mvvm.Base\Blazing.Mvvm.Base.csproj" />
+    <Project Path="..\..\src\Libraries\Blazing.Mvvm\Blazing.Mvvm.csproj" />
+  </Folder>
   <Project Path="Blazing.Mvvm.Security.Wasm.csproj" />
 </Solution>

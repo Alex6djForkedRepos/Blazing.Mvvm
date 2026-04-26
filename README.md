@@ -1217,6 +1217,8 @@ For working examples, see the Hybrid sample projects:
 
 The repository includes several sample projects demonstrating different Blazor hosting models and scenarios. **As of February 2, 2026**, all Blazor MVVM samples have been refactored to use a centralized **`Blazing.Mvvm.Sample.Shared`** project, demonstrating best practices for code sharing across different hosting models.
 
+Sample solution files include their local project-reference closure so they can be opened and built reliably in Visual Studio while still validating the current repository source.
+
 #### Blazor Hosting Model Samples
 
 All of the following samples now reference the shared `Blazing.Mvvm.Sample.Shared` library, which contains common components, ViewModels, pages, and services:
