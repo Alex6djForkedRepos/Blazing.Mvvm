@@ -24,25 +24,25 @@ jobs:
                       10.0.x
 
             - name: Restore
-              run: dotnet restore src/Blazing.Mvvm.CI.slnf
+              run: dotnet restore src/Blazing.Mvvm.slnx
 
             - name: Build
-              run: dotnet build src/Blazing.Mvvm.CI.slnf --no-restore --configuration Release -p:GeneratePackageOnBuild=false
+              run: dotnet build src/Blazing.Mvvm.slnx --no-restore --configuration Release -p:GeneratePackageOnBuild=false
 
             - name: Test (net8.0)
               run: |
-                  dotnet test src/Blazing.Mvvm.Tests/Blazing.Mvvm.Tests.csproj --no-build --configuration Release --framework net8.0
-                  dotnet test src/Blazing.Mvvm.Analyzers.Tests/Blazing.Mvvm.Analyzers.Tests.csproj --no-build --configuration Release --framework net8.0
+                  dotnet test src/Tests/Blazing.Mvvm.Tests/Blazing.Mvvm.Tests.csproj --no-build --configuration Release --framework net8.0
+                  dotnet test src/Tests/Blazing.Mvvm.Analyzers.Tests/Blazing.Mvvm.Analyzers.Tests.csproj --no-build --configuration Release --framework net8.0
 
             - name: Test (net9.0)
               run: |
-                  dotnet test src/Blazing.Mvvm.Tests/Blazing.Mvvm.Tests.csproj --no-build --configuration Release --framework net9.0
-                  dotnet test src/Blazing.Mvvm.Analyzers.Tests/Blazing.Mvvm.Analyzers.Tests.csproj --no-build --configuration Release --framework net9.0
+                  dotnet test src/Tests/Blazing.Mvvm.Tests/Blazing.Mvvm.Tests.csproj --no-build --configuration Release --framework net9.0
+                  dotnet test src/Tests/Blazing.Mvvm.Analyzers.Tests/Blazing.Mvvm.Analyzers.Tests.csproj --no-build --configuration Release --framework net9.0
 
             - name: Test (net10.0)
               run: |
-                  dotnet test src/Blazing.Mvvm.Tests/Blazing.Mvvm.Tests.csproj --no-build --configuration Release --framework net10.0
-                  dotnet test src/Blazing.Mvvm.Analyzers.Tests/Blazing.Mvvm.Analyzers.Tests.csproj --no-build --configuration Release --framework net10.0
+                  dotnet test src/Tests/Blazing.Mvvm.Tests/Blazing.Mvvm.Tests.csproj --no-build --configuration Release --framework net10.0
+                  dotnet test src/Tests/Blazing.Mvvm.Analyzers.Tests/Blazing.Mvvm.Analyzers.Tests.csproj --no-build --configuration Release --framework net10.0
 
             - name: Extract version from Directory.Build.props
               id: version
@@ -67,9 +67,9 @@ jobs:
             - name: Pack NuGet packages
               if: steps.tag_check.outputs.exists == 'false'
               run: |
-                  dotnet pack src/Blazing.Mvvm.Base/Blazing.Mvvm.Base.csproj \
+                  dotnet pack src/Libraries/Blazing.Mvvm.Base/Blazing.Mvvm.Base.csproj \
                     --no-build --configuration Release --output ./artifacts
-                  dotnet pack src/Blazing.Mvvm/Blazing.Mvvm.csproj \
+                  dotnet pack src/Libraries/Blazing.Mvvm/Blazing.Mvvm.csproj \
                     --no-build --configuration Release --output ./artifacts
 
             - name: Create GitHub Release

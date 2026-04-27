@@ -10,12 +10,12 @@ Methods invoked from UI should be exposed as RelayCommands instead of direct met
 
 ## Why This Rule Exists
 
--   Enables proper async command execution with cancellation
--   Provides automatic CanExecute support
--   Improves testability
--   Supports command state management (IsRunning, etc.)
--   Follows MVVM command pattern
--   Better separation of concerns
+- Enables proper async command execution with cancellation
+- Provides automatic CanExecute support
+- Improves testability
+- Supports command state management (IsRunning, etc.)
+- Follows MVVM command pattern
+- Better separation of concerns
 
 ## ✅ DO: Correct Usage
 
@@ -261,10 +261,10 @@ This analyzer provides an automatic code fix that adds the `[RelayCommand]` attr
 
 ## Related Analyzers
 
--   **[BLAZMVVM0017](BLAZMVVM0017.md)**: RelayCommand Async Pattern
--   **[BLAZMVVM0001](BLAZMVVM0001.md)**: ViewModelBase Inheritance
+- **[BLAZMVVM0017](BLAZMVVM0017.md)**: RelayCommand Async Pattern
+- **[BLAZMVVM0001](BLAZMVVM0001.md)**: ViewModelBase Inheritance
 
 ## Additional Resources
 
--   [RelayCommand Documentation](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/generators/relaycommand)
--   [Command Pattern in MVVM](https://github.com/gragra33/Blazing.Mvvm#commands)
+- [RelayCommand Documentation](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/generators/relaycommand)
+- [Command Pattern in MVVM](https://github.com/gragra33/Blazing.Mvvm#commands)

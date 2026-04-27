@@ -64,10 +64,10 @@ $SrcRoot      = Join-Path $RepoRoot 'src'
 $WorkflowDir  = Join-Path $RepoRoot '.github' 'workflows'
 $CiYaml       = Join-Path $WorkflowDir 'ci.yml'
 $ReleaseYaml  = Join-Path $WorkflowDir 'release.yml'
-$SlnFilter    = Join-Path $SrcRoot 'Blazing.Mvvm.CI.slnf'
+$SolutionPath = Join-Path $SrcRoot 'Blazing.Mvvm.slnx'
 $DbProps      = Join-Path $SrcRoot 'Directory.Build.props'
-$MvvmTests    = Join-Path $SrcRoot 'Blazing.Mvvm.Tests' 'Blazing.Mvvm.Tests.csproj'
-$AnalyzerTests = Join-Path $SrcRoot 'Blazing.Mvvm.Analyzers.Tests' 'Blazing.Mvvm.Analyzers.Tests.csproj'
+$MvvmTests    = Join-Path $SrcRoot 'Tests' 'Blazing.Mvvm.Tests' 'Blazing.Mvvm.Tests.csproj'
+$AnalyzerTests = Join-Path $SrcRoot 'Tests' 'Blazing.Mvvm.Analyzers.Tests' 'Blazing.Mvvm.Analyzers.Tests.csproj'
 $Frameworks   = @('net8.0', 'net9.0', 'net10.0')
 
 # ── Tool check ─────────────────────────────────────────────────────────────────

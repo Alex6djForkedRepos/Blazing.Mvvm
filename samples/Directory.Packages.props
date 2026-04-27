@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <!-- Recompute these here because this file can be evaluated independently of Directory.Build.props. -->
+    <RepoRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)../'))</RepoRoot>
+    <SrcRoot>$([MSBuild]::NormalizeDirectory('$(RepoRoot)src/'))</SrcRoot>
+  </PropertyGroup>
+
+  <Import Project="$(SrcRoot)Directory.Packages.props" />
+</Project>

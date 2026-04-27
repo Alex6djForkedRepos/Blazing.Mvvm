@@ -51,14 +51,14 @@ jobs:
                       10.0.x
 
             - name: Restore
-              run: dotnet restore src/Blazing.Mvvm.CI.slnf
+              run: dotnet restore src/Blazing.Mvvm.slnx
 
             - name: Build
-              run: dotnet build src/Blazing.Mvvm.CI.slnf --no-restore --configuration Release -p:GeneratePackageOnBuild=false
+              run: dotnet build src/Blazing.Mvvm.slnx --no-restore --configuration Release -p:GeneratePackageOnBuild=false
 
             - name: Test (${{ matrix.framework }})
               run: |
-                  dotnet test src/Blazing.Mvvm.Tests/Blazing.Mvvm.Tests.csproj \
+                  dotnet test src/Tests/Blazing.Mvvm.Tests/Blazing.Mvvm.Tests.csproj \
                     --no-build \
                     --configuration Release \
                     --framework ${{ matrix.framework }} \
@@ -66,7 +66,7 @@ jobs:
 
             - name: Test Analyzers (${{ matrix.framework }})
               run: |
-                  dotnet test src/Blazing.Mvvm.Analyzers.Tests/Blazing.Mvvm.Analyzers.Tests.csproj \
+                  dotnet test src/Tests/Blazing.Mvvm.Analyzers.Tests/Blazing.Mvvm.Analyzers.Tests.csproj \
                     --no-build \
                     --configuration Release \
                     --framework ${{ matrix.framework }} \
