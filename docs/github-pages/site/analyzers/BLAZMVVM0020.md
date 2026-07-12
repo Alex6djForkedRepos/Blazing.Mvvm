@@ -37,7 +37,7 @@ public class ProductViewModel : ViewModelBase
 public class ProductViewModel : ViewModelBase
 {
     [ViewParameter]
-    public int Id { get; set; } // ? Bound to route
+    public int Id { get; set; } // Bound to the route parameter
 }
 ```
 
@@ -49,7 +49,7 @@ public class ProductViewModel : ViewModelBase
 
 @code {
     [Parameter]
-    public int Id { get; set; } // ? Bound to route
+    public int Id { get; set; } // Bound to the route parameter
 }
 ```
 

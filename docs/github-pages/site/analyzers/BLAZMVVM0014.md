@@ -102,7 +102,7 @@ public class ProductViewModel : ViewModelBase
 
     public void UpdateName(string newName)
     {
-        Name = newName; // ? UI updates automatically
+        Name = newName; // UI updates automatically
     }
 }
 ```

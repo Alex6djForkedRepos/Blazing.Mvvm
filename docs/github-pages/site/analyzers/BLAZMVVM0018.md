@@ -19,10 +19,10 @@ Detects computed/read-only properties that depend on observable properties but l
 public partial class PersonViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private string _firstName; // ? Info: Should notify FullName
+    private string _firstName; // BLAZMVVM0018: should notify FullName
 
     [ObservableProperty]
-    private string _lastName; // ? Info: Should notify FullName
+    private string _lastName; // BLAZMVVM0018: should notify FullName
 
     public string FullName => $"{FirstName} {LastName}";
     // FullName won't update when FirstName/LastName change!
