@@ -5,26 +5,37 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
 
-    <!-- Central version — bump this before merging a release to master -->
-    <ApplicationDisplayVersion>3.2.1</ApplicationDisplayVersion>
-    <ApplicationVersion>3</ApplicationVersion>
-    <AssemblyVersion>3.2.1.0</AssemblyVersion>
-    <FileVersion>3.2.1.0</FileVersion>
-    <Version>3.2.1</Version>
-    
     <!-- Repository information -->
     <RepositoryUrl>https://github.com/gragra33/Blazing.Mvvm</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Copyright>MIT Licence</Copyright>
+    <Copyright>Copyright © Graeme Grant</Copyright>
     <Authors>Graeme Grant (@gragra33)</Authors>
 
-    <!-- Package defaults — apply to all projects (harmless on non-packable/test projects) -->
+    <!-- Package defaults -->
     <PackageProjectUrl>https://github.com/gragra33/Blazing.Mvvm</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/gragra33/Blazing.Mvvm/releases</PackageReleaseNotes>
 
-    <!-- Source link: publish pdb, embed untracked sources, include symbols -->
+    <!-- Source link + symbols -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
-    <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="All" />
+  </ItemGroup>
+
+  <Target Name="OverridePrereleasePackageVersion"
+          AfterTargets="GetBuildVersion"
+          Condition="'$(PublicRelease)' == 'False'">
+    <PropertyGroup>
+      <PackageVersion>$(BuildVersionSimple)-beta</PackageVersion>
+    </PropertyGroup>
+  </Target>
 </Project>

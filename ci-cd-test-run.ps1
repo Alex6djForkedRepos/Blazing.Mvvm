@@ -11,11 +11,11 @@
     dry      - Validate YAML + act dry-run only (no Docker execution, fastest)
     lint     - actionlint static analysis only (no Docker required)
     ci       - Full CI workflow execution via act (requires Docker)
-    all      - lint + ci (default)
+    all      - lint + dry + ci (default)
 
 .PARAMETER Workflow
-    ci       - Run only ci.yml (default for Mode=ci)
-    release  - Run only release.yml
+    ci-cd    - Run only ci-cd.yml (default for Mode=ci)
+    codeql   - Run only codeql.yml
     both     - Run both workflows (sequential)
 
 .PARAMETER Job
@@ -26,8 +26,8 @@
     .\ci-cd-test-run.ps1 -Mode lint
     .\ci-cd-test-run.ps1 -Mode dry
     .\ci-cd-test-run.ps1 -Mode ci
-    .\ci-cd-test-run.ps1 -Mode ci -Workflow release
-    .\ci-cd-test-run.ps1 -Mode ci -Job build-and-test
+    .\ci-cd-test-run.ps1 -Mode ci -Workflow codeql
+    .\ci-cd-test-run.ps1 -Mode ci -Job build-test-package
 #>
 
 [CmdletBinding()]
@@ -35,8 +35,8 @@ param(
     [ValidateSet('dry', 'lint', 'ci', 'all')]
     [string]$Mode = 'all',
 
-    [ValidateSet('ci', 'release', 'both')]
-    [string]$Workflow = 'ci',
+    [ValidateSet('ci-cd', 'codeql', 'both')]
+    [string]$Workflow = 'ci-cd',
 
     [string]$Job = ''
 )
@@ -62,10 +62,9 @@ function Add-Warning { param([string]$msg) $Script:Warnings.Add($msg); Write-War
 $RepoRoot     = $PSScriptRoot
 $SrcRoot      = Join-Path $RepoRoot 'src'
 $WorkflowDir  = Join-Path $RepoRoot '.github' 'workflows'
-$CiYaml       = Join-Path $WorkflowDir 'ci.yml'
-$ReleaseYaml  = Join-Path $WorkflowDir 'release.yml'
+$CiCdYaml     = Join-Path $WorkflowDir 'ci-cd.yml'
+$CodeQlYaml   = Join-Path $WorkflowDir 'codeql.yml'
 $SolutionPath = Join-Path $SrcRoot 'Blazing.Mvvm.slnx'
-$DbProps      = Join-Path $SrcRoot 'Directory.Build.props'
 $MvvmTests    = Join-Path $SrcRoot 'Tests' 'Blazing.Mvvm.Tests' 'Blazing.Mvvm.Tests.csproj'
 $AnalyzerTests = Join-Path $SrcRoot 'Tests' 'Blazing.Mvvm.Analyzers.Tests' 'Blazing.Mvvm.Analyzers.Tests.csproj'
 $Frameworks   = @('net8.0', 'net9.0', 'net10.0')
@@ -85,9 +84,17 @@ function Test-Tool {
 # ══════════════════════════════════════════════════════════════════════════════
 Write-Header 'Prerequisite Check'
 
-$hasDotnet      = Test-Tool 'dotnet'      'https://dotnet.microsoft.com/download'
-$hasActionlint  = Test-Tool 'actionlint'  'winget install rhysd.actionlint'
-$hasAct         = Test-Tool 'act'         'winget install nektos.act'
+$hasDotnet = Test-Tool 'dotnet' 'https://dotnet.microsoft.com/download'
+$hasActionlint = $false
+$hasAct = $false
+
+if ($Mode -in @('lint', 'all')) {
+    $hasActionlint = Test-Tool 'actionlint' 'winget install rhysd.actionlint'
+}
+
+if ($Mode -in @('ci', 'all', 'dry')) {
+    $hasAct = Test-Tool 'act' 'winget install nektos.act'
+}
 
 if ($hasDotnet) { Write-Pass "dotnet $(dotnet --version)" }
 
@@ -96,10 +103,14 @@ $dockerAvailable = $false
 if ($Mode -in @('ci', 'all', 'dry')) {
     try {
         $null = docker info 2>$null
-        $dockerAvailable = $true
-        Write-Pass 'Docker daemon reachable'
+        if ($LASTEXITCODE -eq 0) {
+            $dockerAvailable = $true
+            Write-Pass 'Docker daemon reachable'
+        } else {
+            Add-Warning 'Docker not reachable — ci/dry modes will be skipped'
+        }
     } catch {
-        Add-Warning 'Docker not reachable — ci/dry modes will be skipped'
+        Add-Warning 'Docker not installed — ci/dry modes will be skipped'
     }
 }
 
@@ -113,8 +124,8 @@ if ($Mode -in @('lint', 'all')) {
         Add-Error 'actionlint not installed — skipping lint'
     } else {
         $yamlFiles = @()
-        if ($Workflow -in @('ci',   'both')) { $yamlFiles += $CiYaml      }
-        if ($Workflow -in @('release', 'both')) { $yamlFiles += $ReleaseYaml }
+        if ($Workflow -in @('ci-cd', 'both')) { $yamlFiles += $CiCdYaml   }
+        if ($Workflow -in @('codeql', 'both')) { $yamlFiles += $CodeQlYaml }
 
         foreach ($yaml in $yamlFiles) {
             $name = Split-Path $yaml -Leaf
@@ -137,8 +148,12 @@ if ($Mode -in @('dry', 'all') -and $dockerAvailable -and $hasAct) {
     Write-Header 'Workflow Dry-Run (act -n)'
 
     $dryWorkflows = @()
-    if ($Workflow -in @('ci',   'both')) { $dryWorkflows += @{ Name = 'CI';      File = $CiYaml      } }
-    if ($Workflow -in @('release', 'both')) { $dryWorkflows += @{ Name = 'Release'; File = $ReleaseYaml } }
+    if ($Workflow -in @('ci-cd', 'both')) {
+        $dryWorkflows += @{ Name = 'CI/CD'; File = $CiCdYaml }
+    }
+    if ($Workflow -in @('codeql', 'both')) {
+        Add-Warning 'CodeQL dry-run via act is not supported reliably — skipping.'
+    }
 
     foreach ($wf in $dryWorkflows) {
         Write-Section "Dry-run $($wf.Name) workflow"
@@ -177,8 +192,12 @@ if ($Mode -in @('ci', 'all') -and $dockerAvailable -and $hasAct) {
         Add-Warning 'Docker not available — skipping act execution'
     } else {
         $actWorkflows = @()
-        if ($Workflow -in @('ci',   'both')) { $actWorkflows += @{ Name = 'CI';      File = $CiYaml;      Event = 'push' } }
-        if ($Workflow -in @('release', 'both')) { $actWorkflows += @{ Name = 'Release'; File = $ReleaseYaml; Event = 'push' } }
+        if ($Workflow -in @('ci-cd', 'both')) {
+            $actWorkflows += @{ Name = 'CI/CD'; File = $CiCdYaml; Event = 'push' }
+        }
+        if ($Workflow -in @('codeql', 'both')) {
+            Add-Warning 'CodeQL workflow execution via act is not supported reliably — skipping.'
+        }
 
         foreach ($wf in $actWorkflows) {
             Write-Section "Running $($wf.Name) workflow via act"

@@ -5,6 +5,7 @@
     <LangVersion>12.0</LangVersion>
     <!-- Nullable and ImplicitUsings inherited from Directory.Build.props -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsPackable>true</IsPackable>
@@ -17,12 +18,9 @@
     <Title>Blazing.Mvvm Roslyn Analyzers</Title>
     <Description>Roslyn analyzers for Blazing.Mvvm to help developers follow MVVM best practices and catch common mistakes at compile time.</Description>
     <PackageTags>blazor;mvvm;analyzers;roslyn;code-analysis;blazing-mvvm</PackageTags>
-    <!-- PackageProjectUrl, RepositoryUrl, RepositoryType inherited from Directory.Build.props -->
+    <!-- Authors, Copyright, PackageProjectUrl, RepositoryUrl, RepositoryType inherited from Directory.Build.props -->
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Authors>Graeme Grant</Authors>
-    <Company>Graeme Grant</Company>
-    <Copyright>Copyright (c) Graeme Grant 2025</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 

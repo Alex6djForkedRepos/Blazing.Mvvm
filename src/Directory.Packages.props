@@ -8,9 +8,11 @@
   <ItemGroup>
     <!-- Common packages - use latest compatible versions -->
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.300" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.9.50" />
 
     <!-- Analyzer packages -->
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
@@ -21,9 +23,9 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
     
     <!-- ASP.NET Core packages with conditions -->
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" Condition="'$(TargetFramework)' == 'net9.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0' or $(TargetFramework.StartsWith('net8.0-'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" Condition="$(TargetFramework.StartsWith('net9.0'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" Condition="$(TargetFramework.StartsWith('net10.0'))" />
     
     <!-- MAUI packages with proper conditions for multi-platform support -->
     <!-- .NET 8.0 MAUI packages -->
@@ -42,29 +44,29 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" Condition="$(TargetFramework.StartsWith('net10.0'))" />
     
     <!-- WebAssembly packages with conditions -->
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.0" Condition="'$(TargetFramework)' == 'net9.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.0" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0' or $(TargetFramework.StartsWith('net8.0-'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.0" Condition="$(TargetFramework.StartsWith('net9.0'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.0" Condition="$(TargetFramework.StartsWith('net10.0'))" />
     
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" Condition="'$(TargetFramework)' == 'net9.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0' or $(TargetFramework.StartsWith('net8.0-'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" Condition="$(TargetFramework.StartsWith('net9.0'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" Condition="$(TargetFramework.StartsWith('net10.0'))" />
     
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.10" PrivateAssets="all" Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0" PrivateAssets="all" Condition="'$(TargetFramework)' == 'net9.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.0" PrivateAssets="all" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.10" PrivateAssets="all" Condition="'$(TargetFramework)' == 'net8.0' or $(TargetFramework.StartsWith('net8.0-'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0" PrivateAssets="all" Condition="$(TargetFramework.StartsWith('net9.0'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.0" PrivateAssets="all" Condition="$(TargetFramework.StartsWith('net10.0'))" />
     
-    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.0" Condition="'$(TargetFramework)' == 'net9.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.0" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0' or $(TargetFramework.StartsWith('net8.0-'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.0" Condition="$(TargetFramework.StartsWith('net9.0'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.0" Condition="$(TargetFramework.StartsWith('net10.0'))" />
     
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.0" Condition="'$(TargetFramework)' == 'net9.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.0" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0' or $(TargetFramework.StartsWith('net8.0-'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.0" Condition="$(TargetFramework.StartsWith('net9.0'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.0" Condition="$(TargetFramework.StartsWith('net10.0'))" />
     
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.0" Condition="'$(TargetFramework)' == 'net9.0'" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.0" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0' or $(TargetFramework.StartsWith('net8.0-'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.0" Condition="$(TargetFramework.StartsWith('net9.0'))" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.0" Condition="$(TargetFramework.StartsWith('net10.0'))" />
     
     <!-- Tests -->
     <PackageVersion Include="bunit.web.query" Version="1.28.4-preview" />
@@ -79,11 +81,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="coverlet.collector" Version="6.0.2">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageVersion>
-    
     <!-- HybridSamples packages - use latest compatible versions -->
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
     <PackageVersion Include="Refit" Version="7.2.22" />

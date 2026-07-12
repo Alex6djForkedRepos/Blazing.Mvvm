@@ -1,0 +1,42 @@
+- name: BLAZMVVM0001 - ViewModelBase Inheritance
+  href: BLAZMVVM0001.md
+- name: BLAZMVVM0002 - ViewModelDefinition Attribute
+  href: BLAZMVVM0002.md
+- name: BLAZMVVM0003 - MvvmComponentBase Usage
+  href: BLAZMVVM0003.md
+- name: BLAZMVVM0004 - ViewParameter Attribute Usage
+  href: BLAZMVVM0004.md
+- name: BLAZMVVM0005 - Navigation Type Safety
+  href: BLAZMVVM0005.md
+- name: BLAZMVVM0006 - ViewModelKey Consistency
+  href: BLAZMVVM0006.md
+- name: BLAZMVVM0007 - Lifecycle Method Override
+  href: BLAZMVVM0007.md
+- name: BLAZMVVM0008 - Observable Property Usage
+  href: BLAZMVVM0008.md
+- name: BLAZMVVM0009 - Service Injection
+  href: BLAZMVVM0009.md
+- name: BLAZMVVM0010 - Route-ViewModel Mapping
+  href: BLAZMVVM0010.md
+- name: BLAZMVVM0011 - MvvmNavLink Type Safety
+  href: BLAZMVVM0011.md
+- name: BLAZMVVM0012 - Command Pattern
+  href: BLAZMVVM0012.md
+- name: BLAZMVVM0013 - MvvmOwningComponentBase Usage
+  href: BLAZMVVM0013.md
+- name: BLAZMVVM0014 - StateHasChanged Overuse
+  href: BLAZMVVM0014.md
+- name: BLAZMVVM0015 - Dispose Pattern
+  href: BLAZMVVM0015.md
+- name: BLAZMVVM0016 - Messenger Registration Lifetime
+  href: BLAZMVVM0016.md
+- name: BLAZMVVM0017 - RelayCommand Async Pattern
+  href: BLAZMVVM0017.md
+- name: BLAZMVVM0018 - NotifyPropertyChangedFor
+  href: BLAZMVVM0018.md
+- name: BLAZMVVM0019 - CascadingParameter vs Inject
+  href: BLAZMVVM0019.md
+- name: BLAZMVVM0020 - Route Parameter Binding
+  href: BLAZMVVM0020.md
+- name: BLAZMVVM0021 - EventCallback Two-Way Binding
+  href: BLAZMVVM0021.md

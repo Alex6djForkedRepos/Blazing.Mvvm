@@ -18,7 +18,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0001_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0001.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0001.html");
 
     // BLAZMVVM0002: ViewModelDefinition Attribute Analyzer
     public static readonly DiagnosticDescriptor ViewModelDefinitionMissing = new(
@@ -29,7 +29,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0002_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0002.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0002.html");
 
     // BLAZMVVM0003: MvvmComponentBase Usage Analyzer
     public static readonly DiagnosticDescriptor MvvmComponentBaseMissing = new(
@@ -40,7 +40,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0003_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0003.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0003.html");
 
     // BLAZMVVM0004: ViewParameter Attribute Analyzer
     public static readonly DiagnosticDescriptor ViewParameterMismatch = new(
@@ -51,7 +51,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0004_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0004.md",
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0004.html",
         customTags: WellKnownDiagnosticTags.CompilationEnd);
 
     // BLAZMVVM0005: Navigation Type Safety Analyzer
@@ -63,7 +63,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0005_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0005.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0005.html");
 
     // BLAZMVVM0006: ViewModelKey Consistency Analyzer
     public static readonly DiagnosticDescriptor ViewModelKeyInconsistent = new(
@@ -74,8 +74,19 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0006_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0006.md",
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0006.html",
         customTags: WellKnownDiagnosticTags.CompilationEnd);
+
+    // BLAZMVVM0007: Lifecycle Method Override Analyzer
+    public static readonly DiagnosticDescriptor LifecycleMethodShouldOverride = new(
+        id: "BLAZMVVM0007",
+        title: new LocalizableResourceString(nameof(Resources.BLAZMVVM0007_Title), Resources.ResourceManager, typeof(Resources)),
+        messageFormat: new LocalizableResourceString(nameof(Resources.BLAZMVVM0007_MessageFormat), Resources.ResourceManager, typeof(Resources)),
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Info,
+        isEnabledByDefault: true,
+        description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0007_Description), Resources.ResourceManager, typeof(Resources)),
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0007.html");
 
     // BLAZMVVM0008: Observable Property Analyzer
     public static readonly DiagnosticDescriptor ObservablePropertyMissing = new(
@@ -86,7 +97,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0008_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0008.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0008.html");
 
     // BLAZMVVM0009: Service Injection Analyzer
     public static readonly DiagnosticDescriptor ServiceNotRegistered = new(
@@ -97,7 +108,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0009_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0009.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0009.html");
 
     // BLAZMVVM0010: Route-ViewModel Mapping Analyzer
     public static readonly DiagnosticDescriptor PageMissingViewModel = new(
@@ -108,7 +119,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0010_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0010.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0010.html");
 
     // BLAZMVVM0011: MvvmNavLink Type Safety Analyzer
     public static readonly DiagnosticDescriptor MvvmNavLinkInvalidViewModel = new(
@@ -119,7 +130,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0011_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0011.md",
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0011.html",
         customTags: WellKnownDiagnosticTags.CompilationEnd);
 
     // BLAZMVVM0012: Command Pattern Analyzer
@@ -131,7 +142,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0012_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0012.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0012.html");
 
     // BLAZMVVM0013: MvvmOwningComponentBase Usage Analyzer
     public static readonly DiagnosticDescriptor MvvmOwningComponentBaseSuggested = new(
@@ -142,7 +153,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0013_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0013.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0013.html");
 
     // BLAZMVVM0014: StateHasChanged Overuse Analyzer
     public static readonly DiagnosticDescriptor StateHasChangedUnnecessary = new(
@@ -153,7 +164,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0014_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0014.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0014.html");
 
     // BLAZMVVM0015: Dispose Pattern Analyzer
     public static readonly DiagnosticDescriptor DisposePatternMissing = new(
@@ -164,7 +175,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0015_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0015.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0015.html");
 
     // BLAZMVVM0016: Messenger Registration Lifetime Analyzer
     public static readonly DiagnosticDescriptor MessengerRegistrationLeakPossible = new(
@@ -175,7 +186,18 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0016_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0016.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0016.html");
+
+    // BLAZMVVM0017: RelayCommand Async Pattern Analyzer
+    public static readonly DiagnosticDescriptor RelayCommandAsyncVoid = new(
+        id: "BLAZMVVM0017",
+        title: new LocalizableResourceString(nameof(Resources.BLAZMVVM0017_Title), Resources.ResourceManager, typeof(Resources)),
+        messageFormat: new LocalizableResourceString(nameof(Resources.BLAZMVVM0017_MessageFormat), Resources.ResourceManager, typeof(Resources)),
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0017_Description), Resources.ResourceManager, typeof(Resources)),
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0017.html");
 
     // BLAZMVVM0018: NotifyPropertyChangedFor Analyzer
     public static readonly DiagnosticDescriptor NotifyPropertyChangedForMissing = new(
@@ -186,7 +208,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0018_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0018.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0018.html");
 
     // BLAZMVVM0019: CascadingParameter vs Inject Analyzer
     public static readonly DiagnosticDescriptor InjectPreferredOverCascading = new(
@@ -197,7 +219,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0019_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0019.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0019.html");
 
     // BLAZMVVM0020: Route Parameter Binding Analyzer
     public static readonly DiagnosticDescriptor RouteParameterBindingMissing = new(
@@ -208,7 +230,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0020_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0020.md",
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0020.html",
         customTags: WellKnownDiagnosticTags.CompilationEnd);
 
     // BLAZMVVM0021: EventCallback Two-Way Binding Analyzer
@@ -221,7 +243,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_ManualPattern_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0021.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0021.html");
 
     public static readonly DiagnosticDescriptor EventCallbackTwoWayBindingMissingCallback = new(
         id: "BLAZMVVM0021",
@@ -231,7 +253,7 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_MissingCallback_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0021.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0021.html");
 
     public static readonly DiagnosticDescriptor EventCallbackTwoWayBindingTypeMismatch = new(
         id: "BLAZMVVM0021",
@@ -241,6 +263,6 @@ public static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: new LocalizableResourceString(nameof(Resources.BLAZMVVM0021_TypeMismatch_Description), Resources.ResourceManager, typeof(Resources)),
-        helpLinkUri: "https://github.com/gragra33/Blazing.Mvvm/docs/analyzers/BLAZMVVM0021.md");
+        helpLinkUri: "https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0021.html");
 #pragma warning restore RS2001
 }
