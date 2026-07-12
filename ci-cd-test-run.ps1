@@ -60,14 +60,9 @@ function Add-Warning { param([string]$msg) $Script:Warnings.Add($msg); Write-War
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 $RepoRoot     = $PSScriptRoot
-$SrcRoot      = Join-Path $RepoRoot 'src'
 $WorkflowDir  = Join-Path $RepoRoot '.github' 'workflows'
 $CiCdYaml     = Join-Path $WorkflowDir 'ci-cd.yml'
 $CodeQlYaml   = Join-Path $WorkflowDir 'codeql.yml'
-$SolutionPath = Join-Path $SrcRoot 'Blazing.Mvvm.slnx'
-$MvvmTests    = Join-Path $SrcRoot 'Tests' 'Blazing.Mvvm.Tests' 'Blazing.Mvvm.Tests.csproj'
-$AnalyzerTests = Join-Path $SrcRoot 'Tests' 'Blazing.Mvvm.Analyzers.Tests' 'Blazing.Mvvm.Analyzers.Tests.csproj'
-$Frameworks   = @('net8.0', 'net9.0', 'net10.0')
 
 # ── Tool check ─────────────────────────────────────────────────────────────────
 function Test-Tool {

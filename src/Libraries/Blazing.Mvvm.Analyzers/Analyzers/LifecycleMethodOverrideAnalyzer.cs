@@ -39,10 +39,22 @@ public sealed class LifecycleMethodOverrideAnalyzer : DiagnosticAnalyzer
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
-        context.RegisterSymbolAction(AnalyzeMethod, SymbolKind.Method);
+        context.RegisterCompilationStartAction(compilationContext =>
+        {
+            var supportedBaseTypes = ViewModelBaseTypeNames
+                .Select(compilationContext.Compilation.GetTypeByMetadataName)
+                .OfType<INamedTypeSymbol>()
+                .ToImmutableArray();
+
+            compilationContext.RegisterSymbolAction(
+                symbolContext => AnalyzeMethod(symbolContext, supportedBaseTypes),
+                SymbolKind.Method);
+        });
     }
 
-    private static void AnalyzeMethod(SymbolAnalysisContext context)
+    private static void AnalyzeMethod(
+        SymbolAnalysisContext context,
+        ImmutableArray<INamedTypeSymbol> supportedBaseTypes)
     {
         var method = (IMethodSymbol)context.Symbol;
 
@@ -50,7 +62,7 @@ public sealed class LifecycleMethodOverrideAnalyzer : DiagnosticAnalyzer
             method.IsStatic ||
             method.IsOverride ||
             !LifecycleMethodNames.Contains(method.Name) ||
-            !InheritsFromSupportedViewModelBase(method.ContainingType, context.Compilation))
+            !InheritsFromSupportedViewModelBase(method.ContainingType, supportedBaseTypes))
         {
             return;
         }
@@ -77,13 +89,10 @@ public sealed class LifecycleMethodOverrideAnalyzer : DiagnosticAnalyzer
             method.ContainingType.Name));
     }
 
-    private static bool InheritsFromSupportedViewModelBase(INamedTypeSymbol type, Compilation compilation)
+    private static bool InheritsFromSupportedViewModelBase(
+        INamedTypeSymbol type,
+        ImmutableArray<INamedTypeSymbol> supportedBaseTypes)
     {
-        var supportedBaseTypes = ViewModelBaseTypeNames
-            .Select(compilation.GetTypeByMetadataName)
-            .Where(static symbol => symbol is not null)
-            .ToImmutableArray();
-
         for (var baseType = type.BaseType; baseType is not null; baseType = baseType.BaseType)
         {
             if (supportedBaseTypes.Any(supportedBaseType =>
