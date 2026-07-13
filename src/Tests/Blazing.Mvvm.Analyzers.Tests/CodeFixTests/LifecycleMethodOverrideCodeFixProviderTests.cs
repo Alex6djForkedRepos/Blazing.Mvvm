@@ -48,6 +48,66 @@ public class LifecycleMethodOverrideCodeFixProviderTests
     }
 
     [Fact]
+    public async Task LifecycleMethodWithDifferentAccessibility_MatchesBaseMethod()
+    {
+        const string test = """
+            using System.Threading.Tasks;
+            using Blazing.Mvvm.ComponentModel;
+
+            public class ProductViewModel : ViewModelBase
+            {
+                protected Task {|#0:OnInitializedAsync|}() => Task.CompletedTask;
+            }
+            """;
+
+        const string fixedCode = """
+            using System.Threading.Tasks;
+            using Blazing.Mvvm.ComponentModel;
+
+            public class ProductViewModel : ViewModelBase
+            {
+                public override Task OnInitializedAsync() => Task.CompletedTask;
+            }
+            """;
+
+        var expected = new DiagnosticResult(DiagnosticDescriptors.LifecycleMethodShouldOverride)
+            .WithLocation(0)
+            .WithArguments("OnInitializedAsync", "ProductViewModel");
+
+        await VerifyCS.VerifyCodeFixAsync(test, fixedCode, expected);
+    }
+
+    [Fact]
+    public async Task LifecycleMethodWithoutExplicitAccessibility_MatchesBaseMethod()
+    {
+        const string test = """
+            using System.Threading.Tasks;
+            using Blazing.Mvvm.ComponentModel;
+
+            public class ProductViewModel : ViewModelBase
+            {
+                Task {|#0:OnInitializedAsync|}() => Task.CompletedTask;
+            }
+            """;
+
+        const string fixedCode = """
+            using System.Threading.Tasks;
+            using Blazing.Mvvm.ComponentModel;
+
+            public class ProductViewModel : ViewModelBase
+            {
+                public override Task OnInitializedAsync() => Task.CompletedTask;
+            }
+            """;
+
+        var expected = new DiagnosticResult(DiagnosticDescriptors.LifecycleMethodShouldOverride)
+            .WithLocation(0)
+            .WithArguments("OnInitializedAsync", "ProductViewModel");
+
+        await VerifyCS.VerifyCodeFixAsync(test, fixedCode, expected);
+    }
+
+    [Fact]
     public async Task VirtualLifecycleMethod_ReplacesVirtualWithOverride()
     {
         const string test = """

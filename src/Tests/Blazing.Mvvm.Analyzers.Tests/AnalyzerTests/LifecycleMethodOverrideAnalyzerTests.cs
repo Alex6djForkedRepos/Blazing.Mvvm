@@ -50,6 +50,26 @@ public class LifecycleMethodOverrideAnalyzerTests
     }
 
     [Fact]
+    public async Task LifecycleMethodWithDifferentAccessibility_ReportsDiagnostic()
+    {
+        const string test = """
+            using System.Threading.Tasks;
+            using Blazing.Mvvm.ComponentModel;
+
+            public class ProductViewModel : ViewModelBase
+            {
+                protected Task {|#0:OnInitializedAsync|}() => Task.CompletedTask;
+            }
+            """;
+
+        var expected = new DiagnosticResult(DiagnosticDescriptors.LifecycleMethodShouldOverride)
+            .WithLocation(0)
+            .WithArguments("OnInitializedAsync", "ProductViewModel");
+
+        await VerifyCS.VerifyAnalyzerAsync(test, expected);
+    }
+
+    [Fact]
     public async Task LifecycleMethodWithExplicitNew_NoDiagnostic()
     {
         const string test = """

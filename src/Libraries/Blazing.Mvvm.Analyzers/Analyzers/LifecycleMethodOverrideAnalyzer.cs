@@ -105,7 +105,7 @@ public sealed class LifecycleMethodOverrideAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    private static IMethodSymbol? FindMatchingVirtualBaseMethod(IMethodSymbol method)
+    internal static IMethodSymbol? FindMatchingVirtualBaseMethod(IMethodSymbol method)
     {
         for (var baseType = method.ContainingType.BaseType; baseType is not null; baseType = baseType.BaseType)
         {
@@ -113,7 +113,6 @@ public sealed class LifecycleMethodOverrideAnalyzer : DiagnosticAnalyzer
             {
                 if ((candidate.IsVirtual || candidate.IsAbstract || candidate.IsOverride) &&
                     !candidate.IsSealed &&
-                    method.DeclaredAccessibility == candidate.DeclaredAccessibility &&
                     HasMatchingSignature(method, candidate))
                 {
                     return candidate;

@@ -45,7 +45,7 @@ The same pattern works in markup:
 
 ```razor
 <MvvmNavLink class="nav-link"
-             TViewModel=ITestNavigationViewModel
+             TViewModel="ITestNavigationViewModel"
              Match="NavLinkMatch.All">
     <span class="oi oi-calculator" aria-hidden="true"></span>Test
 </MvvmNavLink>
@@ -55,7 +55,7 @@ You can also append route data or query strings:
 
 ```razor
 <MvvmNavLink class="nav-link"
-             TViewModel=ITestNavigationViewModel
+             TViewModel="ITestNavigationViewModel"
              RelativeUri="?test=this%20is%20a%20MvvmNavLink%20querystring%20test"
              Match="NavLinkMatch.All">
     <span class="oi oi-calculator" aria-hidden="true"></span>Test + QueryString

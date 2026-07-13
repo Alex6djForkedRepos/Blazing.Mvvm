@@ -20,7 +20,7 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
         context.EnableConcurrentExecution();
-        
+
         context.RegisterCompilationStartAction(compilationContext =>
         {
             var viewModelBaseTypes = ImmutableArray.Create(
@@ -29,6 +29,11 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
                     compilationContext.Compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.ValidatorViewModelBase))
                 .OfType<INamedTypeSymbol>()
                 .ToImmutableArray();
+
+            if (viewModelBaseTypes.IsEmpty)
+            {
+                return;
+            }
 
             // Analyze GenericNameSyntax nodes to find MvvmNavLink<TViewModel> usages
             compilationContext.RegisterSyntaxNodeAction(syntaxContext =>
@@ -41,7 +46,7 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
 
                 // Get semantic info
                 var typeInfo = syntaxContext.SemanticModel.GetTypeInfo(genericName, syntaxContext.CancellationToken);
-                
+
                 if (typeInfo.Type is not INamedTypeSymbol namedType)
                     return;
 
@@ -73,14 +78,14 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
 
                     syntaxContext.ReportDiagnostic(diagnostic);
                 }
-                
+
             }, SyntaxKind.GenericName);
 
             // Also check ObjectCreationExpressionSyntax for direct C# usage
             compilationContext.RegisterSyntaxNodeAction(syntaxContext =>
             {
                 var creation = (ObjectCreationExpressionSyntax)syntaxContext.Node;
-                
+
                 // Check if the type is a GenericNameSyntax (e.g., new MvvmNavLink<TViewModel>())
                 if (creation.Type is not GenericNameSyntax genericType)
                     return;
@@ -91,7 +96,7 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
 
                 // Get semantic info
                 var typeInfo = syntaxContext.SemanticModel.GetTypeInfo(creation, syntaxContext.CancellationToken);
-                
+
                 if (typeInfo.Type is not INamedTypeSymbol namedType)
                     return;
 
@@ -121,7 +126,7 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
 
                     syntaxContext.ReportDiagnostic(diagnostic);
                 }
-                
+
             }, SyntaxKind.ObjectCreationExpression);
         });
     }
