@@ -12,7 +12,7 @@ The configuration method `AddMvvmNavigation` has been deprecated. Update your co
 - builder.Services.AddMvvmNavigation(options =>
 + builder.Services.AddMvvm(options =>
 {
-   options.HostingModel = BlazorHostingModel.Server
+   options.HostingModelType = BlazorHostingModelType.Server;
 });
 ```
 
@@ -29,7 +29,7 @@ View model registration has been improved in version 2.0 with support for auto r
 
 + builder.Services.AddMvvm(options =>
 + {
-+    options.HostingModel = BlazorHostingModel.Server,
++    options.HostingModelType = BlazorHostingModelType.Server;
 +    options.RegisterViewModelsFromAssemblyContaining<TransientViewModel>();
 +});
 
@@ -63,7 +63,7 @@ public class MyViewModel : ViewModelBase
 +   public override Task OnInitializedAsync()
     {
     }
-{
+}
 ```
 
 ### Validation
