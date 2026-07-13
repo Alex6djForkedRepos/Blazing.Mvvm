@@ -1,5 +1,5 @@
 <p>
-  <img src="docs/github-pages/images/logo.svg" alt="Blazing.Mvvm logo" width="96">
+  <img src="https://raw.githubusercontent.com/gragra33/Blazing.Mvvm/master/docs/github-pages/images/logo.png" alt="Blazing.Mvvm logo" width="96">
 </p>
 
 # Blazing.Mvvm
