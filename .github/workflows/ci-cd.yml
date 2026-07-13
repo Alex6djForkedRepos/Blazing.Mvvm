@@ -156,13 +156,6 @@ jobs:
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
 
-      - name: Push symbols to NuGet.org
-        run: |
-          dotnet nuget push "${{ env.artifacts_dir }}/*.snupkg" \
-            --api-key "${{ secrets.NUGET_API_KEY }}" \
-            --source https://api.nuget.org/v3/index.json \
-            --skip-duplicate
-
       - name: Create GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
