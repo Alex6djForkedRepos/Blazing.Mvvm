@@ -52,7 +52,9 @@ _scripts/local-doc-gen.sh 8081
 | `index.md` | Landing page |
 | `site/` | Conceptual docs (Markdown) and their `toc.yml` |
 | `api-docs/` | Generated API reference (produced by the build) |
+| `xrefs/` | Generated cross-reference map (`xrefmap.yml`) used to resolve API links |
 | `template/` | Custom theme overrides (`public/main.css`, `public/main.js`) |
 | `images/` | Logo, favicon, and other assets |
 | `docfx.json` | DocFX build configuration |
+| `docfx-xref.json` | DocFX configuration used to generate the cross-reference map |
 | `_scripts/` | Local build helper scripts |
