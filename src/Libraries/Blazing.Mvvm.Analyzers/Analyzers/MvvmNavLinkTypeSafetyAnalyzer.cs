@@ -23,6 +23,13 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
         
         context.RegisterCompilationStartAction(compilationContext =>
         {
+            var viewModelBaseTypes = ImmutableArray.Create(
+                    compilationContext.Compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.ViewModelBase),
+                    compilationContext.Compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.RecipientViewModelBase),
+                    compilationContext.Compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.ValidatorViewModelBase))
+                .OfType<INamedTypeSymbol>()
+                .ToImmutableArray();
+
             // Analyze GenericNameSyntax nodes to find MvvmNavLink<TViewModel> usages
             compilationContext.RegisterSyntaxNodeAction(syntaxContext =>
             {
@@ -57,7 +64,7 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
 
                 // Validate the referenced symbol directly. Syntax and symbol analyzer actions can run
                 // concurrently, so relying on a separately populated collection creates a race.
-                if (!IsValidViewModel(viewModelType, syntaxContext.Compilation))
+                if (!IsValidViewModel(viewModelType, viewModelBaseTypes))
                 {
                     var diagnostic = Diagnostic.Create(
                         DiagnosticDescriptors.MvvmNavLinkInvalidViewModel,
@@ -105,7 +112,7 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
                 if (viewModelType.TypeKind == TypeKind.Interface)
                     return;
 
-                if (!IsValidViewModel(viewModelType, syntaxContext.Compilation))
+                if (!IsValidViewModel(viewModelType, viewModelBaseTypes))
                 {
                     var diagnostic = Diagnostic.Create(
                         DiagnosticDescriptors.MvvmNavLinkInvalidViewModel,
@@ -119,12 +126,14 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
         });
     }
 
-    private static bool IsValidViewModel(INamedTypeSymbol typeSymbol, Compilation compilation)
+    private static bool IsValidViewModel(
+        INamedTypeSymbol typeSymbol,
+        ImmutableArray<INamedTypeSymbol> viewModelBaseTypes)
     {
         if (!typeSymbol.Name.EndsWith(AnalyzerConstants.Naming.ViewModelSuffix) ||
             typeSymbol.TypeKind != TypeKind.Class ||
             typeSymbol.IsAbstract ||
-            !InheritsFromViewModelBase(typeSymbol, compilation))
+            !InheritsFromViewModelBase(typeSymbol, viewModelBaseTypes))
         {
             return false;
         }
@@ -137,19 +146,15 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Checks if a type inherits from ViewModelBase (same logic as BLAZMVVM0001)
     /// </summary>
-    private static bool InheritsFromViewModelBase(INamedTypeSymbol typeSymbol, Compilation compilation)
+    private static bool InheritsFromViewModelBase(
+        INamedTypeSymbol typeSymbol,
+        ImmutableArray<INamedTypeSymbol> viewModelBaseTypes)
     {
-        var viewModelBaseTypes = new[]
-        {
-            compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.ViewModelBase),
-            compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.RecipientViewModelBase),
-            compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.ValidatorViewModelBase)
-        };
-
         var baseType = typeSymbol.BaseType;
         while (baseType != null)
         {
-            if (viewModelBaseTypes.Any(vb => vb != null && SymbolEqualityComparer.Default.Equals(baseType, vb)))
+            if (viewModelBaseTypes.Any(viewModelBaseType =>
+                    SymbolEqualityComparer.Default.Equals(baseType, viewModelBaseType)))
             {
                 return true;
             }
