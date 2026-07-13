@@ -37,7 +37,8 @@ mkdir -p "$xref_dir"
 cp -f "$gen_folder/xrefmap.yml" "$xref_dir/xrefmap.yml"
 
 # Make hrefs absolute so cross-references resolve from any page depth
-sed -i "s|href: |href: ${sub_path}|g" "$xref_dir/xrefmap.yml"
+sed -i.bak "s|href: |href: ${sub_path}|g" "$xref_dir/xrefmap.yml"
+rm -f "$xref_dir/xrefmap.yml.bak"
 
 # Clean up intermediate artifacts (the main build regenerates api-docs as apiPage)
 rm -rf api-docs "$gen_folder"

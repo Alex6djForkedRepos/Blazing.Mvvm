@@ -20,7 +20,7 @@ public class LifecycleMethodOverrideCodeFixProviderTests
 
             public class ProductViewModel : ViewModelBase
             {
-                protected async Task {|#0:OnInitializedAsync|}()
+                public async Task {|#0:OnInitializedAsync|}()
                 {
                     await Task.CompletedTask;
                 }
@@ -33,7 +33,7 @@ public class LifecycleMethodOverrideCodeFixProviderTests
 
             public class ProductViewModel : ViewModelBase
             {
-                protected override async Task OnInitializedAsync()
+                public override async Task OnInitializedAsync()
                 {
                     await Task.CompletedTask;
                 }
@@ -55,7 +55,7 @@ public class LifecycleMethodOverrideCodeFixProviderTests
 
             public class ProductViewModel : ViewModelBase
             {
-                protected virtual bool {|#0:ShouldRender|}() => false;
+                public virtual bool {|#0:ShouldRender|}() => false;
             }
             """;
 
@@ -64,7 +64,7 @@ public class LifecycleMethodOverrideCodeFixProviderTests
 
             public class ProductViewModel : ViewModelBase
             {
-                protected override bool ShouldRender() => false;
+                public override bool ShouldRender() => false;
             }
             """;
 

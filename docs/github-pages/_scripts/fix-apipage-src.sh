@@ -24,7 +24,8 @@ if [ ! -d "$api_dir" ]; then
   exit 1
 fi
 
-find "$api_dir" -type f -name '*.yml' -print0 \
-  | xargs -0 sed -i '/^[[:space:]]*src:/ { s/{/%7B/g; s/}/%7D/g }'
+find "$api_dir" -type f -name '*.yml' \
+  -exec sed -i.bak '/^[[:space:]]*src:/ { s/{/%7B/g; s/}/%7D/g }' {} +
+find "$api_dir" -type f -name '*.yml.bak' -delete
 
 echo "fix-apipage-src: encoded curly braces in src URLs under $api_dir"

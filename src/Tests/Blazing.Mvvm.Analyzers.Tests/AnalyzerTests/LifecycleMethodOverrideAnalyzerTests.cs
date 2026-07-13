@@ -19,7 +19,7 @@ public class LifecycleMethodOverrideAnalyzerTests
 
             public class ProductViewModel : ViewModelBase
             {
-                protected async Task {|#0:OnInitializedAsync|}()
+                public async Task {|#0:OnInitializedAsync|}()
                 {
                     await Task.CompletedTask;
                 }
@@ -42,7 +42,7 @@ public class LifecycleMethodOverrideAnalyzerTests
 
             public class ProductViewModel : ViewModelBase
             {
-                protected override Task OnInitializedAsync() => Task.CompletedTask;
+                public override Task OnInitializedAsync() => Task.CompletedTask;
             }
             """;
 
@@ -58,7 +58,7 @@ public class LifecycleMethodOverrideAnalyzerTests
 
             public class ProductViewModel : ViewModelBase
             {
-                protected new Task OnInitializedAsync() => Task.CompletedTask;
+                public new Task OnInitializedAsync() => Task.CompletedTask;
             }
             """;
 
