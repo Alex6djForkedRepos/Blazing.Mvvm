@@ -1,3 +1,7 @@
+<p>
+  <img src="docs/github-pages/images/logo.svg" alt="Blazing.Mvvm logo" width="96">
+</p>
+
 # Blazing.Mvvm
 
 [![CI/CD](https://github.com/gragra33/Blazing.Mvvm/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/gragra33/Blazing.Mvvm/actions/workflows/ci-cd.yml)
