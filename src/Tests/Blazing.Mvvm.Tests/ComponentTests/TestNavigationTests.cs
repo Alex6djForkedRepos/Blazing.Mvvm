@@ -79,14 +79,14 @@ public class TestNavigationTests : ComponentTestBase
         const string expectedUri = "http://localhost/hextranslate";
         const string hexTranslateButtonSelector = "#hex-translate";
 
-        var fakeNavigationManager = GetService<FakeNavigationManager>();
-        var cut = RenderComponent<TestNavigation>();
+        var navigationManager = GetService<BunitNavigationManager>();
+        var cut = Render<TestNavigation>();
 
         // Act
         cut.Find(hexTranslateButtonSelector).Click();
 
         // Assert
-        fakeNavigationManager.Uri.Should().Match(expectedUri);
+        navigationManager.Uri.Should().Match(expectedUri);
     }
 
     /// <summary>
@@ -99,14 +99,14 @@ public class TestNavigationTests : ComponentTestBase
         const string expectedUri = "http://localhost/test/{echo}";  // {echo} not URL-encoded in NavigationManager
         const string testButtonSelector = "#test";
 
-        var fakeNavigationManager = GetService<FakeNavigationManager>();
-        var cut = RenderComponent<TestNavigation>();
+        var navigationManager = GetService<BunitNavigationManager>();
+        var cut = Render<TestNavigation>();
 
         // Act
         cut.Find(testButtonSelector).Click();
 
         // Assert - Navigates without parameter, so {echo} remains unsubstituted
-        fakeNavigationManager.Uri.Should().Be(expectedUri);
+        navigationManager.Uri.Should().Be(expectedUri);
     }
 
     /// <summary>
@@ -122,19 +122,19 @@ public class TestNavigationTests : ComponentTestBase
         const string testRelativePathButtonSelector = "#test-relative-path";
         const string relativePathParagraphAriaLabel = "relative path";
 
-        var cut = RenderComponent<TestNavigation>();
+        var cut = Render<TestNavigation>();
         var cutViewModel = GetViewModel<ITestNavigationViewModel>();
-        var fakeNavigationManager = GetService<FakeNavigationManager>();
+        var navigationManager = GetService<BunitNavigationManager>();
         /* Simulating setting Echo after navigation */
-        fakeNavigationManager.LocationChanged += (_, _)
-            => cut.SetParametersAndRender(parameters => parameters.Add(p => p.Echo, expectedEcho));
+        navigationManager.LocationChanged += (_, _)
+            => cut.Render(parameters => parameters.Add(p => p.Echo, expectedEcho));
 
         // Act
         cut.Find(testRelativePathButtonSelector).Click();
 
         // Assert - Parameter substitution: {echo} replaced with the parameter value
         using var _ = new AssertionScope();
-        fakeNavigationManager.Uri.Should().Be(expectedUri);
+        navigationManager.Uri.Should().Be(expectedUri);
         cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.Should().Be(expectedParagraphContent);
         cutViewModel.Echo.Should().Be(expectedEcho);
         cutViewModel.QueryString.Should().BeEmpty();
@@ -155,8 +155,8 @@ public class TestNavigationTests : ComponentTestBase
         const string queryStringParagraphAriaLabel = "query string";
         const string testQueryStringButtonSelector = "#test-query-string";
 
-        var fakeNavigationManager = GetService<FakeNavigationManager>();
-        var cut = RenderComponent<TestNavigation>();
+        var navigationManager = GetService<BunitNavigationManager>();
+        var cut = Render<TestNavigation>();
         var cutViewModel = GetViewModel<ITestNavigationViewModel>();
 
         // Act
@@ -164,7 +164,7 @@ public class TestNavigationTests : ComponentTestBase
 
         // Assert
         using var _ = new AssertionScope();
-        fakeNavigationManager.Uri.Should().Be(expectedUri);
+        navigationManager.Uri.Should().Be(expectedUri);
         cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.Should().Be(expectedParagraphContent);
         cutViewModel.Echo.Should().BeEmpty();
         cutViewModel.QueryString.Should().Be(expectedQueryString);
@@ -188,19 +188,19 @@ public class TestNavigationTests : ComponentTestBase
         const string relativePathParagraphAriaLabel = "relative path";
         const string testRelativePathQueryStringButtonSelector = "#test-relpath-qstring";
 
-        var cut = RenderComponent<TestNavigation>();
+        var cut = Render<TestNavigation>();
         var cutViewModel = GetViewModel<ITestNavigationViewModel>();
-        var fakeNavigationManager = GetService<FakeNavigationManager>();
+        var navigationManager = GetService<BunitNavigationManager>();
         /* Simulating setting Echo after navigation */
-        fakeNavigationManager.LocationChanged += (_, _) =>
-            cut.SetParametersAndRender(parameters => parameters.Add(p => p.Echo, expectedEcho));
+        navigationManager.LocationChanged += (_, _) =>
+            cut.Render(parameters => parameters.Add(p => p.Echo, expectedEcho));
 
         // Act
         cut.Find(testRelativePathQueryStringButtonSelector).Click();
 
         // Assert - Parameter substitution with query string
         using var _ = new AssertionScope();
-        fakeNavigationManager.Uri.Should().Be(expectedUri);
+        navigationManager.Uri.Should().Be(expectedUri);
         cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.Should().Be(expectedRelativePathParagraphContent);
         cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.Should().Be(expectedQueryStringParagraphContent);
         cutViewModel.Echo.Should().Be(expectedEcho);
@@ -218,14 +218,14 @@ public class TestNavigationTests : ComponentTestBase
         const string expectedUri = "http://localhost/keyedtest/{echo}";  // Not URL-encoded when navigating to template
         const string testButtonSelector = "#keyedtest";
 
-        var fakeNavigationManager = GetService<FakeNavigationManager>();
-        var cut = RenderComponent<TestKeyedNavigation>();
+        var navigationManager = GetService<BunitNavigationManager>();
+        var cut = Render<TestKeyedNavigation>();
 
         // Act
         cut.Find(testButtonSelector).Click();
 
         // Assert - Navigates without parameter, so {echo} remains unsubstituted
-        fakeNavigationManager.Uri.Should().Be(expectedUri);
+        navigationManager.Uri.Should().Be(expectedUri);
     }
 
     /// <summary>
@@ -241,19 +241,19 @@ public class TestNavigationTests : ComponentTestBase
         const string testRelativePathButtonSelector = "#keyedtest-relative-path";
         const string relativePathParagraphAriaLabel = "relative path";
 
-        var cut = RenderComponent<TestKeyedNavigation>();
+        var cut = Render<TestKeyedNavigation>();
         var cutViewModel = GetViewModel<ITestKeyedNavigationViewModel>("TestKeyedNavigationViewModel");
-        var fakeNavigationManager = GetService<FakeNavigationManager>();
+        var navigationManager = GetService<BunitNavigationManager>();
         /* Simulating setting Echo after navigation */
-        fakeNavigationManager.LocationChanged += (_, _)
-            => cut.SetParametersAndRender(parameters => parameters.Add(p => p.Echo, expectedEcho));
+        navigationManager.LocationChanged += (_, _)
+            => cut.Render(parameters => parameters.Add(p => p.Echo, expectedEcho));
 
         // Act
         cut.Find(testRelativePathButtonSelector).Click();
 
         // Assert - Keyed navigation appends relative URI instead of parameter substitution
         using var _ = new AssertionScope();
-        fakeNavigationManager.Uri.Should().Be(expectedUri);
+        navigationManager.Uri.Should().Be(expectedUri);
         cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.Should().Be(expectedParagraphContent);
         cutViewModel.Echo.Should().Be(expectedEcho);
         cutViewModel.QueryString.Should().BeEmpty();
@@ -274,8 +274,8 @@ public class TestNavigationTests : ComponentTestBase
         const string queryStringParagraphAriaLabel = "query string";
         const string testQueryStringButtonSelector = "#keyedtest-query-string";
 
-        var fakeNavigationManager = GetService<FakeNavigationManager>();
-        var cut = RenderComponent<TestKeyedNavigation>();
+        var navigationManager = GetService<BunitNavigationManager>();
+        var cut = Render<TestKeyedNavigation>();
         var cutViewModel = GetViewModel<ITestKeyedNavigationViewModel>("TestKeyedNavigationViewModel");
 
         // Act
@@ -283,7 +283,7 @@ public class TestNavigationTests : ComponentTestBase
 
         // Assert
         using var _ = new AssertionScope();
-        fakeNavigationManager.Uri.Should().Be(expectedUri);
+        navigationManager.Uri.Should().Be(expectedUri);
         cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.Should().Be(expectedParagraphContent);
         cutViewModel.Echo.Should().BeEmpty();
         cutViewModel.QueryString.Should().Be(expectedQueryString);
@@ -307,19 +307,19 @@ public class TestNavigationTests : ComponentTestBase
         const string relativePathParagraphAriaLabel = "relative path";
         const string testRelativePathQueryStringButtonSelector = "#keyedtest-relpath-qstring";
 
-        var cut = RenderComponent<TestKeyedNavigation>();
+        var cut = Render<TestKeyedNavigation>();
         var cutViewModel = GetViewModel<ITestKeyedNavigationViewModel>("TestKeyedNavigationViewModel");
-        var fakeNavigationManager = GetService<FakeNavigationManager>();
+        var navigationManager = GetService<BunitNavigationManager>();
         /* Simulating setting Echo after navigation */
-        fakeNavigationManager.LocationChanged += (_, _) =>
-            cut.SetParametersAndRender(parameters => parameters.Add(p => p.Echo, expectedEcho));
+        navigationManager.LocationChanged += (_, _) =>
+            cut.Render(parameters => parameters.Add(p => p.Echo, expectedEcho));
 
         // Act
         cut.Find(testRelativePathQueryStringButtonSelector).Click();
 
         // Assert - Keyed navigation appends relative URI with query string
         using var _ = new AssertionScope();
-        fakeNavigationManager.Uri.Should().Be(expectedUri);
+        navigationManager.Uri.Should().Be(expectedUri);
         cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.Should().Be(expectedRelativePathParagraphContent);
         cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.Should().Be(expectedQueryStringParagraphContent);
         cutViewModel.Echo.Should().Be(expectedEcho);

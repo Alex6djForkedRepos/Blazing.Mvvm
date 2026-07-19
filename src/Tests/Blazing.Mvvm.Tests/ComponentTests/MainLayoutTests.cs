@@ -27,12 +27,12 @@ public class MainLayoutTests : ComponentTestBase
         const string spanArialLabel = "navigation count";
         var expectedSpanContent = $"Navigation Count: {expectedCounter}";
 
-        var cut = RenderComponent<MainLayout>();
+        var cut = Render<MainLayout>();
         var cutViewModel = GetViewModel<MainLayoutViewModel>();
-        var fakeNavigationManager = Services.GetRequiredService<FakeNavigationManager>();
+        var navigationManager = Services.GetRequiredService<BunitNavigationManager>();
 
         // Act
-        fakeNavigationManager.NavigateTo("test");
+        navigationManager.NavigateTo("test");
 
         // Assert
         using var _ = new AssertionScope();

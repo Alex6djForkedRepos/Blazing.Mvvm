@@ -39,7 +39,7 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedName = "Lorem Ipsum";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var nameInput = cut.FindByLabelText(NameInputAriaLabel);
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
@@ -61,7 +61,7 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedEmail = "lorem@ipsum.io";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var emailInput = cut.FindByLabelText(EmailInputAriaLabel);
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
@@ -83,7 +83,7 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedPhoneNumber = "+12345678";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var phoneNumberInput = cut.FindByLabelText(PhoneNumberInputAriaLabel);
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
@@ -105,7 +105,7 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedName = "Lorem Ipsum";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
         // Act
@@ -124,7 +124,7 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedEmail = "lorem@ipsum.io";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
         // Act
@@ -143,7 +143,7 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedPhoneNumber = "+12345678";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
         // Act
@@ -163,7 +163,7 @@ public class FormTests : ComponentTestBase
         const string expectedLogMessage = "Form is valid and submitted!";
         Services.AddSingleton(_ => GetMock<ILogger<EditContactViewModel>>().Object);
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         cut.FindByLabelText(NameInputAriaLabel).Change(new ChangeEventArgs { Value = "Lorem Ipsum" });
         cut.FindByLabelText(EmailInputAriaLabel).Change(new ChangeEventArgs { Value = "lorem@ipsum.io" });
         cut.FindByLabelText(PhoneNumberInputAriaLabel).Change(new ChangeEventArgs { Value = "+12345678" });
@@ -198,7 +198,7 @@ public class FormTests : ComponentTestBase
             </ul>
             """;
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var submitButton = cut.Find(SubmitButtonSelector);
 
         // Act
@@ -232,7 +232,7 @@ public class FormTests : ComponentTestBase
             </ul>
             """;
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
 
         // Act
         cut.FindByLabelText(NameInputAriaLabel).Change(new ChangeEventArgs { Value = "L" });
@@ -255,7 +255,7 @@ public class FormTests : ComponentTestBase
     public void GivenFormIsInvalid_WhenClearButtonIsClicked_ThenFormShouldBeCleared()
     {
         // Arrange
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
 
         // Act
         cut.Find(ClearButtonSelector).Click();

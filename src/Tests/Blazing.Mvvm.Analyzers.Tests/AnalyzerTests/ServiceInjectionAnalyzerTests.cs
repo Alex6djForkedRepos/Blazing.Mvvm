@@ -18,8 +18,8 @@ public class ServiceInjectionAnalyzerTests
         await VerifyCS.VerifyAnalyzerAsync(test);
     }
 
-    [Fact(Skip = "Heuristic-based analyzer - cannot reliably detect all DI registrations at compile time")]
-    public async Task InjectedService_NotRegistered_ReportsDiagnostic()
+    [Fact]
+    public async Task ConstructorInjectedInterface_NoDiagnostic()
     {
         const string test = @"
 using Blazing.Mvvm.ComponentModel;
@@ -29,7 +29,7 @@ namespace TestNamespace
     [ViewModelDefinition]
     public class TestViewModel : ViewModelBase
     {
-        public TestViewModel({|#0:IUnregisteredService|} service)
+        public TestViewModel(IUnregisteredService service)
         {
         }
     }
@@ -37,11 +37,7 @@ namespace TestNamespace
     public interface IUnregisteredService { }
 }";
 
-        var expected = new DiagnosticResult(DiagnosticDescriptors.ServiceNotRegistered)
-            .WithLocation(0)
-            .WithArguments("IUnregisteredService");
-
-        await VerifyCS.VerifyAnalyzerAsync(test, expected);
+        await VerifyCS.VerifyAnalyzerAsync(test);
     }
 
     [Fact]
@@ -89,20 +85,20 @@ namespace TestNamespace
         await VerifyCS.VerifyAnalyzerAsync(test);
     }
 
-    [Fact(Skip = "Heuristic-based analyzer - cannot reliably detect all DI registrations at compile time")]
-    public async Task CustomServiceWithInterface_ReportsDiagnostic()
+    [Fact]
+    public async Task InjectPropertyInViewModel_ReportsDiagnostic()
     {
         const string test = @"
 using Blazing.Mvvm.ComponentModel;
+using Microsoft.AspNetCore.Components;
 
 namespace TestNamespace
 {
     [ViewModelDefinition]
     public class TestViewModel : ViewModelBase
     {
-        public TestViewModel({|#0:IMyCustomService|} service)
-        {
-        }
+        {|#0:[Inject]
+        public IMyCustomService MyCustomService { get; set; } = null!;|}
     }
 
     public interface IMyCustomService { }
@@ -110,7 +106,7 @@ namespace TestNamespace
 
         var expected = new DiagnosticResult(DiagnosticDescriptors.ServiceNotRegistered)
             .WithLocation(0)
-            .WithArguments("IMyCustomService");
+            .WithArguments("MyCustomService");
 
         await VerifyCS.VerifyAnalyzerAsync(test, expected);
     }
@@ -156,22 +152,23 @@ namespace TestNamespace
         await VerifyCS.VerifyAnalyzerAsync(test);
     }
 
-    [Fact(Skip = "Heuristic-based analyzer - cannot reliably detect all DI registrations at compile time")]
-    public async Task MultipleUnregisteredServices_ReportsMultipleDiagnostics()
+    [Fact]
+    public async Task MultipleInjectPropertiesInViewModel_ReportMultipleDiagnostics()
     {
         const string test = @"
 using Blazing.Mvvm.ComponentModel;
+using Microsoft.AspNetCore.Components;
 
 namespace TestNamespace
 {
     [ViewModelDefinition]
     public class TestViewModel : ViewModelBase
     {
-        public TestViewModel(
-            {|#0:IFirstService|} first, 
-            {|#1:ISecondService|} second)
-        {
-        }
+        {|#0:[Inject]
+        public IFirstService FirstService { get; set; } = null!;|}
+
+        {|#1:[Inject]
+        public ISecondService SecondService { get; set; } = null!;|}
     }
 
     public interface IFirstService { }
@@ -180,17 +177,17 @@ namespace TestNamespace
 
         var expected1 = new DiagnosticResult(DiagnosticDescriptors.ServiceNotRegistered)
             .WithLocation(0)
-            .WithArguments("IFirstService");
+            .WithArguments("FirstService");
 
         var expected2 = new DiagnosticResult(DiagnosticDescriptors.ServiceNotRegistered)
             .WithLocation(1)
-            .WithArguments("ISecondService");
+            .WithArguments("SecondService");
 
         await VerifyCS.VerifyAnalyzerAsync(test, expected1, expected2);
     }
 
     [Fact]
-    public async Task ConcreteClassAsService_ReportsDiagnostic()
+    public async Task ConstructorInjectedConcreteClass_NoDiagnostic()
     {
         const string test = @"
 using Blazing.Mvvm.ComponentModel;
@@ -200,7 +197,7 @@ namespace TestNamespace
     [ViewModelDefinition]
     public class TestViewModel : ViewModelBase
     {
-        public TestViewModel({|#0:MyConcreteService|} service)
+        public TestViewModel(MyConcreteService service)
         {
         }
     }
@@ -208,10 +205,6 @@ namespace TestNamespace
     public class MyConcreteService { }
 }";
 
-        var expected = new DiagnosticResult(DiagnosticDescriptors.ServiceNotRegistered)
-            .WithLocation(0)
-            .WithArguments("MyConcreteService");
-
-        await VerifyCS.VerifyAnalyzerAsync(test, expected);
+        await VerifyCS.VerifyAnalyzerAsync(test);
     }
 }

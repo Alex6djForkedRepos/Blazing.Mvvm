@@ -54,7 +54,7 @@ This package includes **21 analyzers** to help you write better Blazing.Mvvm cod
 ### Phase 4: Advanced (Specialized)
 
 - **[BLAZMVVM0006](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0006.html)**: ViewModelKey Consistency - Ensures ViewModelKey values match navigation keys
-- **[BLAZMVVM0009](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0009.html)**: Service Injection - Validates constructor parameters are registered services
+- **[BLAZMVVM0009](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0009.html)**: Service Injection - Flags `[Inject]` properties in ViewModels and recommends constructor injection
 - **[BLAZMVVM0011](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0011.html)**: MvvmNavLink Type Safety - Validates MvvmNavLink TViewModel parameter
 
 ## Code Fix Providers

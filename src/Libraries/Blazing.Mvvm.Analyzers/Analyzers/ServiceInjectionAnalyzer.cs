@@ -25,7 +25,6 @@ public class ServiceInjectionAnalyzer : DiagnosticAnalyzer
         context.EnableConcurrentExecution();
         
         context.RegisterSyntaxNodeAction(AnalyzeProperty, SyntaxKind.PropertyDeclaration);
-        context.RegisterSyntaxNodeAction(AnalyzeConstructor, SyntaxKind.ConstructorDeclaration);
     }
 
     private static void AnalyzeProperty(SyntaxNodeAnalysisContext context)
@@ -59,35 +58,6 @@ public class ServiceInjectionAnalyzer : DiagnosticAnalyzer
             propertySymbol.Name);
 
         context.ReportDiagnostic(diagnostic);
-    }
-
-    private static void AnalyzeConstructor(SyntaxNodeAnalysisContext context)
-    {
-        var constructorDeclaration = (ConstructorDeclarationSyntax)context.Node;
-        var constructorSymbol = context.SemanticModel.GetDeclaredSymbol(constructorDeclaration, context.CancellationToken);
-        if (constructorSymbol == null || !IsViewModel(constructorSymbol.ContainingType))
-        {
-            return;
-        }
-
-        foreach (var parameter in constructorDeclaration.ParameterList.Parameters)
-        {
-            var parameterSymbol = context.SemanticModel.GetDeclaredSymbol(parameter, context.CancellationToken);
-            if (parameterSymbol?.Type is not INamedTypeSymbol parameterType)
-            {
-                continue;
-            }
-
-            if (!ShouldReportConstructorService(parameterType))
-            {
-                continue;
-            }
-
-            context.ReportDiagnostic(Diagnostic.Create(
-                DiagnosticDescriptors.ServiceNotRegistered,
-                parameter.Type?.GetLocation() ?? parameter.GetLocation(),
-                parameterType.Name));
-        }
     }
 
     private static bool IsViewModel(INamedTypeSymbol typeSymbol)
@@ -141,30 +111,5 @@ public class ServiceInjectionAnalyzer : DiagnosticAnalyzer
         }
 
         return false;
-    }
-
-    private static bool ShouldReportConstructorService(INamedTypeSymbol parameterType)
-    {
-        if (parameterType.TypeKind != TypeKind.Class || parameterType.IsAbstract)
-        {
-            return false;
-        }
-
-        var fullName = parameterType.ToDisplayString();
-        if (fullName == "string" ||
-            fullName == "System.Net.Http.HttpClient" ||
-            fullName == "Microsoft.AspNetCore.Components.NavigationManager")
-        {
-            return false;
-        }
-
-        var containingNamespace = parameterType.ContainingNamespace?.ToDisplayString() ?? string.Empty;
-        if (containingNamespace.StartsWith("System", StringComparison.Ordinal) ||
-            containingNamespace.StartsWith("Microsoft.Extensions.Logging", StringComparison.Ordinal))
-        {
-            return false;
-        }
-
-        return true;
     }
 }

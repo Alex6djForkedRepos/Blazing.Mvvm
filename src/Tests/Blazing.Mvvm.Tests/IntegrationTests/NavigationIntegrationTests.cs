@@ -112,7 +112,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void FullNavigationFlow_GivenCompleteSetup_ShouldNavigateSuccessfully()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
 
         // Act - Navigate using MVVM navigation manager
@@ -129,7 +129,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void FullNavigationFlow_GivenParameterizedRoute_ShouldNavigateWithParameters()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
 
         // Act - Navigate with relative URI
@@ -146,7 +146,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void FullNavigationFlow_GivenQueryParameters_ShouldNavigateWithQuery()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
 
         // Act - Navigate with query string
@@ -163,7 +163,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void FullNavigationFlow_GivenKeyedNavigation_ShouldNavigateSuccessfully()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
 
         // Act - Navigate using key
@@ -181,7 +181,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     {
         // Arrange
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
 
         // Act - Test that the navigation manager can get URIs that NavLink would use
         var homeUri = mvvmNavigationManager.GetUri<IHomeViewModel>();
@@ -203,7 +203,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     {
         // Arrange
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
 
         // Act - Test the navigation that NavLink would perform
         mvvmNavigationManager.NavigateTo<IHomeViewModel>();
@@ -225,7 +225,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void CompleteUserJourney_MultipleNavigations_ShouldWorkCorrectly()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
 
         // Act - Simulate user journey
@@ -279,7 +279,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         Services.AddSingleton<TestIntegrationViewModel>();
 
         // Act
-        var cut = RenderComponent<TestIntegrationView>();
+        var cut = Render<TestIntegrationView>();
         var viewModel = Services.GetRequiredService<TestIntegrationViewModel>();
 
         // Assert
@@ -300,7 +300,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         Services.AddSingleton<IParameterResolver>(_ => new global::Blazing.Mvvm.Components.Parameter.ParameterResolver(ParameterResolutionMode.ViewModel));
 
         // Act
-        var cut = RenderComponent<TestParameterView>(parameters => parameters
+        var cut = Render<TestParameterView>(parameters => parameters
             .Add(p => p.TestParameter, "TestValue"));
 
         var viewModel = Services.GetRequiredService<TestParameterViewModel>();
@@ -411,7 +411,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_YarpStyleHosting_ShouldNavigateCorrectly()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         navigationManager.NavigateTo("http://localhost/api/v1/", false);
         
         var routeCache = new Mock<IViewModelRouteCache>();
@@ -447,7 +447,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_DeeplyNestedPath_ShouldNavigateCorrectly()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         navigationManager.NavigateTo("http://localhost/app/tenant/123/", false);
         
         var routeCache = new Mock<IViewModelRouteCache>();
@@ -483,7 +483,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_ConfiguredTakesPriority_ShouldUseConfigured()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         navigationManager.NavigateTo("http://localhost/detected/path/", false);
         
         var routeCache = new Mock<IViewModelRouteCache>();
@@ -520,7 +520,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_CompleteUserJourney_ShouldWorkCorrectly()
     {
         // Arrange - Simulating YARP reverse proxy scenario
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         navigationManager.NavigateTo("http://localhost/myapp/", false);
         
         var routeCache = new Mock<IViewModelRouteCache>();
@@ -575,7 +575,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_RootHosting_ShouldNavigateCorrectly()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         // NavigationManager already at root: http://localhost/
         
         var routeCache = new Mock<IViewModelRouteCache>();
@@ -611,7 +611,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_KeyedNavigation_ShouldNavigateCorrectly()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         navigationManager.NavigateTo("http://localhost/app/", false);
         
         var routeCache = new Mock<IViewModelRouteCache>();

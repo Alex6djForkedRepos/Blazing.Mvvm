@@ -23,7 +23,7 @@ public class TwoWayBindingTests : ComponentTestBase
         var viewModel = new TwoWayBindingTestViewModel();
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<TwoWayBindingTestComponent>();
+        var parentComponent = Render<TwoWayBindingTestComponent>();
         var childComponent = parentComponent.FindComponent<TwoWayBindingChildComponent>();
 
         // Act - Change ViewModel property
@@ -43,7 +43,7 @@ public class TwoWayBindingTests : ComponentTestBase
         // Arrange
         Services.AddScoped<TwoWayBindingTestViewModel>();
 
-        var parentComponent = RenderComponent<TwoWayBindingOwningTestComponent>();
+        var parentComponent = Render<TwoWayBindingOwningTestComponent>();
         var childComponent = parentComponent.FindComponent<TwoWayBindingOwningChildComponent>();
         var viewModel = childComponent.Instance.GetViewModel();
 
@@ -65,7 +65,7 @@ public class TwoWayBindingTests : ComponentTestBase
         var viewModel = new TwoWayBindingTestViewModel();
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<TwoWayBindingNoCallbackTestComponent>();
+        var parentComponent = Render<TwoWayBindingNoCallbackTestComponent>();
         var childComponent = parentComponent.FindComponent<TwoWayBindingNoCallbackChildComponent>();
 
         // Act - Change ViewModel property
@@ -86,7 +86,7 @@ public class TwoWayBindingTests : ComponentTestBase
         var viewModel = new MultiPropertyTestViewModel();
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<MultiPropertyTestComponent>();
+        var parentComponent = Render<MultiPropertyTestComponent>();
         var childComponent = parentComponent.FindComponent<MultiPropertyChildComponent>();
 
         // Act - Change multiple ViewModel properties
@@ -110,7 +110,7 @@ public class TwoWayBindingTests : ComponentTestBase
         var viewModel = new TwoWayBindingTestViewModel();
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<IncorrectNamingTestComponent>();
+        var parentComponent = Render<IncorrectNamingTestComponent>();
         var childComponent = parentComponent.FindComponent<IncorrectNamingChildComponent>();
 
         // Act - Change ViewModel property
@@ -131,7 +131,7 @@ public class TwoWayBindingTests : ComponentTestBase
         viewModel.Counter = 5;
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<TwoWayBindingTestComponent>(parameters => parameters
+        var parentComponent = Render<TwoWayBindingTestComponent>(parameters => parameters
             .Add(p => p.Counter, 5));
         
         var initialCount = parentComponent.Instance.CallbackInvokedCount;
@@ -153,7 +153,7 @@ public class TwoWayBindingTests : ComponentTestBase
         var viewModel = new TwoWayBindingTestViewModel();
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<TwoWayBindingTestComponent>();
+        var parentComponent = Render<TwoWayBindingTestComponent>();
         
         // Verify component was created and is functioning
         parentComponent.Instance.Should().NotBeNull();

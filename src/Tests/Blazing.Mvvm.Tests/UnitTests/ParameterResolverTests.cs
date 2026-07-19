@@ -11,15 +11,15 @@ namespace Blazing.Mvvm.Tests.UnitTests;
 /// </summary>
 public partial class ParameterResolverTests : ComponentTestBase
 {
-    private static readonly Dictionary<string, ComponentParameter> Parameters = new()
+    private static readonly Dictionary<string, object?> Parameters = new()
     {
-        { nameof(IParameterTestView.Parameter1), ComponentParameter.CreateParameter(nameof(IParameterTestView.Parameter1), "Parameter1Value") },
-        { nameof(IParameterTestView.Parameter2), ComponentParameter.CreateParameter(nameof(IParameterTestView.Parameter2), 10)  },
-        { nameof(IParameterTestView.Parameter3), ComponentParameter.CreateParameter(nameof(IParameterTestView.Parameter3), null) },
-        { nameof(IParameterTestView.ParentView), ComponentParameter. CreateCascadingValue(null, new TestParameterView()) },
-        { IParameterTestView.NamedCascadingParameterName, ComponentParameter.CreateCascadingValue(IParameterTestView.NamedCascadingParameterName, new TestParameterViewModel()) },
-        { nameof(IParameterTestView.QueryParameter), ComponentParameter.CreateCascadingValue(nameof(IParameterTestView.QueryParameter), "namedQueryParameterValue") },
-        { IParameterTestView.NamedQueryParameterName, ComponentParameter.CreateCascadingValue(IParameterTestView.NamedQueryParameterName, DateOnly.FromDateTime(DateTime.Now)) }
+        { nameof(IParameterTestView.Parameter1), "Parameter1Value" },
+        { nameof(IParameterTestView.Parameter2), 10 },
+        { nameof(IParameterTestView.Parameter3), null },
+        { nameof(IParameterTestView.ParentView), new TestParameterView() },
+        { IParameterTestView.NamedCascadingParameterName, new TestParameterViewModel() },
+        { nameof(IParameterTestView.QueryParameter), "namedQueryParameterValue" },
+        { IParameterTestView.NamedQueryParameterName, DateOnly.FromDateTime(DateTime.Now) }
     };
 
     /// <summary>
@@ -213,7 +213,7 @@ public partial class ParameterResolverTests : ComponentTestBase
         Services.AddSingleton<IParameterResolver>(_ => new ParameterResolver(ParameterResolutionMode.ViewModel));
 
         // Act
-        Action act = () => RenderComponent<TestParameterViewDuplicateKeyOnViewModel>(
+        Action act = () => Render<TestParameterViewDuplicateKeyOnViewModel>(
             parameters => parameters.Add(p => p.Parameter1, "Parameter1"));
 
         // Assert
@@ -231,7 +231,7 @@ public partial class ParameterResolverTests : ComponentTestBase
         Services.AddSingleton<IParameterResolver>(_ => new ParameterResolver(ParameterResolutionMode.ViewModel));
 
         // Act
-        Action act = () => RenderComponent<TestParameterNoSetterOnViewModel>(
+        Action act = () => Render<TestParameterNoSetterOnViewModel>(
             parameters => parameters.Add(p => p.Parameter1, "Parameter1"));
 
         // Assert
@@ -290,12 +290,12 @@ public partial class ParameterResolverTests : ComponentTestBase
             throw new KeyNotFoundException($"The parameter '{name}' was not found.");
         }
 
-        if (value.Value is null)
+        if (value is null)
         {
             throw new ArgumentNullException($"The parameter '{name}' was null.");
         }
 
-        return (T)value.Value;
+        return (T)value;
     }
 
     private IRenderedComponent<T> RenderAndSetParameters<T>()
@@ -303,14 +303,23 @@ public partial class ParameterResolverTests : ComponentTestBase
     {
         // We need to navigate to the component to ensure that the query parameters are set.
         // https://bunit.dev/docs/providing-input/passing-parameters-to-components.html?tabs=csharp#passing-query-parameters-supplyparameterfromquery-to-a-component
-        var fakeNavigationManager = Services.GetRequiredService<NavigationManager>();
-        var uri = fakeNavigationManager.GetUriWithQueryParameters(new Dictionary<string, object?>
+        var navigationManager = Services.GetRequiredService<NavigationManager>();
+        var uri = navigationManager.GetUriWithQueryParameters(new Dictionary<string, object?>
         {
-            { nameof(IParameterTestView.QueryParameter), Parameters[nameof(IParameterTestView.QueryParameter)].Value},
-            { IParameterTestView.NamedQueryParameterName,  Parameters[IParameterTestView.NamedQueryParameterName].Value}
+            { nameof(IParameterTestView.QueryParameter), Parameters[nameof(IParameterTestView.QueryParameter)]},
+            { IParameterTestView.NamedQueryParameterName, Parameters[IParameterTestView.NamedQueryParameterName]}
         });
-        fakeNavigationManager.NavigateTo(uri);
+        navigationManager.NavigateTo(uri);
 
-        return RenderComponent<T>([.. Parameters.Values]);
+        return Render<T>(parameters =>
+        {
+            parameters.TryAdd(nameof(IParameterTestView.Parameter1), GetParamaterValue<string>(nameof(IParameterTestView.Parameter1)));
+            parameters.TryAdd(nameof(IParameterTestView.Parameter2), GetParamaterValue<int>(nameof(IParameterTestView.Parameter2)));
+            parameters.TryAdd<string?>(nameof(IParameterTestView.Parameter3), null);
+            parameters.AddCascadingValue<IParameterTestView>(GetParamaterValue<IParameterTestView>(nameof(IParameterTestView.ParentView)));
+            parameters.AddCascadingValue(IParameterTestView.NamedCascadingParameterName, GetParamaterValue<TestParameterViewModel>(IParameterTestView.NamedCascadingParameterName));
+            parameters.AddCascadingValue(nameof(IParameterTestView.QueryParameter), GetParamaterValue<string>(nameof(IParameterTestView.QueryParameter)));
+            parameters.AddCascadingValue(IParameterTestView.NamedQueryParameterName, GetParamaterValue<DateOnly>(IParameterTestView.NamedQueryParameterName));
+        });
     }
 }

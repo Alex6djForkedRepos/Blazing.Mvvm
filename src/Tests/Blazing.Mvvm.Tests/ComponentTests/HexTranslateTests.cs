@@ -37,7 +37,7 @@ public class HexTranslateTests : ComponentTestBase
     public void GivenComponentRendered_WhenAsciiInputInvalid_ThenSendAsciiButtonShouldBeDisabled(string input)
     {
         // Arrange
-        var cut = RenderComponent<HexTranslate>();
+        var cut = Render<HexTranslate>();
 
         // Act
         cut.FindByLabelText(AsciiInputAriaLabel).Input(new ChangeEventArgs { Value = input });
@@ -56,7 +56,7 @@ public class HexTranslateTests : ComponentTestBase
     public void GivenComponentRendered_WhenHexInputInvalid_ThenSendHexButtonShouldBeDisabled(string input)
     {
         // Arrange
-        var cut = RenderComponent<HexTranslate>();
+        var cut = Render<HexTranslate>();
 
         // Act
         cut.FindByLabelText(HexInputAriaLabel).Input(new ChangeEventArgs { Value = input });
@@ -75,7 +75,7 @@ public class HexTranslateTests : ComponentTestBase
         const string input = "some text here";
         const string expectedHex = "736F6D6520746578742068657265";
 
-        var cut = RenderComponent<HexTranslate>();
+        var cut = Render<HexTranslate>();
         var textEntryViewModel = GetViewModel<TextEntryViewModel>();
         var hexEntryViewModel = GetViewModel<HexEntryViewModel>();
         var asciiTextInput = cut.FindByLabelText(AsciiInputAriaLabel);
@@ -103,7 +103,7 @@ public class HexTranslateTests : ComponentTestBase
         const string input = "736F6D6520746578742068657265";
         const string expectedAscii = "some text here";
 
-        var cut = RenderComponent<HexTranslate>();
+        var cut = Render<HexTranslate>();
         var hexEntryViewModel = GetViewModel<HexEntryViewModel>();
         var textEntryViewModel = GetViewModel<TextEntryViewModel>();
         var hexTextInput = cut.FindByLabelText(HexInputAriaLabel);
@@ -132,7 +132,7 @@ public class HexTranslateTests : ComponentTestBase
         const string asciiInput = "some text here";
         const string hexInput = "736F6D6520746578742068657265";
 
-        var cut = RenderComponent<HexTranslate>();
+        var cut = Render<HexTranslate>();
         var hexEntryViewModel = GetViewModel<HexEntryViewModel>();
         var textEntryViewModel = GetViewModel<TextEntryViewModel>();
 

@@ -36,7 +36,7 @@ public class CounterTests : ComponentTestBase
         logger.Setup(x => x.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
 
         // Act
-        RenderComponent<Counter>();
+        Render<Counter>();
 
         // Assert
         logger.VerifyLog(LogLevel.Information, expectedLogMessage, Times.Once());
@@ -54,7 +54,7 @@ public class CounterTests : ComponentTestBase
         var logger = GetMock<ILogger<CounterViewModel>>();
         logger.Setup(x => x.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
 
-        var cut = RenderComponent<Counter>();
+        var cut = Render<Counter>();
 
         // Act
         cut.Render();
@@ -74,7 +74,7 @@ public class CounterTests : ComponentTestBase
         const int expectedCount = 1;
         var expectedParagraphContent = $"Current count: {expectedCount}";
 
-        var cut = RenderComponent<Counter>();
+        var cut = Render<Counter>();
         var cutViewModel = GetViewModel<CounterViewModel>();
 
         // Act
@@ -97,7 +97,7 @@ public class CounterTests : ComponentTestBase
         const int expectedCount = 0;
         var expectedParagraphContent = $"Current count: {expectedCount}";
 
-        var cut = RenderComponent<Counter>();
+        var cut = Render<Counter>();
         var cutViewModel = GetViewModel<CounterViewModel>();
         cutViewModel.CurrentCount = 5;
 

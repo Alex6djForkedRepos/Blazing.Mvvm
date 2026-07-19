@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Collections.Concurrent;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -23,53 +22,38 @@ public class NavigationTypeSafetyAnalyzer : DiagnosticAnalyzer
         context.EnableConcurrentExecution();
         context.RegisterCompilationStartAction(compilationContext =>
         {
-            var viewModelRoutes = new ConcurrentDictionary<string, byte>(StringComparer.Ordinal);
-
-            compilationContext.RegisterSymbolAction(symbolContext =>
-            {
-                CollectViewModelRoutes(symbolContext, viewModelRoutes);
-            }, SymbolKind.NamedType);
-
             compilationContext.RegisterSyntaxNodeAction(nodeContext =>
             {
-                AnalyzeNavigateToInvocation(nodeContext, viewModelRoutes);
+                AnalyzeNavigateToInvocation(nodeContext);
             }, SyntaxKind.InvocationExpression);
         });
     }
 
-    private static void CollectViewModelRoutes(SymbolAnalysisContext context, ConcurrentDictionary<string, byte> viewModelRoutes)
+    private static bool IsValidNavigationTarget(INamedTypeSymbol namedTypeSymbol, Compilation compilation)
     {
-        var namedTypeSymbol = (INamedTypeSymbol)context.Symbol;
-
         // Check if the class name ends with "ViewModel"
         if (!namedTypeSymbol.Name.EndsWith(AnalyzerConstants.Naming.ViewModelSuffix))
         {
-            return;
+            return false;
         }
 
         // Skip interfaces, abstract classes
         if (namedTypeSymbol.TypeKind != TypeKind.Class || namedTypeSymbol.IsAbstract)
         {
-            return;
+            return false;
         }
 
         // Navigation requires DI registration, which requires BOTH:
         // 1. Inheritance from ViewModelBase (architectural requirement)
         // 2. [ViewModelDefinition] attribute (DI registration requirement)
-        var inheritsFromBase = InheritsFromViewModelBase(namedTypeSymbol, context.Compilation);
+        var inheritsFromBase = InheritsFromViewModelBase(namedTypeSymbol, compilation);
         var hasDefinition = HasViewModelDefinitionAttribute(namedTypeSymbol);
-        var hasAssociatedRoute = HasAssociatedRoute(namedTypeSymbol, context.Compilation);
+        var hasAssociatedRoute = HasAssociatedRoute(namedTypeSymbol, compilation);
 
-        // Only ViewModels with BOTH are valid navigation targets
-        if (inheritsFromBase && hasDefinition && hasAssociatedRoute)
-        {
-            viewModelRoutes.TryAdd(namedTypeSymbol.ToDisplayString(), 0);
-        }
+        return inheritsFromBase && hasDefinition && hasAssociatedRoute;
     }
 
-    private static void AnalyzeNavigateToInvocation(
-        SyntaxNodeAnalysisContext context,
-        ConcurrentDictionary<string, byte> viewModelRoutes)
+    private static void AnalyzeNavigateToInvocation(SyntaxNodeAnalysisContext context)
     {
         var invocationExpression = (InvocationExpressionSyntax)context.Node;
 
@@ -102,8 +86,9 @@ public class NavigationTypeSafetyAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Check if the ViewModel has a valid route mapping
-        if (!viewModelRoutes.ContainsKey(namedViewModelType.ToDisplayString()))
+        // Validate the referenced symbol directly. Symbol and syntax analyzer actions can run
+        // concurrently, so relying on a separately populated collection creates a race.
+        if (!IsValidNavigationTarget(namedViewModelType, context.Compilation))
         {
             var diagnostic = Diagnostic.Create(
                 DiagnosticDescriptors.InvalidNavigationTarget,

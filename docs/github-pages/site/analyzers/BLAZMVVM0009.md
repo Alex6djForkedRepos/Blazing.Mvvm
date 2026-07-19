@@ -4,17 +4,27 @@
 
 Services should be injected via constructor in ViewModels, not using `[Inject]` attribute.
 
+## What This Rule Checks
+
+`BLAZMVVM0009` reports properties decorated with
+`Microsoft.AspNetCore.Components.InjectAttribute` when the containing type is a
+ViewModel. Constructor-injected dependencies do not produce this diagnostic.
+
+This rule does not inspect the application's dependency injection registrations
+or determine whether constructor parameters are registered. It also does not
+detect service locator usage or services created directly with `new`.
+
 ## Severity
 
 **Warning** - Using `[Inject]` in ViewModels is not the recommended pattern.
 
 ## Why This Rule Exists
 
--   ViewModels should use constructor injection, not property injection
--   Makes dependencies explicit and testable
--   Follows dependency injection best practices
--   `[Inject]` is for Blazor components, not ViewModels
--   Enables proper unit testing
+- ViewModels should use constructor injection, not property injection
+- Makes dependencies explicit and testable
+- Follows dependency injection best practices
+- `[Inject]` is for Blazor components, not ViewModels
+- Enables proper unit testing
 
 ## ✅ DO: Correct Usage
 
@@ -65,7 +75,7 @@ public class ProductViewModel : ViewModelBase
     public ILogger<ProductViewModel> Logger { get; set; } = null!;
 }
 
-// ❌ Wrong: Service locator pattern
+// Related anti-pattern, but not detected by BLAZMVVM0009: Service locator
 [ViewModelDefinition]
 public class ProductViewModel : ViewModelBase
 {
@@ -79,7 +89,7 @@ public class ProductViewModel : ViewModelBase
     }
 }
 
-// ❌ Wrong: New-ing up services
+// Related anti-pattern, but not detected by BLAZMVVM0009: Creating services directly
 [ViewModelDefinition]
 public class ProductViewModel : ViewModelBase
 {
@@ -204,14 +214,14 @@ public class ProductViewModelTests
 
 ## Code Fix
 
-This analyzer provides an automatic code fix that converts property injection to constructor injection.
+No automatic code fix is currently provided for `BLAZMVVM0009`. Convert property injection to constructor injection manually, as shown above.
 
 ## Related Analyzers
 
--   **[BLAZMVVM0001](BLAZMVVM0001.md)**: ViewModelBase Inheritance
--   **[BLAZMVVM0002](BLAZMVVM0002.md)**: ViewModelDefinition Attribute
+- **[BLAZMVVM0001](BLAZMVVM0001.md)**: ViewModelBase Inheritance
+- **[BLAZMVVM0002](BLAZMVVM0002.md)**: ViewModelDefinition Attribute
 
 ## Additional Resources
 
--   [Dependency Injection in Blazor](https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/dependency-injection)
--   [Constructor Injection Best Practices](https://github.com/gragra33/Blazing.Mvvm#dependency-injection)
+- [Dependency Injection in Blazor](https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/dependency-injection)
+- [Constructor Injection Best Practices](https://github.com/gragra33/Blazing.Mvvm#dependency-injection)

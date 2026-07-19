@@ -28,7 +28,7 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandExecutes_ThenButtonDisablesAndReEnables()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var button = cut.Find("#load-data");
 
         // Act - Initial state
@@ -60,7 +60,7 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandExecutes_ThenIsRunningStateIsDisplayed()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
 
         // Act - Execute command
         cut.Find("#load-data").Click();
@@ -86,7 +86,7 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandCompletes_ThenResultIsUpdatedInUI()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
 
         // Act
         cut.Find("#load-data").Click();
@@ -107,7 +107,7 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenParameterizedCommandExecutes_ThenParameterIsProcessed()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
 
         // Act
         cut.Find("#process-data").Click();
@@ -127,7 +127,7 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandExecutedMultipleTimes_ThenEachExecutionUpdatesUI()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var button = cut.Find("#fast-command");
 
         // Act - Execute three times
@@ -152,7 +152,7 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandIsRunning_ThenCanExecuteStateIsDisplayed()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
 
         // Act - Start command
         cut.Find("#slow-command").Click();
@@ -179,7 +179,7 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandExecutes_ThenUIUpdatesAreNonBlocking()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
         // Act - Execute command and immediately check we can access properties
@@ -211,7 +211,7 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenMultipleCommandsExist_ThenEachHasIndependentIsRunningState()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
         // Act - Start slow command
@@ -234,7 +234,7 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenComponentRendersAndDisposed_ThenNoExceptionsOccur()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
         // Act - Execute command and dispose while running
@@ -255,7 +255,7 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenButtonClickedRapidly_ThenButtonIsDisabledWhileRunning()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var button = cut.Find("#slow-command");
         var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
@@ -289,7 +289,7 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandExecutes_ThenButtonEnabledStateMatchesCanExecute()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var button = cut.Find("#load-data");
         var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
