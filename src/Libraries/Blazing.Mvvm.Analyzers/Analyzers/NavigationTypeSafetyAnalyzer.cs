@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -22,9 +23,11 @@ public class NavigationTypeSafetyAnalyzer : DiagnosticAnalyzer
         context.EnableConcurrentExecution();
         context.RegisterCompilationStartAction(compilationContext =>
         {
+            var navigationTargetCache = new ConcurrentDictionary<INamedTypeSymbol, Lazy<bool>>(SymbolEqualityComparer.Default);
+
             compilationContext.RegisterSyntaxNodeAction(nodeContext =>
             {
-                AnalyzeNavigateToInvocation(nodeContext);
+                AnalyzeNavigateToInvocation(nodeContext, navigationTargetCache);
             }, SyntaxKind.InvocationExpression);
         });
     }
@@ -53,7 +56,9 @@ public class NavigationTypeSafetyAnalyzer : DiagnosticAnalyzer
         return inheritsFromBase && hasDefinition && hasAssociatedRoute;
     }
 
-    private static void AnalyzeNavigateToInvocation(SyntaxNodeAnalysisContext context)
+    private static void AnalyzeNavigateToInvocation(
+        SyntaxNodeAnalysisContext context,
+        ConcurrentDictionary<INamedTypeSymbol, Lazy<bool>> navigationTargetCache)
     {
         var invocationExpression = (InvocationExpressionSyntax)context.Node;
 
@@ -88,7 +93,12 @@ public class NavigationTypeSafetyAnalyzer : DiagnosticAnalyzer
 
         // Validate the referenced symbol directly. Symbol and syntax analyzer actions can run
         // concurrently, so relying on a separately populated collection creates a race.
-        if (!IsValidNavigationTarget(namedViewModelType, context.Compilation))
+        var compilation = context.Compilation;
+        var isValidNavigationTarget = navigationTargetCache.GetOrAdd(
+            namedViewModelType,
+            typeSymbol => new Lazy<bool>(() => IsValidNavigationTarget(typeSymbol, compilation))).Value;
+
+        if (!isValidNavigationTarget)
         {
             var diagnostic = Diagnostic.Create(
                 DiagnosticDescriptors.InvalidNavigationTarget,

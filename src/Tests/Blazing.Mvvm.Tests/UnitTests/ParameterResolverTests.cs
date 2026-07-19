@@ -19,7 +19,7 @@ public partial class ParameterResolverTests : ComponentTestBase
         { nameof(IParameterTestView.ParentView), new TestParameterView() },
         { IParameterTestView.NamedCascadingParameterName, new TestParameterViewModel() },
         { nameof(IParameterTestView.QueryParameter), "namedQueryParameterValue" },
-        { IParameterTestView.NamedQueryParameterName, DateOnly.FromDateTime(DateTime.Now) }
+        { IParameterTestView.NamedQueryParameterName, new DateOnly(2024, 1, 15) }
     };
 
     /// <summary>
@@ -292,7 +292,7 @@ public partial class ParameterResolverTests : ComponentTestBase
 
         if (value is null)
         {
-            throw new ArgumentNullException($"The parameter '{name}' was null.");
+            throw new ArgumentNullException(name, $"The parameter '{name}' was null.");
         }
 
         return (T)value;
@@ -318,8 +318,6 @@ public partial class ParameterResolverTests : ComponentTestBase
             parameters.TryAdd<string?>(nameof(IParameterTestView.Parameter3), null);
             parameters.AddCascadingValue<IParameterTestView>(GetParamaterValue<IParameterTestView>(nameof(IParameterTestView.ParentView)));
             parameters.AddCascadingValue(IParameterTestView.NamedCascadingParameterName, GetParamaterValue<TestParameterViewModel>(IParameterTestView.NamedCascadingParameterName));
-            parameters.AddCascadingValue(nameof(IParameterTestView.QueryParameter), GetParamaterValue<string>(nameof(IParameterTestView.QueryParameter)));
-            parameters.AddCascadingValue(IParameterTestView.NamedQueryParameterName, GetParamaterValue<DateOnly>(IParameterTestView.NamedQueryParameterName));
         });
     }
 }
