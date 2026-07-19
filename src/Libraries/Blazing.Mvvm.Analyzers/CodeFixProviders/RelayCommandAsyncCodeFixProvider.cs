@@ -60,8 +60,13 @@ public sealed class RelayCommandAsyncCodeFixProvider : CodeFixProvider
         var updatedMethod = method.WithReturnType(taskType).WithAdditionalAnnotations(Formatter.Annotation);
         var updatedRoot = compilationUnit.ReplaceNode(method, updatedMethod);
 
-        if (!compilationUnit.Usings.Any(usingDirective =>
-                usingDirective.Name?.ToString() == "System.Threading.Tasks"))
+        var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+        var taskSymbol = semanticModel?.Compilation.GetTypeByMetadataName("System.Threading.Tasks.Task");
+        var taskIsInScope = taskSymbol is not null && semanticModel!
+            .LookupNamespacesAndTypes(method.ReturnType.SpanStart, name: "Task")
+            .Any(symbol => SymbolEqualityComparer.Default.Equals(symbol, taskSymbol));
+
+        if (!taskIsInScope)
         {
             var lineEnding = compilationUnit.ToFullString().IndexOf("\r\n", StringComparison.Ordinal) >= 0
                 ? "\r\n"

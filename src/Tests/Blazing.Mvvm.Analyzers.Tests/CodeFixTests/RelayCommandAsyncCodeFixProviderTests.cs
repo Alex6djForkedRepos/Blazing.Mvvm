@@ -85,4 +85,42 @@ public class RelayCommandAsyncCodeFixProviderTests
 
         await VerifyCS.VerifyCodeFixAsync(test, fixedCode, expected);
     }
+
+    [Fact]
+    public async Task AsyncVoidRelayCommand_GlobalTasksUsing_DoesNotAddFileUsing()
+    {
+        const string test = """
+            global using System.Threading.Tasks;
+            using CommunityToolkit.Mvvm.Input;
+
+            public partial class ProductViewModel
+            {
+                [RelayCommand]
+                private async void {|#0:Save|}()
+                {
+                    await Task.CompletedTask;
+                }
+            }
+            """;
+
+        const string fixedCode = """
+            global using System.Threading.Tasks;
+            using CommunityToolkit.Mvvm.Input;
+
+            public partial class ProductViewModel
+            {
+                [RelayCommand]
+                private async Task Save()
+                {
+                    await Task.CompletedTask;
+                }
+            }
+            """;
+
+        var expected = new DiagnosticResult(DiagnosticDescriptors.RelayCommandAsyncVoid)
+            .WithLocation(0)
+            .WithArguments("Save");
+
+        await VerifyCS.VerifyCodeFixAsync(test, fixedCode, expected);
+    }
 }

@@ -78,6 +78,10 @@ jobs:
         id: get_version
         shell: bash
         run: |
+          if [[ -z "$GitBuildVersionSimple" ]]; then
+            echo "::error::Nerdbank.GitVersioning did not populate GitBuildVersionSimple"
+            exit 1
+          fi
           package_version="$GitBuildVersionSimple"
           if [[ "${{ github.ref_name }}" == "develop" ]]; then
             package_version+="-beta"
