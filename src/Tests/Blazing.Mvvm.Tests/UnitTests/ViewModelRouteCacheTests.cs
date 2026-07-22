@@ -37,8 +37,8 @@ public class ViewModelRouteCacheTests
         var cache = new ViewModelRouteCache(_loggerMock.Object, _configuration);
 
         // Assert
-        cache.ViewModelRoutes.Should().NotBeNull();
-        cache.KeyedViewModelRoutes.Should().NotBeNull();
+        cache.ViewModelRoutes.ShouldNotBeNull();
+        cache.KeyedViewModelRoutes.ShouldNotBeNull();
     }
 
     /// <summary>
@@ -54,9 +54,8 @@ public class ViewModelRouteCacheTests
         var cache = new ViewModelRouteCache(_loggerMock.Object, _configuration);
 
         // Assert
-        using var _ = new AssertionScope();
-        cache.ViewModelRoutes.Should().ContainKey(typeof(TestViewModel));
-        cache.ViewModelRoutes[typeof(TestViewModel)].Should().Be("/test");
+        cache.ViewModelRoutes.ContainsKey(typeof(TestViewModel)).ShouldBeTrue();
+        cache.ViewModelRoutes[typeof(TestViewModel)].ShouldBe("/test");
     }
 
     /// <summary>
@@ -72,9 +71,8 @@ public class ViewModelRouteCacheTests
         var cache = new ViewModelRouteCache(_loggerMock.Object, _configuration);
 
         // Assert
-        using var _ = new AssertionScope();
-        cache.KeyedViewModelRoutes.Should().ContainKey("TestKey");
-        cache.KeyedViewModelRoutes["TestKey"].Should().Be("/keyed-test");
+        cache.KeyedViewModelRoutes.ContainsKey("TestKey").ShouldBeTrue();
+        cache.KeyedViewModelRoutes["TestKey"].ShouldBe("/keyed-test");
     }
 
     /// <summary>
@@ -91,7 +89,7 @@ public class ViewModelRouteCacheTests
         var cache = new ViewModelRouteCache(_loggerMock.Object, _configuration);
 
         // Assert
-        cache.ViewModelRoutes[typeof(TestViewModel)].Should().Be("/app/test");
+        cache.ViewModelRoutes[typeof(TestViewModel)].ShouldBe("/app/test");
     }
 
     /// <summary>
@@ -108,7 +106,7 @@ public class ViewModelRouteCacheTests
         var cache = new ViewModelRouteCache(_loggerMock.Object, _configuration);
 
         // Assert
-        cache.ViewModelRoutes[typeof(TestViewModel)].Should().Be("/app/test");
+        cache.ViewModelRoutes[typeof(TestViewModel)].ShouldBe("/app/test");
     }
 
     /// <summary>
@@ -124,7 +122,7 @@ public class ViewModelRouteCacheTests
         var cache = new ViewModelRouteCache(_loggerMock.Object, _configuration);
 
         // Assert
-        cache.ViewModelRoutes.Should().NotContainKey(typeof(TestViewModelWithoutRoute));
+        cache.ViewModelRoutes.ContainsKey(typeof(TestViewModelWithoutRoute)).ShouldBeFalse();
     }
 
     /// <summary>
@@ -140,9 +138,8 @@ public class ViewModelRouteCacheTests
         var cache = new ViewModelRouteCache(_loggerMock.Object, _configuration);
 
         // Assert
-        using var _ = new AssertionScope();
-        cache.ViewModelRoutes.Should().ContainKey(typeof(TestViewModelWithMultipleRoutes));
-        cache.ViewModelRoutes[typeof(TestViewModelWithMultipleRoutes)].Should().Be("/first");
+        cache.ViewModelRoutes.ContainsKey(typeof(TestViewModelWithMultipleRoutes)).ShouldBeTrue();
+        cache.ViewModelRoutes[typeof(TestViewModelWithMultipleRoutes)].ShouldBe("/first");
     }
 
     /// <summary>
@@ -164,7 +161,7 @@ public class ViewModelRouteCacheTests
         // This test verifies the cache handles exceptions gracefully
         // Act & Assert should not throw
         var act = () => new ViewModelRouteCache(_loggerMock.Object, _configuration);
-        act.Should().NotThrow();
+        Should.NotThrow(act);
     }
 
     /// <summary>
@@ -180,9 +177,8 @@ public class ViewModelRouteCacheTests
         var cache = new ViewModelRouteCache(_loggerMock.Object, _configuration);
 
         // Assert
-        using var _ = new AssertionScope();
-        cache.ViewModelRoutes.Should().BeEmpty();
-        cache.KeyedViewModelRoutes.Should().BeEmpty();
+        cache.ViewModelRoutes.ShouldBeEmpty();
+        cache.KeyedViewModelRoutes.ShouldBeEmpty();
     }
 
     /// <summary>
@@ -198,11 +194,10 @@ public class ViewModelRouteCacheTests
         var cache = new ViewModelRouteCache(_loggerMock.Object, _configuration);
 
         // Assert
-        using var _ = new AssertionScope();
-        cache.ViewModelRoutes.Should().ContainKey(typeof(TestViewModelWithRouteAndKey));
-        cache.ViewModelRoutes[typeof(TestViewModelWithRouteAndKey)].Should().Be("/route-and-key");
-        cache.KeyedViewModelRoutes.Should().ContainKey("RouteAndKey");
-        cache.KeyedViewModelRoutes["RouteAndKey"].Should().Be("/route-and-key");
+        cache.ViewModelRoutes.ContainsKey(typeof(TestViewModelWithRouteAndKey)).ShouldBeTrue();
+        cache.ViewModelRoutes[typeof(TestViewModelWithRouteAndKey)].ShouldBe("/route-and-key");
+        cache.KeyedViewModelRoutes.ContainsKey("RouteAndKey").ShouldBeTrue();
+        cache.KeyedViewModelRoutes["RouteAndKey"].ShouldBe("/route-and-key");
     }
 
     /// <summary>
@@ -218,9 +213,8 @@ public class ViewModelRouteCacheTests
         var cache = new ViewModelRouteCache(_loggerMock.Object, _configuration);
 
         // Assert
-        using var _ = new AssertionScope();
-        cache.ViewModelRoutes.Should().ContainKey(typeof(TestOwningViewModel));
-        cache.ViewModelRoutes[typeof(TestOwningViewModel)].Should().Be("/owning");
+        cache.ViewModelRoutes.ContainsKey(typeof(TestOwningViewModel)).ShouldBeTrue();
+        cache.ViewModelRoutes[typeof(TestOwningViewModel)].ShouldBe("/owning");
     }
 
     /// <summary>
@@ -236,7 +230,7 @@ public class ViewModelRouteCacheTests
         var routes = cache.ViewModelRoutes;
 
         // Assert
-        routes.Should().BeAssignableTo<IReadOnlyDictionary<Type, string>>();
+        routes.ShouldBeAssignableTo<IReadOnlyDictionary<Type, string>>();
     }
 
     /// <summary>
@@ -252,7 +246,7 @@ public class ViewModelRouteCacheTests
         var keyedRoutes = cache.KeyedViewModelRoutes;
 
         // Assert
-        keyedRoutes.Should().BeAssignableTo<IReadOnlyDictionary<object, string>>();
+        keyedRoutes.ShouldBeAssignableTo<IReadOnlyDictionary<object, string>>();
     }
 
     // Test ViewModel and View classes

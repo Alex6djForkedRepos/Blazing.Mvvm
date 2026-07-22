@@ -24,8 +24,7 @@ public class EditContextObservableValidatorHandlerTests
         var act = () => new EditContextObservableValidatorHandler(editContext);
 
         // Assert
-        act.Should().Throw<InvalidOperationException>()
-            .WithMessage(expectedMessage);
+        act.ShouldThrow<InvalidOperationException>().Message.ShouldBe(expectedMessage);
     }
 
     /// <summary>
@@ -43,9 +42,9 @@ public class EditContextObservableValidatorHandlerTests
         editContext.Validate();
 
         // Assert
-        editContext.GetValidationMessages().Should().NotBeEmpty();
-        contactInfo.GetErrors().Should().NotBeEmpty();
-        editContext.GetValidationMessages().Should().BeEquivalentTo(contactInfo.GetErrors().Select(x => x.ErrorMessage));
+        editContext.GetValidationMessages().ShouldNotBeEmpty();
+        contactInfo.GetErrors().ShouldNotBeEmpty();
+        editContext.GetValidationMessages().ShouldBe(contactInfo.GetErrors().Select(x => x.ErrorMessage));
     }
 
     /// <summary>
@@ -63,9 +62,9 @@ public class EditContextObservableValidatorHandlerTests
         contactInfo.Name = "1";
 
         // Assert
-        editContext.GetValidationMessages().Should().NotBeEmpty();
-        contactInfo.GetErrors().Should().NotBeEmpty();
-        editContext.GetValidationMessages().Should().BeEquivalentTo(contactInfo.GetErrors().Select(x => x.ErrorMessage));
+        editContext.GetValidationMessages().ShouldNotBeEmpty();
+        contactInfo.GetErrors().ShouldNotBeEmpty();
+        editContext.GetValidationMessages().ShouldBe(contactInfo.GetErrors().Select(x => x.ErrorMessage));
     }
 
     /// <summary>
@@ -84,8 +83,8 @@ public class EditContextObservableValidatorHandlerTests
         contactInfo.Name = "John Doe";
 
         // Assert
-        editContext.GetValidationMessages().Should().BeEmpty();
-        contactInfo.GetErrors().Should().BeEmpty();
+        editContext.GetValidationMessages().ShouldBeEmpty();
+        contactInfo.GetErrors().ShouldBeEmpty();
     }
 
     /// <summary>
@@ -103,6 +102,6 @@ public class EditContextObservableValidatorHandlerTests
         editContext.Validate();
 
         // Assert
-        editContext.GetValidationMessages().Should().BeEmpty();
+        editContext.GetValidationMessages().ShouldBeEmpty();
     }
 }

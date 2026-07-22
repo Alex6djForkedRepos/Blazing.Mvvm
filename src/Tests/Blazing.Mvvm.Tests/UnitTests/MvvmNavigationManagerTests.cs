@@ -17,7 +17,7 @@ namespace Blazing.Mvvm.Tests.UnitTests;
 public class TestNavigationManager : NavigationManager
 {
     private readonly List<NavigationCall> _navigationCalls = new();
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="TestNavigationManager"/> class with the specified base URI.
     /// </summary>
@@ -26,7 +26,7 @@ public class TestNavigationManager : NavigationManager
     {
         Initialize(baseUri, baseUri);
     }
-    
+
     /// <summary>
     /// Records navigation calls for verification.
     /// </summary>
@@ -34,7 +34,7 @@ public class TestNavigationManager : NavigationManager
     {
         _navigationCalls.Add(new NavigationCall(uri, forceLoad, false));
     }
-    
+
     /// <summary>
     /// Sets the base URI for navigation.
     /// </summary>
@@ -43,21 +43,21 @@ public class TestNavigationManager : NavigationManager
     {
         Initialize(baseUri, baseUri);
     }
-    
+
     /// <summary>
     /// Verifies that a navigation call was made to the expected URI with the specified options.
     /// </summary>
     public void VerifyNavigateTo(string expectedUri, bool expectedForceLoad = false, bool expectedReplace = false)
     {
-        var matching = _navigationCalls.Where(call => call.Uri == expectedUri && 
-                                                    call.ForceLoad == expectedForceLoad && 
+        var matching = _navigationCalls.Where(call => call.Uri == expectedUri &&
+                                                    call.ForceLoad == expectedForceLoad &&
                                                     call.Replace == expectedReplace).ToList();
         if (matching.Count != 1)
         {
             throw new InvalidOperationException($"Expected exactly one navigation call to '{expectedUri}' with forceLoad={expectedForceLoad}, replace={expectedReplace}, but found {matching.Count}. All calls: {string.Join(", ", _navigationCalls.Select(c => $"'{c.Uri}' (forceLoad={c.ForceLoad}, replace={c.Replace})"))}");
         }
     }
-    
+
     /// <summary>
     /// Verifies that no navigation calls were made.
     /// </summary>
@@ -68,7 +68,7 @@ public class TestNavigationManager : NavigationManager
             throw new InvalidOperationException($"Expected no navigation calls, but found {_navigationCalls.Count}: {string.Join(", ", _navigationCalls.Select(c => $"'{c.Uri}'"))}");
         }
     }
-    
+
     /// <summary>
     /// Clears all recorded navigation calls.
     /// </summary>
@@ -76,7 +76,7 @@ public class TestNavigationManager : NavigationManager
     {
         _navigationCalls.Clear();
     }
-    
+
     /// <summary>
     /// Represents a navigation call for verification.
     /// </summary>
@@ -102,11 +102,11 @@ public class MvvmNavigationManagerTests
     private static void SetupRouteCacheMocks(Mock<IViewModelRouteCache> routeCacheMock, Dictionary<Type, string>? viewModelRoutes = null, Dictionary<object, string>? keyedRoutes = null)
     {
         var routeTemplateParser = new RouteTemplateParser();
-        
+
         if (viewModelRoutes != null)
         {
             routeCacheMock.Setup(x => x.ViewModelRoutes).Returns(viewModelRoutes);
-            
+
             // Setup multi-route templates for all routes
             var routeTemplates = new Dictionary<Type, RouteTemplateCollection>();
             foreach (var (type, route) in viewModelRoutes)
@@ -129,7 +129,7 @@ public class MvvmNavigationManagerTests
         if (keyedRoutes != null)
         {
             routeCacheMock.Setup(x => x.KeyedViewModelRoutes).Returns(keyedRoutes);
-            
+
             // Setup multi-route templates for all keyed routes
             var keyedRouteTemplates = new Dictionary<object, RouteTemplateCollection>();
             foreach (var (key, route) in keyedRoutes)
@@ -161,18 +161,18 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         SetupRouteCacheMocks(routeCacheMock);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
         var act = () => mvvmNavigationManager.NavigateTo<TestViewModel>();
 
         // Assert
-        act.Should().Throw<ViewModelRouteNotFoundException>()
-            .WithMessage($"{typeof(TestViewModel)} has no associated page");
+        act.ShouldThrow<ViewModelRouteNotFoundException>()
+            .Message.ShouldBe($"{typeof(TestViewModel)} has no associated page");
     }
 
     /// <summary>
@@ -186,18 +186,18 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         SetupRouteCacheMocks(routeCacheMock);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
         var act = () => mvvmNavigationManager.GetUri<TestViewModel>();
 
         // Assert
-        act.Should().Throw<ViewModelRouteNotFoundException>()
-            .WithMessage($"{typeof(TestViewModel)} has no associated page");
+        act.ShouldThrow<ViewModelRouteNotFoundException>()
+            .Message.ShouldBe($"{typeof(TestViewModel)} has no associated page");
     }
 
     /// <summary>
@@ -211,18 +211,18 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(ComponentViewModels.CounterViewModel)] = "/counter" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
         string uri = mvvmNavigationManager.GetUri<ComponentViewModels.CounterViewModel>();
 
         // Assert
-        uri.Should().Be("counter");
+        uri.ShouldBe("counter");
     }
 
     /// <summary>
@@ -236,18 +236,18 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(ComponentViewModels.FetchDataViewModel)] = "/fetchdata" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
         string uri = mvvmNavigationManager.GetUri<ComponentViewModels.FetchDataViewModel>();
 
         // Assert
-        uri.Should().Be("fetchdata");
+        uri.ShouldBe("fetchdata");
     }
 
     /// <summary>
@@ -261,18 +261,18 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
-        var routes = new Dictionary<Type, string> { [typeof(Blazing.Mvvm.Tests.Infrastructure.Fakes.ITestNavigationViewModel)] = "/test" };
+
+        var routes = new Dictionary<Type, string> { [typeof(ITestNavigationViewModel)] = "/test" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
-        string uri = mvvmNavigationManager.GetUri<Blazing.Mvvm.Tests.Infrastructure.Fakes.ITestNavigationViewModel>();
+        string uri = mvvmNavigationManager.GetUri<ITestNavigationViewModel>();
 
         // Assert
-        uri.Should().Be("test");
+        uri.ShouldBe("test");
     }
 
     /// <summary>
@@ -286,18 +286,18 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         SetupRouteCacheMocks(routeCacheMock);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
         var act = () => mvvmNavigationManager.NavigateTo("InvalidKey");
 
         // Assert
-        act.Should().Throw<ViewModelRouteNotFoundException>()
-            .WithMessage("No associated page for key 'InvalidKey'");
+        act.ShouldThrow<ViewModelRouteNotFoundException>()
+            .Message.ShouldBe("No associated page for key 'InvalidKey'");
     }
 
     /// <summary>
@@ -311,18 +311,18 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         SetupRouteCacheMocks(routeCacheMock);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
         var act = () => mvvmNavigationManager.GetUri("InvalidKey");
 
         // Assert
-        act.Should().Throw<ViewModelRouteNotFoundException>()
-            .WithMessage("No associated page for key 'InvalidKey'");
+        act.ShouldThrow<ViewModelRouteNotFoundException>()
+            .Message.ShouldBe("No associated page for key 'InvalidKey'");
     }
 
     /// <summary>
@@ -338,18 +338,18 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var keyedRoutes = new Dictionary<object, string> { [key] = expectedRoute };
         SetupRouteCacheMocks(routeCacheMock, null, keyedRoutes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
         string uri = mvvmNavigationManager.GetUri(key);
 
         // Assert
-        uri.Should().Be(expectedRoute);
+        uri.ShouldBe(expectedRoute);
     }
 
     #region URI Resolution Tests for Regular Hosting (No BasePath)
@@ -365,11 +365,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = null });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -390,11 +390,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/counter" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = null });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -415,11 +415,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/test/nested" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = null });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -444,11 +444,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/fu/bar" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "/fu/bar/" });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -469,11 +469,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/fu/bar/counter" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "/fu/bar/" });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -494,11 +494,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/fu/bar/hextranslate" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "/fu/bar/" });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -519,11 +519,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/fu/bar/test" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "/fu/bar/" });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -544,11 +544,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/fu/bar/nested/route" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "/fu/bar/" });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -573,11 +573,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var keyedRoutes = new Dictionary<object, string> { ["TestKey"] = "/keyedtest" };
         SetupRouteCacheMocks(routeCacheMock, null, keyedRoutes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = null });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -598,11 +598,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var keyedRoutes = new Dictionary<object, string> { ["TestKey"] = "/fu/bar/keyedtest" };
         SetupRouteCacheMocks(routeCacheMock, null, keyedRoutes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "/fu/bar/" });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -627,11 +627,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/fu/bar/counter" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "/fu/bar" }); // No trailing slash
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -652,11 +652,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/fu/bar/counter" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "fu/bar/" }); // No leading slash
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -677,11 +677,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/different/counter" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "/fu/bar/" });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -706,11 +706,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/fu/bar/counter" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = null }); // No configured base path
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -731,11 +731,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/api/v1/users" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration()); // No configured base path
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -756,11 +756,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/configured/path/counter" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "/configured/path/" });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -781,11 +781,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/counter" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration()); // No configured base path
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -806,11 +806,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/app/tenant/123/dashboard" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration()); // No configured base path
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -831,11 +831,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var keyedRoutes = new Dictionary<object, string> { ["TestKey"] = "/fu/bar/keyed-route" };
         SetupRouteCacheMocks(routeCacheMock, null, keyedRoutes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration()); // No configured base path
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -856,11 +856,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/fu/bar/counter" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "" }); // Empty string
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -881,11 +881,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration()); // No configured base path
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -910,11 +910,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/users/{userId}/posts/{postId}" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -935,11 +935,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/users/{userId}/posts/{postId}" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -960,11 +960,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/myapp/users/{userId}/posts/{postId}" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "/myapp/" });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -985,11 +985,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/myapp/users/{userId}/posts/{postId}" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration { BasePath = "/myapp/" });
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -1010,18 +1010,18 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/users/{userId}/posts/{postId}" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
         string uri = mvvmNavigationManager.GetUri<TestViewModel>();
 
         // Assert - Should return the template with placeholders
-        uri.Should().Be("users/{userId}/posts/{postId}");
+        uri.ShouldBe("users/{userId}/posts/{postId}");
     }
 
     /// <summary>
@@ -1035,11 +1035,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/app/v1/users/{userId}/posts/{postId}" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration()); // No configured base path
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -1060,11 +1060,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/api/{version}/users/{userId}/posts/{postId}" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -1085,11 +1085,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/api/{version}/users/{userId}/posts/{postId}" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act
@@ -1110,11 +1110,11 @@ public class MvvmNavigationManagerTests
         Mock<ILogger<MvvmNavigationManager>> loggerMock = new();
         Mock<IViewModelRouteCache> routeCacheMock = new();
         Mock<IOptions<LibraryConfiguration>> configMock = new();
-        
+
         var routes = new Dictionary<Type, string> { [typeof(TestViewModel)] = "/users/{userId}/posts/{postId}" };
         SetupRouteCacheMocks(routeCacheMock, routes);
         configMock.Setup(x => x.Value).Returns(new LibraryConfiguration());
-        
+
         MvvmNavigationManager mvvmNavigationManager = CreateMvvmNavigationManager(navigationManager, loggerMock.Object, routeCacheMock.Object, configMock.Object);
 
         // Act - Using URL-encoded parameter values

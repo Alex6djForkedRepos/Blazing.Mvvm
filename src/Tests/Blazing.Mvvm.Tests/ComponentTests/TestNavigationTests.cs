@@ -86,7 +86,7 @@ public class TestNavigationTests : ComponentTestBase
         cut.Find(hexTranslateButtonSelector).Click();
 
         // Assert
-        navigationManager.Uri.Should().Match(expectedUri);
+        navigationManager.Uri.ShouldMatch(expectedUri);
     }
 
     /// <summary>
@@ -106,7 +106,7 @@ public class TestNavigationTests : ComponentTestBase
         cut.Find(testButtonSelector).Click();
 
         // Assert - Navigates without parameter, so {echo} remains unsubstituted
-        navigationManager.Uri.Should().Be(expectedUri);
+        navigationManager.Uri.ShouldBe(expectedUri);
     }
 
     /// <summary>
@@ -133,12 +133,11 @@ public class TestNavigationTests : ComponentTestBase
         cut.Find(testRelativePathButtonSelector).Click();
 
         // Assert - Parameter substitution: {echo} replaced with the parameter value
-        using var _ = new AssertionScope();
-        navigationManager.Uri.Should().Be(expectedUri);
-        cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.Should().Be(expectedParagraphContent);
-        cutViewModel.Echo.Should().Be(expectedEcho);
-        cutViewModel.QueryString.Should().BeEmpty();
-        cutViewModel.Test.Should().BeNull();
+        navigationManager.Uri.ShouldBe(expectedUri);
+        cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.ShouldBe(expectedParagraphContent);
+        cutViewModel.Echo.ShouldBe(expectedEcho);
+        cutViewModel.QueryString.ShouldBeEmpty();
+        cutViewModel.Test.ShouldBeNull();
     }
 
     /// <summary>
@@ -163,12 +162,11 @@ public class TestNavigationTests : ComponentTestBase
         cut.Find(testQueryStringButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        navigationManager.Uri.Should().Be(expectedUri);
-        cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.Should().Be(expectedParagraphContent);
-        cutViewModel.Echo.Should().BeEmpty();
-        cutViewModel.QueryString.Should().Be(expectedQueryString);
-        cutViewModel.Test.Should().Be(expectedQueryParameterValue);
+        navigationManager.Uri.ShouldBe(expectedUri);
+        cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.ShouldBe(expectedParagraphContent);
+        cutViewModel.Echo.ShouldBeEmpty();
+        cutViewModel.QueryString.ShouldBe(expectedQueryString);
+        cutViewModel.Test.ShouldBe(expectedQueryParameterValue);
     }
 
     /// <summary>
@@ -199,13 +197,12 @@ public class TestNavigationTests : ComponentTestBase
         cut.Find(testRelativePathQueryStringButtonSelector).Click();
 
         // Assert - Parameter substitution with query string
-        using var _ = new AssertionScope();
-        navigationManager.Uri.Should().Be(expectedUri);
-        cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.Should().Be(expectedRelativePathParagraphContent);
-        cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.Should().Be(expectedQueryStringParagraphContent);
-        cutViewModel.Echo.Should().Be(expectedEcho);
-        cutViewModel.QueryString.Should().Be(expectedQueryString);
-        cutViewModel.Test.Should().Be(expectedQueryParameterValue);
+        navigationManager.Uri.ShouldBe(expectedUri);
+        cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.ShouldBe(expectedRelativePathParagraphContent);
+        cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.ShouldBe(expectedQueryStringParagraphContent);
+        cutViewModel.Echo.ShouldBe(expectedEcho);
+        cutViewModel.QueryString.ShouldBe(expectedQueryString);
+        cutViewModel.Test.ShouldBe(expectedQueryParameterValue);
     }
 
     /// <summary>
@@ -225,7 +222,7 @@ public class TestNavigationTests : ComponentTestBase
         cut.Find(testButtonSelector).Click();
 
         // Assert - Navigates without parameter, so {echo} remains unsubstituted
-        navigationManager.Uri.Should().Be(expectedUri);
+        navigationManager.Uri.ShouldBe(expectedUri);
     }
 
     /// <summary>
@@ -252,12 +249,11 @@ public class TestNavigationTests : ComponentTestBase
         cut.Find(testRelativePathButtonSelector).Click();
 
         // Assert - Keyed navigation appends relative URI instead of parameter substitution
-        using var _ = new AssertionScope();
-        navigationManager.Uri.Should().Be(expectedUri);
-        cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.Should().Be(expectedParagraphContent);
-        cutViewModel.Echo.Should().Be(expectedEcho);
-        cutViewModel.QueryString.Should().BeEmpty();
-        cutViewModel.Test.Should().BeNull();
+        navigationManager.Uri.ShouldBe(expectedUri);
+        cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.ShouldBe(expectedParagraphContent);
+        cutViewModel.Echo.ShouldBe(expectedEcho);
+        cutViewModel.QueryString.ShouldBeEmpty();
+        cutViewModel.Test.ShouldBeNull();
     }
 
     /// <summary>
@@ -282,12 +278,11 @@ public class TestNavigationTests : ComponentTestBase
         cut.Find(testQueryStringButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        navigationManager.Uri.Should().Be(expectedUri);
-        cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.Should().Be(expectedParagraphContent);
-        cutViewModel.Echo.Should().BeEmpty();
-        cutViewModel.QueryString.Should().Be(expectedQueryString);
-        cutViewModel.Test.Should().Be(expectedQueryParameterValue);
+        navigationManager.Uri.ShouldBe(expectedUri);
+        cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.ShouldBe(expectedParagraphContent);
+        cutViewModel.Echo.ShouldBeEmpty();
+        cutViewModel.QueryString.ShouldBe(expectedQueryString);
+        cutViewModel.Test.ShouldBe(expectedQueryParameterValue);
     }
 
     /// <summary>
@@ -318,12 +313,11 @@ public class TestNavigationTests : ComponentTestBase
         cut.Find(testRelativePathQueryStringButtonSelector).Click();
 
         // Assert - Keyed navigation appends relative URI with query string
-        using var _ = new AssertionScope();
-        navigationManager.Uri.Should().Be(expectedUri);
-        cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.Should().Be(expectedRelativePathParagraphContent);
-        cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.Should().Be(expectedQueryStringParagraphContent);
-        cutViewModel.Echo.Should().Be(expectedEcho);
-        cutViewModel.QueryString.Should().Be(expectedQueryString);
-        cutViewModel.Test.Should().Be(expectedQueryParameterValue);
+        navigationManager.Uri.ShouldBe(expectedUri);
+        cut.FindByLabelText(relativePathParagraphAriaLabel).TextContent.ShouldBe(expectedRelativePathParagraphContent);
+        cut.FindByLabelText(queryStringParagraphAriaLabel).TextContent.ShouldBe(expectedQueryStringParagraphContent);
+        cutViewModel.Echo.ShouldBe(expectedEcho);
+        cutViewModel.QueryString.ShouldBe(expectedQueryString);
+        cutViewModel.Test.ShouldBe(expectedQueryParameterValue);
     }
 }

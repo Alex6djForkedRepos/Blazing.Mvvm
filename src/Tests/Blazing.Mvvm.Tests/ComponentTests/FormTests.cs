@@ -47,9 +47,8 @@ public class FormTests : ComponentTestBase
         nameInput.Change(new ChangeEventArgs { Value = expectedName });
 
         // Assert
-        using var _ = new AssertionScope();
-        nameInput.GetAttribute(AttributeNames.Value).Should().Be(expectedName);
-        cutViewModel.Contact.Name.Should().Be(expectedName);
+        nameInput.GetAttribute(AttributeNames.Value).ShouldBe(expectedName);
+        cutViewModel.Contact.Name.ShouldBe(expectedName);
     }
 
     /// <summary>
@@ -69,9 +68,8 @@ public class FormTests : ComponentTestBase
         emailInput.Change(new ChangeEventArgs { Value = expectedEmail });
 
         // Assert
-        using var _ = new AssertionScope();
-        emailInput.GetAttribute(AttributeNames.Value).Should().Be(expectedEmail);
-        cutViewModel.Contact.Email.Should().Be(expectedEmail);
+        emailInput.GetAttribute(AttributeNames.Value).ShouldBe(expectedEmail);
+        cutViewModel.Contact.Email.ShouldBe(expectedEmail);
     }
 
     /// <summary>
@@ -91,9 +89,8 @@ public class FormTests : ComponentTestBase
         phoneNumberInput.Change(new ChangeEventArgs { Value = expectedPhoneNumber });
 
         // Assert
-        using var _ = new AssertionScope();
-        phoneNumberInput.GetAttribute(AttributeNames.Value).Should().Be(expectedPhoneNumber);
-        cutViewModel.Contact.PhoneNumber.Should().Be(expectedPhoneNumber);
+        phoneNumberInput.GetAttribute(AttributeNames.Value).ShouldBe(expectedPhoneNumber);
+        cutViewModel.Contact.PhoneNumber.ShouldBe(expectedPhoneNumber);
     }
 
     /// <summary>
@@ -112,7 +109,7 @@ public class FormTests : ComponentTestBase
         cutViewModel.Contact.Name = expectedName;
 
         // Assert
-        cut.FindByLabelText(NameInputAriaLabel).GetAttribute(AttributeNames.Value).Should().Be(expectedName);
+        cut.FindByLabelText(NameInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBe(expectedName);
     }
 
     /// <summary>
@@ -131,7 +128,7 @@ public class FormTests : ComponentTestBase
         cutViewModel.Contact.Email = expectedEmail;
 
         // Assert
-        cut.FindByLabelText(EmailInputAriaLabel).GetAttribute(AttributeNames.Value).Should().Be(expectedEmail);
+        cut.FindByLabelText(EmailInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBe(expectedEmail);
     }
 
     /// <summary>
@@ -150,7 +147,7 @@ public class FormTests : ComponentTestBase
         cutViewModel.Contact.PhoneNumber = expectedPhoneNumber;
 
         // Assert
-        cut.FindByLabelText(PhoneNumberInputAriaLabel).GetAttribute(AttributeNames.Value).Should().Be(expectedPhoneNumber);
+        cut.FindByLabelText(PhoneNumberInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBe(expectedPhoneNumber);
     }
 
     /// <summary>
@@ -174,8 +171,7 @@ public class FormTests : ComponentTestBase
         cut.Find(SubmitButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        cutViewModel.Contact.HasErrors.Should().BeFalse();
+        cutViewModel.Contact.HasErrors.ShouldBeFalse();
         loggerMock.VerifyLog(LogLevel.Information, expectedLogMessage);
     }
 
@@ -205,12 +201,11 @@ public class FormTests : ComponentTestBase
         submitButton.Click();
 
         // Assert
-        using var _ = new AssertionScope();
         cut.FindByLabelText(ErrorSummaryAriaLabel).MarkupMatches(expectedErrorSummaryHtml);
-        cut.FindByLabelText(NameValidationMessageAriaLabel).TextContent.Should().Be(expectedNameErrorMsg);
-        cut.FindByLabelText(EmailValidationMessageAriaLabel).TextContent.Should().Be(expectedEmailErrorMsg);
-        cut.FindByLabelText(PhoneNumberValidationMessageAriaLabel).TextContent.Should().Be(expectedPhoneNumberErrorMsg);
-        submitButton.IsDisabled().Should().BeTrue();
+        cut.FindByLabelText(NameValidationMessageAriaLabel).TextContent.ShouldBe(expectedNameErrorMsg);
+        cut.FindByLabelText(EmailValidationMessageAriaLabel).TextContent.ShouldBe(expectedEmailErrorMsg);
+        cut.FindByLabelText(PhoneNumberValidationMessageAriaLabel).TextContent.ShouldBe(expectedPhoneNumberErrorMsg);
+        submitButton.IsDisabled().ShouldBeTrue();
     }
 
     /// <summary>
@@ -240,12 +235,11 @@ public class FormTests : ComponentTestBase
         cut.FindByLabelText(PhoneNumberInputAriaLabel).Change(new ChangeEventArgs { Value = "+" });
 
         // Assert
-        using var _ = new AssertionScope();
         cut.FindByLabelText(ErrorSummaryAriaLabel).MarkupMatches(expectedErrorSummaryHtml);
-        cut.FindByLabelText(NameValidationMessageAriaLabel).TextContent.Should().Be(expectedNameErrorMsg);
-        cut.FindByLabelText(EmailValidationMessageAriaLabel).TextContent.Should().Be(expectedEmailErrorMsg);
-        cut.FindByLabelText(PhoneNumberValidationMessageAriaLabel).TextContent.Should().Be(expectedPhoneNumberErrorMsg);
-        cut.Find(SubmitButtonSelector).IsDisabled().Should().BeTrue();
+        cut.FindByLabelText(NameValidationMessageAriaLabel).TextContent.ShouldBe(expectedNameErrorMsg);
+        cut.FindByLabelText(EmailValidationMessageAriaLabel).TextContent.ShouldBe(expectedEmailErrorMsg);
+        cut.FindByLabelText(PhoneNumberValidationMessageAriaLabel).TextContent.ShouldBe(expectedPhoneNumberErrorMsg);
+        cut.Find(SubmitButtonSelector).IsDisabled().ShouldBeTrue();
     }
 
     /// <summary>
@@ -261,10 +255,9 @@ public class FormTests : ComponentTestBase
         cut.Find(ClearButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        cut.FindByLabelText(NameInputAriaLabel).GetAttribute(AttributeNames.Value).Should().BeNull();
-        cut.FindByLabelText(EmailInputAriaLabel).GetAttribute(AttributeNames.Value).Should().BeNull();
-        cut.FindByLabelText(PhoneNumberInputAriaLabel).GetAttribute(AttributeNames.Value).Should().BeNull();
-        cut.Find(SubmitButtonSelector).IsEnabled().Should().BeTrue();
+        cut.FindByLabelText(NameInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBeNull();
+        cut.FindByLabelText(EmailInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBeNull();
+        cut.FindByLabelText(PhoneNumberInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBeNull();
+        cut.Find(SubmitButtonSelector).IsEnabled().ShouldBeTrue();
     }
 }

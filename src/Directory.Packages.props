@@ -73,7 +73,7 @@
     <PackageVersion Include="AngleSharp" Version="1.5.2" />
     <PackageVersion Include="bunit.web.query" Version="2.7.2" />
     <PackageVersion Include="bunit" Version="2.7.2" />
-    <PackageVersion Include="FluentAssertions" Version="8.10.0" />
+    <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageVersion Include="Moq.AutoMock" Version="4.0.2" />
     <PackageVersion Include="xunit" Version="2.9.3" />

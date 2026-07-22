@@ -24,7 +24,7 @@ internal class Program
     {
         HostApplicationBuilder appBuilder = Host.CreateApplicationBuilder(args);
         appBuilder.Logging.AddDebug();
-        
+
         appBuilder.Services.AddWindowsFormsBlazorWebView();
 #if DEBUG
         appBuilder.Services.AddBlazorWebViewDeveloperTools();
@@ -34,11 +34,11 @@ internal class Program
             // .AddViewModels() // obsolete - now uses the ViewModelDefinition attribute & auto registration
             .AddServicesWpf()
             .AddMvvm(options =>
-            { 
+            {
                 // Register ViewModels from HybridSample.Core assembly
                 options.RegisterViewModelsFromAssemblyContaining<SamplePageViewModel>();
                 // Register Views/Pages from HybridSample.Blazor.Core assembly for route mapping
-                options.RegisterViewModelsFromAssemblyContaining<HybridSample.Blazor.Core.Pages.IntroductionPage>();
+                options.RegisterViewModelsFromAssemblyContaining<Blazor.Core.Pages.IntroductionPage>();
             });
 
         using IHost host = appBuilder.Build();

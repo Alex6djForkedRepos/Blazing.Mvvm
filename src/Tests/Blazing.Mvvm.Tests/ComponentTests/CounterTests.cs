@@ -81,9 +81,8 @@ public class CounterTests : ComponentTestBase
         cut.Find(clickMeButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        cut.Find(ParagraphSelector).TextContent.Should().Be(expectedParagraphContent);
-        cutViewModel.CurrentCount.Should().Be(expectedCount);
+        cut.Find(ParagraphSelector).TextContent.ShouldBe(expectedParagraphContent);
+        cutViewModel.CurrentCount.ShouldBe(expectedCount);
     }
 
     /// <summary>
@@ -105,8 +104,7 @@ public class CounterTests : ComponentTestBase
         cut.Find(resetButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        cut.Find(ParagraphSelector).TextContent.Should().Be(expectedParagraphContent);
-        cutViewModel.CurrentCount.Should().Be(expectedCount);
+        cut.Find(ParagraphSelector).TextContent.ShouldBe(expectedParagraphContent);
+        cutViewModel.CurrentCount.ShouldBe(expectedCount);
     }
 }

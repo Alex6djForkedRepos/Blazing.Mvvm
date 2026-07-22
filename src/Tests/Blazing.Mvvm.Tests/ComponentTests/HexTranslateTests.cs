@@ -43,7 +43,7 @@ public class HexTranslateTests : ComponentTestBase
         cut.FindByLabelText(AsciiInputAriaLabel).Input(new ChangeEventArgs { Value = input });
 
         // Assert
-        cut.Find(SendAsciiButtonSelector).IsDisabled().Should().BeTrue();
+        cut.Find(SendAsciiButtonSelector).IsDisabled().ShouldBeTrue();
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public class HexTranslateTests : ComponentTestBase
         cut.FindByLabelText(HexInputAriaLabel).Input(new ChangeEventArgs { Value = input });
 
         // Assert
-        cut.Find(SendHexButtonSelector).IsDisabled().Should().BeTrue();
+        cut.Find(SendHexButtonSelector).IsDisabled().ShouldBeTrue();
     }
 
     /// <summary>
@@ -86,11 +86,10 @@ public class HexTranslateTests : ComponentTestBase
         cut.Find(SendAsciiButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        cut.FindByLabelText(HexInputAriaLabel).GetAttribute(AttributeNames.Value).Should().Be(expectedHex);
-        hexEntryViewModel.HexText.Should().Be(expectedHex);
-        asciiTextInput.GetAttribute(AttributeNames.Value).Should().Be(input);
-        textEntryViewModel.AsciiText.Should().Be(input);
+        cut.FindByLabelText(HexInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBe(expectedHex);
+        hexEntryViewModel.HexText.ShouldBe(expectedHex);
+        asciiTextInput.GetAttribute(AttributeNames.Value).ShouldBe(input);
+        textEntryViewModel.AsciiText.ShouldBe(input);
     }
 
     /// <summary>
@@ -114,11 +113,10 @@ public class HexTranslateTests : ComponentTestBase
         cut.Find(SendHexButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        cut.FindByLabelText(AsciiInputAriaLabel).GetAttribute(AttributeNames.Value).Should().Be(expectedAscii);
-        textEntryViewModel.AsciiText.Should().Be(expectedAscii);
-        hexTextInput.GetAttribute(AttributeNames.Value).Should().Be(input);
-        hexEntryViewModel.HexText.Should().Be(input);
+        cut.FindByLabelText(AsciiInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBe(expectedAscii);
+        textEntryViewModel.AsciiText.ShouldBe(expectedAscii);
+        hexTextInput.GetAttribute(AttributeNames.Value).ShouldBe(input);
+        hexEntryViewModel.HexText.ShouldBe(input);
     }
 
     /// <summary>
@@ -143,10 +141,9 @@ public class HexTranslateTests : ComponentTestBase
         cut.Find(clearButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        textEntryViewModel.AsciiText.Should().BeEmpty();
-        hexEntryViewModel.HexText.Should().BeEmpty();
-        cut.FindByLabelText(HexInputAriaLabel).GetAttribute(AttributeNames.Value).Should().BeEmpty();
-        cut.FindByLabelText(AsciiInputAriaLabel).GetAttribute(AttributeNames.Value).Should().BeEmpty();
+        textEntryViewModel.AsciiText.ShouldBeEmpty();
+        hexEntryViewModel.HexText.ShouldBeEmpty();
+        cut.FindByLabelText(HexInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBeEmpty();
+        cut.FindByLabelText(AsciiInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBeEmpty();
     }
 }

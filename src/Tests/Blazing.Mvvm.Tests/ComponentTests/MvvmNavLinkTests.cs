@@ -25,7 +25,7 @@ public class MvvmNavLinkTests : ComponentTestBase
     {
         _routeCacheMock = new Mock<IViewModelRouteCache>();
         _loggerMock = new Mock<ILogger<MvvmNavigationManager>>();
-        
+
         var routeTemplateParser = new RouteTemplateParser();
 
         // Setup default route cache behavior
@@ -37,7 +37,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         {
             ["TestKey"] = "/keyed-test"
         };
-        
+
         // Setup multi-route templates for all routes
         var viewModelRouteTemplates = new Dictionary<Type, RouteTemplateCollection>();
         foreach (var (type, route) in viewModelRoutes)
@@ -49,7 +49,7 @@ public class MvvmNavLinkTests : ComponentTestBase
                 AllRoutes = new List<RouteTemplate> { template }
             };
         }
-        
+
         var keyedRouteTemplates = new Dictionary<object, RouteTemplateCollection>();
         foreach (var (key, route) in keyedRoutes)
         {
@@ -86,7 +86,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         var uri = mvvmNavigationManager.GetUri<ITestViewModel>();
 
         // Assert
-        uri.Should().Be("test/{echo}");
+        uri.ShouldBe("test/{echo}");
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         var uri = mvvmNavigationManager.GetUri("TestKey");
 
         // Assert
-        uri.Should().Be("keyed-test");
+        uri.ShouldBe("keyed-test");
     }
 
     /// <summary>
@@ -119,7 +119,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         mvvmNavigationManager.NavigateTo<ITestViewModel>();
 
         // Assert
-        navigationManager.Uri.Should().Be("http://localhost/test/{echo}");
+        navigationManager.Uri.ShouldBe("http://localhost/test/{echo}");
     }
 
     /// <summary>
@@ -136,7 +136,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         mvvmNavigationManager.NavigateTo("TestKey");
 
         // Assert
-        navigationManager.Uri.Should().Be("http://localhost/keyed-test");
+        navigationManager.Uri.ShouldBe("http://localhost/keyed-test");
     }
 
     /// <summary>
@@ -153,7 +153,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         mvvmNavigationManager.NavigateTo<ITestViewModel>("123");
 
         // Assert - The {echo} parameter should be substituted with "123"
-        navigationManager.Uri.Should().Be("http://localhost/test/123");
+        navigationManager.Uri.ShouldBe("http://localhost/test/123");
     }
 
     /// <summary>
@@ -170,7 +170,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         mvvmNavigationManager.NavigateTo<ITestViewModel>("?id=123&name=test");
 
         // Assert - Query string should be appended to the base route (with URL-encoded parameter placeholder)
-        navigationManager.Uri.Should().Be("http://localhost/test/%7Becho%7D?id=123&name=test");
+        navigationManager.Uri.ShouldBe("http://localhost/test/%7Becho%7D?id=123&name=test");
     }
 
     /// <summary>
@@ -187,7 +187,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         mvvmNavigationManager.NavigateTo<ITestViewModel>("my-value?id=123");
 
         // Assert - Parameter substituted and query string appended
-        navigationManager.Uri.Should().Be("http://localhost/test/my-value?id=123");
+        navigationManager.Uri.ShouldBe("http://localhost/test/my-value?id=123");
     }
 
     /// <summary>
@@ -204,7 +204,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         mvvmNavigationManager.NavigateTo("TestKey", "admin/users");
 
         // Assert
-        navigationManager.Uri.Should().Be("http://localhost/keyed-test/admin/users");
+        navigationManager.Uri.ShouldBe("http://localhost/keyed-test/admin/users");
     }
 
     /// <summary>
@@ -218,8 +218,7 @@ public class MvvmNavLinkTests : ComponentTestBase
 
         // Act & Assert
         var act = () => mvvmNavigationManager.NavigateTo<IInvalidViewModel>();
-        act.Should().Throw<ViewModelRouteNotFoundException>()
-           .WithMessage("*IInvalidViewModel*");
+        act.ShouldThrow<ViewModelRouteNotFoundException>().Message.ShouldContain("IInvalidViewModel");
     }
 
     /// <summary>
@@ -233,8 +232,7 @@ public class MvvmNavLinkTests : ComponentTestBase
 
         // Act & Assert
         var act = () => mvvmNavigationManager.NavigateTo("InvalidKey");
-        act.Should().Throw<ViewModelRouteNotFoundException>()
-           .WithMessage("*InvalidKey*");
+        act.ShouldThrow<ViewModelRouteNotFoundException>().Message.ShouldContain("InvalidKey");
     }
 
     /// <summary>
@@ -256,13 +254,13 @@ public class MvvmNavLinkTests : ComponentTestBase
         mvvmNavigationManager.NavigateTo<ITestViewModel>(options);
 
         // Assert - No parameters provided, so {echo} remains unsubstituted
-        navigationManager.Uri.Should().Be("http://localhost/test/{echo}");
+        navigationManager.Uri.ShouldBe("http://localhost/test/{echo}");
     }
 
     /// <summary>
     /// Verifies that NavigateTo navigates with browser navigation options for a key.
     /// </summary>
-    [Fact] 
+    [Fact]
     public void MvvmNavigationManager_GivenKeyWithNavigationOptions_ShouldNavigateWithOptions()
     {
         // Arrange
@@ -278,7 +276,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         mvvmNavigationManager.NavigateTo("TestKey", options);
 
         // Assert
-        navigationManager.Uri.Should().Be("http://localhost/keyed-test");
+        navigationManager.Uri.ShouldBe("http://localhost/keyed-test");
     }
 
     /// <summary>
@@ -296,7 +294,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         mvvmNavigationManager.NavigateTo<ITestViewModel>("456", options);
 
         // Assert - Parameter substituted in route template
-        navigationManager.Uri.Should().Be("http://localhost/test/456");
+        navigationManager.Uri.ShouldBe("http://localhost/test/456");
     }
 
     /// <summary>
@@ -314,7 +312,7 @@ public class MvvmNavLinkTests : ComponentTestBase
         mvvmNavigationManager.NavigateTo("TestKey", "settings", options);
 
         // Assert
-        navigationManager.Uri.Should().Be("http://localhost/keyed-test/settings");
+        navigationManager.Uri.ShouldBe("http://localhost/keyed-test/settings");
     }
 
     /// <summary>

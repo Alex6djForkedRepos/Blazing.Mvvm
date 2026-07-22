@@ -106,7 +106,7 @@ public sealed class MvvmComponentBaseUsageCodeFixProvider : CodeFixProvider
                 SyntaxFactory.Identifier("MvvmComponentBase"))
             .WithTypeArgumentList(
                 SyntaxFactory.TypeArgumentList(
-                    SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+                    SyntaxFactory.SingletonSeparatedList(
                         SyntaxFactory.ParseTypeName(viewModelTypeName)))));
 
         var newBaseList = classDeclaration.BaseList.ReplaceNode(

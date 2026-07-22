@@ -20,11 +20,10 @@ public class LibraryConfigurationTests
         var config = new LibraryConfiguration();
 
         // Assert
-        using var _ = new AssertionScope();
-        config.HostingModelType.Should().Be(BlazorHostingModelType.NotSpecified);
-        config.ParameterResolutionMode.Should().Be(ParameterResolutionMode.None);
-        config.ViewModelAssemblies.Should().BeEmpty();
-        config.BasePath.Should().BeNull();
+        config.HostingModelType.ShouldBe(BlazorHostingModelType.NotSpecified);
+        config.ParameterResolutionMode.ShouldBe(ParameterResolutionMode.None);
+        config.ViewModelAssemblies.ShouldBeEmpty();
+        config.BasePath.ShouldBeNull();
     }
 
     /// <summary>
@@ -40,7 +39,7 @@ public class LibraryConfigurationTests
         config.HostingModelType = BlazorHostingModelType.WebAssembly;
 
         // Assert
-        config.HostingModelType.Should().Be(BlazorHostingModelType.WebAssembly);
+        config.HostingModelType.ShouldBe(BlazorHostingModelType.WebAssembly);
     }
 
     /// <summary>
@@ -56,7 +55,7 @@ public class LibraryConfigurationTests
         config.ParameterResolutionMode = ParameterResolutionMode.ViewModel;
 
         // Assert
-        config.ParameterResolutionMode.Should().Be(ParameterResolutionMode.ViewModel);
+        config.ParameterResolutionMode.ShouldBe(ParameterResolutionMode.ViewModel);
     }
 
     /// <summary>
@@ -72,7 +71,7 @@ public class LibraryConfigurationTests
         config.BasePath = "/myapp";
 
         // Assert
-        config.BasePath.Should().Be("/myapp");
+        config.BasePath.ShouldBe("/myapp");
     }
 
     /// <summary>
@@ -88,7 +87,7 @@ public class LibraryConfigurationTests
         config.RegisterViewModelsFromAssemblyContaining<LibraryConfigurationTests>();
 
         // Assert
-        config.ViewModelAssemblies.Should().Contain(typeof(LibraryConfigurationTests).Assembly);
+        config.ViewModelAssemblies.ShouldContain(typeof(LibraryConfigurationTests).Assembly);
     }
 
     /// <summary>
@@ -104,7 +103,7 @@ public class LibraryConfigurationTests
         config.RegisterViewModelsFromAssemblyContaining(typeof(LibraryConfigurationTests));
 
         // Assert
-        config.ViewModelAssemblies.Should().Contain(typeof(LibraryConfigurationTests).Assembly);
+        config.ViewModelAssemblies.ShouldContain(typeof(LibraryConfigurationTests).Assembly);
     }
 
     /// <summary>
@@ -121,7 +120,7 @@ public class LibraryConfigurationTests
         config.RegisterViewModelsFromAssembly(assembly);
 
         // Assert
-        config.ViewModelAssemblies.Should().Contain(assembly);
+        config.ViewModelAssemblies.ShouldContain(assembly);
     }
 
     /// <summary>
@@ -139,9 +138,8 @@ public class LibraryConfigurationTests
         config.RegisterViewModelsFromAssembly(assembly1, assembly2);
 
         // Assert
-        using var _ = new AssertionScope();
-        config.ViewModelAssemblies.Should().Contain(assembly1);
-        config.ViewModelAssemblies.Should().Contain(assembly2);
+        config.ViewModelAssemblies.ShouldContain(assembly1);
+        config.ViewModelAssemblies.ShouldContain(assembly2);
     }
 
     /// <summary>
@@ -162,9 +160,8 @@ public class LibraryConfigurationTests
         config.RegisterViewModelsFromAssemblies(assemblies);
 
         // Assert
-        using var _ = new AssertionScope();
-        config.ViewModelAssemblies.Should().Contain(assemblies[0]);
-        config.ViewModelAssemblies.Should().Contain(assemblies[1]);
+        config.ViewModelAssemblies.ShouldContain(assemblies[0]);
+        config.ViewModelAssemblies.ShouldContain(assemblies[1]);
     }
 
     /// <summary>
@@ -182,7 +179,7 @@ public class LibraryConfigurationTests
         config.RegisterViewModelsFromAssembly(assembly); // Add duplicate
 
         // Assert
-        config.ViewModelAssemblies.Should().ContainSingle(a => a == assembly);
+        config.ViewModelAssemblies.Count(a => a == assembly).ShouldBe(1);
     }
 
     /// <summary>
@@ -200,10 +197,9 @@ public class LibraryConfigurationTests
         config.RegisterViewModelsFromAssemblyContaining<LibraryConfigurationTests>(); // Duplicate
 
         // Assert
-        using var _ = new AssertionScope();
-        config.ViewModelAssemblies.Should().HaveCount(2);
-        config.ViewModelAssemblies.Should().Contain(typeof(LibraryConfigurationTests).Assembly);
-        config.ViewModelAssemblies.Should().Contain(typeof(string).Assembly);
+        config.ViewModelAssemblies.Count.ShouldBe(2);
+        config.ViewModelAssemblies.ShouldContain(typeof(LibraryConfigurationTests).Assembly);
+        config.ViewModelAssemblies.ShouldContain(typeof(string).Assembly);
     }
 
     /// <summary>
@@ -220,7 +216,7 @@ public class LibraryConfigurationTests
         config.ViewModelAssemblies.Add(assembly);
 
         // Assert
-        config.ViewModelAssemblies.Should().Contain(assembly);
+        config.ViewModelAssemblies.ShouldContain(assembly);
     }
 
     /// <summary>
@@ -242,7 +238,7 @@ public class LibraryConfigurationTests
         config.HostingModelType = hostingType;
 
         // Assert
-        config.HostingModelType.Should().Be(hostingType);
+        config.HostingModelType.ShouldBe(hostingType);
     }
 
     /// <summary>
@@ -261,7 +257,7 @@ public class LibraryConfigurationTests
         config.ParameterResolutionMode = resolutionMode;
 
         // Assert
-        config.ParameterResolutionMode.Should().Be(resolutionMode);
+        config.ParameterResolutionMode.ShouldBe(resolutionMode);
     }
 
     /// <summary>
@@ -285,7 +281,7 @@ public class LibraryConfigurationTests
         config.BasePath = basePath;
 
         // Assert
-        config.BasePath.Should().Be(basePath);
+        config.BasePath.ShouldBe(basePath);
     }
 
     /// <summary>
@@ -304,8 +300,8 @@ public class LibraryConfigurationTests
             config.RegisterViewModelsFromAssemblyContaining<string>();
         };
 
-        act.Should().NotThrow();
-        config.ViewModelAssemblies.Should().HaveCount(2);
+        act.ShouldNotThrow();
+        config.ViewModelAssemblies.Count.ShouldBe(2);
     }
 
     /// <summary>
@@ -318,8 +314,8 @@ public class LibraryConfigurationTests
         var config = new LibraryConfiguration();
 
         // Act & Assert
-        config.ViewModelAssemblies.Should().BeEmpty();
-        config.ViewModelAssemblies.Should().NotBeNull();
+        config.ViewModelAssemblies.ShouldBeEmpty();
+        config.ViewModelAssemblies.ShouldNotBeNull();
     }
 
     /// <summary>
@@ -336,8 +332,8 @@ public class LibraryConfigurationTests
         var act = () => config.RegisterViewModelsFromAssemblies(emptyAssemblies);
 
         // Assert
-        act.Should().NotThrow();
-        config.ViewModelAssemblies.Should().BeEmpty();
+        act.ShouldNotThrow();
+        config.ViewModelAssemblies.ShouldBeEmpty();
     }
 
     /// <summary>
@@ -354,7 +350,7 @@ public class LibraryConfigurationTests
         var act = () => config.RegisterViewModelsFromAssembly(emptyAssemblies);
 
         // Assert
-        act.Should().NotThrow();
-        config.ViewModelAssemblies.Should().BeEmpty();
+        act.ShouldNotThrow();
+        config.ViewModelAssemblies.ShouldBeEmpty();
     }
 }

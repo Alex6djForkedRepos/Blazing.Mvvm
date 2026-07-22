@@ -25,9 +25,8 @@ public class ServicesExtensionTests
         sut.AddMvvm();
 
         // Assert
-        using var _ = new AssertionScope();
-        sut.Contains(mvvmNavigationServiceDescriptor, ServiceDescriptorComparer.Comparer).Should().BeTrue();
-        sut.Contains(parameterResolverServiceDescriptor, ServiceDescriptorComparer.Comparer).Should().BeTrue();
+        sut.Contains(mvvmNavigationServiceDescriptor, ServiceDescriptorComparer.Comparer).ShouldBeTrue();
+        sut.Contains(parameterResolverServiceDescriptor, ServiceDescriptorComparer.Comparer).ShouldBeTrue();
     }
 
     /// <summary>
@@ -50,7 +49,7 @@ public class ServicesExtensionTests
         sut.AddMvvm(c => c.HostingModelType = blazorHostingModel);
 
         // Assert
-        sut.Contains(mvvmNavigationServiceDescriptor, ServiceDescriptorComparer.Comparer).Should().BeTrue();
+        sut.Contains(mvvmNavigationServiceDescriptor, ServiceDescriptorComparer.Comparer).ShouldBeTrue();
     }
 
     /// <summary>
@@ -67,7 +66,7 @@ public class ServicesExtensionTests
         sut.AddMvvm();
 
         // Assert
-        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).Should().BeTrue();
+        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).ShouldBeTrue();
     }
 
     /// <summary>
@@ -84,7 +83,7 @@ public class ServicesExtensionTests
         sut.AddMvvm(c => c.RegisterViewModelsFromAssemblyContaining<ServicesExtensionTests>());
 
         // Assert
-        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).Should().BeTrue();
+        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).ShouldBeTrue();
     }
 
     /// <summary>
@@ -101,7 +100,7 @@ public class ServicesExtensionTests
         sut.AddMvvm(c => c.RegisterViewModelsFromAssemblyContaining(typeof(ServicesExtensionTests)));
 
         // Assert
-        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).Should().BeTrue();
+        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).ShouldBeTrue();
     }
 
     /// <summary>
@@ -119,7 +118,7 @@ public class ServicesExtensionTests
         sut.AddMvvm(c => c.RegisterViewModelsFromAssembly(assembly));
 
         // Assert
-        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).Should().BeTrue();
+        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).ShouldBeTrue();
     }
 
     /// <summary>
@@ -137,7 +136,7 @@ public class ServicesExtensionTests
         sut.AddMvvm(c => c.RegisterViewModelsFromAssemblies(assemblies));
 
         // Assert
-        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).Should().BeTrue();
+        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).ShouldBeTrue();
     }
 
     /// <summary>
@@ -149,13 +148,13 @@ public class ServicesExtensionTests
     {
         // Arrange
         var sut = new ServiceCollection();
-        typeof(ServicesExtensionTests).Assembly.Should().NotBeSameAs(typeof(DependentAssemblyViewModels.CounterViewModel).Assembly);
+        typeof(ServicesExtensionTests).Assembly.ShouldNotBeSameAs(typeof(DependentAssemblyViewModels.CounterViewModel).Assembly);
 
         // Act
         sut.AddMvvm(c => c.RegisterViewModelsFromAssemblyContaining<DependentAssemblyViewModels.CounterViewModel>());
 
         // Assert
-        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).Should().BeTrue();
+        sut.Contains(vmServiceDescriptor, ServiceDescriptorComparer.Comparer).ShouldBeTrue();
     }
 
     private static class ServicesExtensionTestData

@@ -138,7 +138,9 @@ jobs:
     if: needs.build-test-package.outputs.should_publish == 'true'
     needs: build-test-package
     runs-on: ubuntu-latest
+    environment: release
     permissions:
+      id-token: write
       contents: write
 
     steps:
@@ -153,10 +155,16 @@ jobs:
           name: packages-${{ needs.build-test-package.outputs.package_version }}
           path: ${{ env.artifacts_dir }}
 
+      - name: NuGet login (OIDC)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
       - name: Push packages to NuGet.org
         run: |
           dotnet nuget push "${{ env.artifacts_dir }}/*.nupkg" \
-            --api-key "${{ secrets.NUGET_API_KEY }}" \
+            --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
 

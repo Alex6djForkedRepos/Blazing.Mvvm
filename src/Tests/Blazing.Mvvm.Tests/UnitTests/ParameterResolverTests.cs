@@ -37,7 +37,6 @@ public partial class ParameterResolverTests : ComponentTestBase
         var view = RenderAndSetParameters<TestParameterView>();
 
         // Assert
-        using var _ = new AssertionScope();
         AssertThatViewPropertiesAreSet(view.Instance);
         AssertThatViewModelPropertiesAreNotSet(viewModel);
     }
@@ -57,7 +56,6 @@ public partial class ParameterResolverTests : ComponentTestBase
         var view = RenderAndSetParameters<TestParameterView>();
 
         // Assert
-        using var _ = new AssertionScope();
         AssertThatViewModelPropertiesAreSet(viewModel);
         AssertThatViewPropertiesAreNotSet(view.Instance);
     }
@@ -77,7 +75,6 @@ public partial class ParameterResolverTests : ComponentTestBase
         var view = RenderAndSetParameters<TestParameterView>();
 
         // Assert
-        using var _ = new AssertionScope();
         AssertThatViewPropertiesAreSet(view.Instance);
         AssertThatViewModelPropertiesAreSet(viewModel);
     }
@@ -97,7 +94,6 @@ public partial class ParameterResolverTests : ComponentTestBase
         var view = RenderAndSetParameters<TestParameterLayoutView>();
 
         // Assert
-        using var _ = new AssertionScope();
         AssertThatViewPropertiesAreSet(view.Instance);
         AssertThatViewModelPropertiesAreNotSet(viewModel);
     }
@@ -117,7 +113,6 @@ public partial class ParameterResolverTests : ComponentTestBase
         var view = RenderAndSetParameters<TestParameterLayoutView>();
 
         // Assert
-        using var _ = new AssertionScope();
         AssertThatViewModelPropertiesAreSet(viewModel);
         AssertThatViewPropertiesAreNotSet(view.Instance);
     }
@@ -137,7 +132,6 @@ public partial class ParameterResolverTests : ComponentTestBase
         var view = RenderAndSetParameters<TestParameterLayoutView>();
 
         // Assert
-        using var _ = new AssertionScope();
         AssertThatViewPropertiesAreSet(view.Instance);
         AssertThatViewModelPropertiesAreSet(viewModel);
     }
@@ -157,7 +151,6 @@ public partial class ParameterResolverTests : ComponentTestBase
         var view = RenderAndSetParameters<TestParameterOwingView>();
 
         // Assert
-        using var _ = new AssertionScope();
         AssertThatViewPropertiesAreSet(view.Instance);
         AssertThatViewModelPropertiesAreNotSet(viewModel);
     }
@@ -177,7 +170,6 @@ public partial class ParameterResolverTests : ComponentTestBase
         var view = RenderAndSetParameters<TestParameterOwingView>();
 
         // Assert
-        using var _ = new AssertionScope();
         AssertThatViewModelPropertiesAreSet(viewModel);
         AssertThatViewPropertiesAreNotSet(view.Instance);
     }
@@ -197,7 +189,6 @@ public partial class ParameterResolverTests : ComponentTestBase
         var view = RenderAndSetParameters<TestParameterOwingView>();
 
         // Assert
-        using var _ = new AssertionScope();
         AssertThatViewPropertiesAreSet(view.Instance);
         AssertThatViewModelPropertiesAreSet(viewModel);
     }
@@ -213,11 +204,12 @@ public partial class ParameterResolverTests : ComponentTestBase
         Services.AddSingleton<IParameterResolver>(_ => new ParameterResolver(ParameterResolutionMode.ViewModel));
 
         // Act
-        Action act = () => Render<TestParameterViewDuplicateKeyOnViewModel>(
+        var act = () => Render<TestParameterViewDuplicateKeyOnViewModel>(
             parameters => parameters.Add(p => p.Parameter1, "Parameter1"));
 
         // Assert
-        act.Should().Throw<InvalidOperationException>().WithMessage($"Duplicate parameter name 'Parameter1' found on type '{typeof(TestParameterDuplicateKeyViewModel).FullName}'.");
+        act.ShouldThrow<InvalidOperationException>().Message.ShouldBe(
+            $"Duplicate parameter name 'Parameter1' found on type '{typeof(TestParameterDuplicateKeyViewModel).FullName}'.");
     }
 
     /// <summary>
@@ -231,55 +223,56 @@ public partial class ParameterResolverTests : ComponentTestBase
         Services.AddSingleton<IParameterResolver>(_ => new ParameterResolver(ParameterResolutionMode.ViewModel));
 
         // Act
-        Action act = () => Render<TestParameterNoSetterOnViewModel>(
+        var act = () => Render<TestParameterNoSetterOnViewModel>(
             parameters => parameters.Add(p => p.Parameter1, "Parameter1"));
 
         // Assert
-        act.Should().Throw<InvalidOperationException>().WithMessage($"The property 'Parameter1' on type '{typeof(TestParameterNoSetterViewModel).FullName}' does not have a setter.");
+        act.ShouldThrow<InvalidOperationException>().Message.ShouldBe(
+            $"The property 'Parameter1' on type '{typeof(TestParameterNoSetterViewModel).FullName}' does not have a setter.");
     }
 
     private static void AssertThatViewPropertiesAreSet(IParameterTestView view)
     {
-        view.Parameter1.Should().Be(GetParamaterValue<string>(nameof(IParameterTestView.Parameter1)));
-        view.Parameter2.Should().Be(GetParamaterValue<int>(nameof(IParameterTestView.Parameter2)));
-        view.Parameter3.Should().BeNull();
-        view.ParentView.Should().Be(GetParamaterValue<IParameterTestView>(nameof(IParameterTestView.ParentView)));
-        view.ParentViewModel.Should().Be(GetParamaterValue<TestParameterViewModel>(IParameterTestView.NamedCascadingParameterName));
-        view.QueryParameter.Should().Be(GetParamaterValue<string>(nameof(IParameterTestView.QueryParameter)));
-        view.QueryParameter2.Should().Be(GetParamaterValue<DateOnly>(IParameterTestView.NamedQueryParameterName));
+        view.Parameter1.ShouldBe(GetParamaterValue<string>(nameof(IParameterTestView.Parameter1)));
+        view.Parameter2.ShouldBe(GetParamaterValue<int>(nameof(IParameterTestView.Parameter2)));
+        view.Parameter3.ShouldBeNull();
+        view.ParentView.ShouldBe(GetParamaterValue<IParameterTestView>(nameof(IParameterTestView.ParentView)));
+        view.ParentViewModel.ShouldBe(GetParamaterValue<TestParameterViewModel>(IParameterTestView.NamedCascadingParameterName));
+        view.QueryParameter.ShouldBe(GetParamaterValue<string>(nameof(IParameterTestView.QueryParameter)));
+        view.QueryParameter2.ShouldBe(GetParamaterValue<DateOnly>(IParameterTestView.NamedQueryParameterName));
     }
 
     private static void AssertThatViewPropertiesAreNotSet(IParameterTestView view)
     {
-        view.Parameter1.Should().BeNull();
-        view.Parameter2.Should().Be(default);
-        view.Parameter3.Should().BeNull();
-        view.ParentView.Should().BeNull();
-        view.ParentViewModel.Should().BeNull();
-        view.QueryParameter.Should().BeNull();
-        view.QueryParameter2.Should().BeNull();
+        view.Parameter1.ShouldBeNull();
+        view.Parameter2.ShouldBe(default);
+        view.Parameter3.ShouldBeNull();
+        view.ParentView.ShouldBeNull();
+        view.ParentViewModel.ShouldBeNull();
+        view.QueryParameter.ShouldBeNull();
+        view.QueryParameter2.ShouldBeNull();
     }
 
     private static void AssertThatViewModelPropertiesAreSet(TestParameterViewModel viewModel)
     {
-        viewModel.Parameter1.Should().Be(GetParamaterValue<string>(nameof(IParameterTestView.Parameter1)));
-        viewModel.GetProperty1().Should().Be(GetParamaterValue<int>(nameof(IParameterTestView.Parameter2)));
-        viewModel.Parameter3.Should().BeNull();
-        viewModel.ParentView.Should().Be(GetParamaterValue<IParameterTestView>(nameof(IParameterTestView.ParentView)));
-        viewModel.AncestorViewModel.Should().Be(GetParamaterValue<TestParameterViewModel>(IParameterTestView.NamedCascadingParameterName));
-        viewModel.QueryParameter.Should().Be(GetParamaterValue<string>(nameof(IParameterTestView.QueryParameter)));
-        viewModel.GetNamedQueryParameter().Should().Be(GetParamaterValue<DateOnly>(IParameterTestView.NamedQueryParameterName));
+        viewModel.Parameter1.ShouldBe(GetParamaterValue<string>(nameof(IParameterTestView.Parameter1)));
+        viewModel.GetProperty1().ShouldBe(GetParamaterValue<int>(nameof(IParameterTestView.Parameter2)));
+        viewModel.Parameter3.ShouldBeNull();
+        viewModel.ParentView.ShouldBe(GetParamaterValue<IParameterTestView>(nameof(IParameterTestView.ParentView)));
+        viewModel.AncestorViewModel.ShouldBe(GetParamaterValue<TestParameterViewModel>(IParameterTestView.NamedCascadingParameterName));
+        viewModel.QueryParameter.ShouldBe(GetParamaterValue<string>(nameof(IParameterTestView.QueryParameter)));
+        viewModel.GetNamedQueryParameter().ShouldBe(GetParamaterValue<DateOnly>(IParameterTestView.NamedQueryParameterName));
     }
 
     private static void AssertThatViewModelPropertiesAreNotSet(TestParameterViewModel viewModel)
     {
-        viewModel.Parameter1.Should().BeNull();
-        viewModel.GetProperty1().Should().Be(default);
-        viewModel.Parameter3.Should().BeNull();
-        viewModel.ParentView.Should().BeNull();
-        viewModel.AncestorViewModel.Should().BeNull();
-        viewModel.QueryParameter.Should().BeNull();
-        viewModel.GetNamedQueryParameter().Should().BeNull();
+        viewModel.Parameter1.ShouldBeNull();
+        viewModel.GetProperty1().ShouldBe(default);
+        viewModel.Parameter3.ShouldBeNull();
+        viewModel.ParentView.ShouldBeNull();
+        viewModel.AncestorViewModel.ShouldBeNull();
+        viewModel.QueryParameter.ShouldBeNull();
+        viewModel.GetNamedQueryParameter().ShouldBeNull();
     }
 
     private static T GetParamaterValue<T>(string name)
@@ -316,7 +309,7 @@ public partial class ParameterResolverTests : ComponentTestBase
             parameters.TryAdd(nameof(IParameterTestView.Parameter1), GetParamaterValue<string>(nameof(IParameterTestView.Parameter1)));
             parameters.TryAdd(nameof(IParameterTestView.Parameter2), GetParamaterValue<int>(nameof(IParameterTestView.Parameter2)));
             parameters.TryAdd<string?>(nameof(IParameterTestView.Parameter3), null);
-            parameters.AddCascadingValue<IParameterTestView>(GetParamaterValue<IParameterTestView>(nameof(IParameterTestView.ParentView)));
+            parameters.AddCascadingValue(GetParamaterValue<IParameterTestView>(nameof(IParameterTestView.ParentView)));
             parameters.AddCascadingValue(IParameterTestView.NamedCascadingParameterName, GetParamaterValue<TestParameterViewModel>(IParameterTestView.NamedCascadingParameterName));
         });
     }

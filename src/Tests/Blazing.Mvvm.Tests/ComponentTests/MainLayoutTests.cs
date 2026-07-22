@@ -35,8 +35,7 @@ public class MainLayoutTests : ComponentTestBase
         navigationManager.NavigateTo("test");
 
         // Assert
-        using var _ = new AssertionScope();
-        cutViewModel.Counter.Should().Be(expectedCounter);
-        cut.FindByLabelText(spanArialLabel).TextContent.Should().Be(expectedSpanContent);
+        cutViewModel.Counter.ShouldBe(expectedCounter);
+        cut.FindByLabelText(spanArialLabel).TextContent.ShouldBe(expectedSpanContent);
     }
 }
