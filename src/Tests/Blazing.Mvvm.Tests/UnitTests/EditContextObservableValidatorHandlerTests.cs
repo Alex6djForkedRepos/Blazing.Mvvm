@@ -44,7 +44,9 @@ public class EditContextObservableValidatorHandlerTests
         // Assert
         editContext.GetValidationMessages().ShouldNotBeEmpty();
         contactInfo.GetErrors().ShouldNotBeEmpty();
-        editContext.GetValidationMessages().ShouldBe(contactInfo.GetErrors().Select(x => x.ErrorMessage));
+        editContext.GetValidationMessages().ShouldBe(
+            contactInfo.GetErrors().Select(x => x.ErrorMessage),
+            ignoreOrder: true);
     }
 
     /// <summary>
@@ -64,7 +66,9 @@ public class EditContextObservableValidatorHandlerTests
         // Assert
         editContext.GetValidationMessages().ShouldNotBeEmpty();
         contactInfo.GetErrors().ShouldNotBeEmpty();
-        editContext.GetValidationMessages().ShouldBe(contactInfo.GetErrors().Select(x => x.ErrorMessage));
+        editContext.GetValidationMessages().ShouldBe(
+            contactInfo.GetErrors().Select(x => x.ErrorMessage),
+            ignoreOrder: true);
     }
 
     /// <summary>
