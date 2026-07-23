@@ -28,29 +28,25 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandExecutes_ThenButtonDisablesAndReEnables()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var button = cut.Find("#load-data");
+        var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
-        // Act - Initial state
-        var initiallyEnabled = !button.HasAttribute("disabled");
+        // Assert - Initial state
+        button.HasAttribute("disabled").ShouldBeFalse("Button should be enabled initially");
 
-        // Start command execution
+        // Act
         button.Click();
-        await Task.Delay(20); // Let command start
 
-        var disabledWhileRunning = button.HasAttribute("disabled");
+        // Assert - During execution
+        cut.WaitForAssertion(() =>
+            button.HasAttribute("disabled").ShouldBeTrue("Button should be disabled while command is running"));
 
-        // Wait for command to complete
-        await Task.Delay(150);
-        cut.WaitForState(() => !GetViewModel<AsyncCommandTestViewModel>().LoadDataCommand.IsRunning, timeout: TimeSpan.FromSeconds(2));
+        // Assert - After execution
+        await viewModel.LoadDataCommand.ExecutionTask.ShouldNotBeNull();
 
-        var enabledAfterCompletion = !button.HasAttribute("disabled");
-
-        // Assert
-        using var _ = new AssertionScope();
-        initiallyEnabled.Should().BeTrue("Button should be enabled initially");
-        disabledWhileRunning.Should().BeTrue("Button should be disabled while command is running");
-        enabledAfterCompletion.Should().BeTrue("Button should be re-enabled after command completes");
+        cut.WaitForAssertion(() =>
+            button.HasAttribute("disabled").ShouldBeFalse("Button should be re-enabled after command completes"));
     }
 
     /// <summary>
@@ -60,23 +56,25 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandExecutes_ThenIsRunningStateIsDisplayed()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
+        var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
-        // Act - Execute command
+        // Act
         cut.Find("#load-data").Click();
-        await Task.Delay(20);
 
-        var runningStateWhileExecuting = cut.Find("#is-running").TextContent;
+        // Assert - During execution
+        cut.WaitForAssertion(() =>
+            cut.Find("#is-running").TextContent.ShouldContain(
+                "True",
+                customMessage: "IsRunning should be true while executing"));
 
-        // Wait for completion
-        await Task.Delay(150);
-        cut.WaitForState(() => !GetViewModel<AsyncCommandTestViewModel>().LoadDataCommand.IsRunning, timeout: TimeSpan.FromSeconds(2));
+        // Assert - After execution
+        await viewModel.LoadDataCommand.ExecutionTask.ShouldNotBeNull();
 
-        var runningStateAfterCompletion = cut.Find("#is-running").TextContent;
-
-        // Assert
-        runningStateWhileExecuting.Should().Contain("True", "IsRunning should be true while executing");
-        runningStateAfterCompletion.Should().Contain("False", "IsRunning should be false after completion");
+        cut.WaitForAssertion(() =>
+            cut.Find("#is-running").TextContent.ShouldContain(
+                "False",
+                customMessage: "IsRunning should be false after completion"));
     }
 
     /// <summary>
@@ -86,18 +84,19 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandCompletes_ThenResultIsUpdatedInUI()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
+        var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
         // Act
         cut.Find("#load-data").Click();
-        
-        // Wait for command to complete
-        await Task.Delay(200);
-        cut.WaitForState(() => cut.Find("#result").TextContent.Contains("Data loaded"), timeout: TimeSpan.FromSeconds(2));
+        await viewModel.LoadDataCommand.ExecutionTask.ShouldNotBeNull();
 
         // Assert
-        cut.Find("#result").TextContent.Should().Contain("Data loaded");
-        cut.Find("#execution-count").TextContent.Should().Contain("1");
+        cut.WaitForAssertion(() =>
+        {
+            cut.Find("#result").TextContent.ShouldContain("Data loaded");
+            cut.Find("#execution-count").TextContent.ShouldContain("1");
+        });
     }
 
     /// <summary>
@@ -107,17 +106,16 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenParameterizedCommandExecutes_ThenParameterIsProcessed()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
+        var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
         // Act
         cut.Find("#process-data").Click();
-
-        // Wait for completion
-        await Task.Delay(200);
-        cut.WaitForState(() => cut.Find("#result").TextContent.Contains("Processed"), timeout: TimeSpan.FromSeconds(2));
+        await viewModel.ProcessCommand.ExecutionTask.ShouldNotBeNull();
 
         // Assert
-        cut.Find("#result").TextContent.Should().Contain("Processed: TestInput");
+        cut.WaitForAssertion(() =>
+            cut.Find("#result").TextContent.ShouldContain("Processed: TestInput"));
     }
 
     /// <summary>
@@ -127,22 +125,24 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandExecutedMultipleTimes_ThenEachExecutionUpdatesUI()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var button = cut.Find("#fast-command");
+        var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
         // Act - Execute three times
         for (int i = 0; i < 3; i++)
         {
             button.Click();
-            await Task.Delay(100);
+            await viewModel.FastCommand.ExecutionTask.ShouldNotBeNull();
+            cut.WaitForAssertion(() => button.HasAttribute("disabled").ShouldBeFalse());
         }
 
-        // Wait for all to complete
-        cut.WaitForState(() => cut.Find("#execution-count").TextContent.Contains('3'), timeout: TimeSpan.FromSeconds(2));
-
         // Assert
-        cut.Find("#execution-count").TextContent.Should().Contain("3");
-        cut.Find("#result").TextContent.Should().Contain("Fast command completed");
+        cut.WaitForAssertion(() =>
+        {
+            cut.Find("#execution-count").TextContent.ShouldContain("3");
+            cut.Find("#result").TextContent.ShouldContain("Fast command completed");
+        });
     }
 
     /// <summary>
@@ -152,24 +152,24 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandIsRunning_ThenCanExecuteStateIsDisplayed()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
-
-        // Act - Start command
-        cut.Find("#slow-command").Click();
-        await Task.Delay(20);
-
-        var canExecuteWhileRunning = cut.Find("#load-data-enabled").TextContent;
-
-        // Wait for completion
-        await Task.Delay(200);
+        var cut = Render<AsyncCommandTestView>();
         var viewModel = GetViewModel<AsyncCommandTestViewModel>();
-        cut.WaitForState(() => !viewModel.SlowCommand.IsRunning, timeout: TimeSpan.FromSeconds(2));
 
-        var canExecuteAfterCompletion = cut.Find("#load-data-enabled").TextContent;
+        // Act
+        cut.Find("#slow-command").Click();
 
-        // Assert
-        using var _ = new AssertionScope();
-        cut.Find("#load-data-enabled").TextContent.Should().Contain("True");
+        // Assert - During execution
+        cut.WaitForAssertion(() =>
+        {
+            viewModel.SlowCommand.IsRunning.ShouldBeTrue();
+            cut.Find("#load-data-enabled").TextContent.ShouldContain("True");
+        });
+
+        // Assert - After execution
+        await viewModel.SlowCommand.ExecutionTask.ShouldNotBeNull();
+
+        cut.WaitForAssertion(() =>
+            cut.Find("#load-data-enabled").TextContent.ShouldContain("True"));
     }
 
     /// <summary>
@@ -179,29 +179,23 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandExecutes_ThenUIUpdatesAreNonBlocking()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
-        // Act - Execute command and immediately check we can access properties
+        // Act
         cut.Find("#load-data").Click();
-        
-        var canAccessViewModel = true;
-        try
+        cut.WaitForState(() => viewModel.LoadDataCommand.IsRunning);
+
+        Action accessViewModel = () =>
         {
             _ = viewModel.Result;
             _ = viewModel.IsProcessing;
             _ = viewModel.ExecutionCount;
-        }
-        catch
-        {
-            canAccessViewModel = false;
-        }
-
-        // Wait for completion
-        await Task.Delay(200);
+        };
 
         // Assert
-        canAccessViewModel.Should().BeTrue("ViewModel should be accessible while command is running");
+        Should.NotThrow(accessViewModel, "ViewModel should be accessible while command is running");
+        await viewModel.LoadDataCommand.ExecutionTask.ShouldNotBeNull();
     }
 
     /// <summary>
@@ -211,20 +205,17 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenMultipleCommandsExist_ThenEachHasIndependentIsRunningState()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
-        // Act - Start slow command
+        // Act
         cut.Find("#slow-command").Click();
-        await Task.Delay(20);
-
-        var slowCommandRunning = viewModel.SlowCommand.IsRunning;
-        var loadCommandRunning = viewModel.LoadDataCommand.IsRunning;
+        cut.WaitForState(() => viewModel.SlowCommand.IsRunning);
 
         // Assert
-        using var _ = new AssertionScope();
-        slowCommandRunning.Should().BeTrue("Slow command should be running");
-        loadCommandRunning.Should().BeFalse("Load command should not be running");
+        viewModel.SlowCommand.IsRunning.ShouldBeTrue("Slow command should be running");
+        viewModel.LoadDataCommand.IsRunning.ShouldBeFalse("Load command should not be running");
+        await viewModel.SlowCommand.ExecutionTask.ShouldNotBeNull();
     }
 
     /// <summary>
@@ -234,17 +225,18 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenComponentRendersAndDisposed_ThenNoExceptionsOccur()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
-        // Act - Execute command and dispose while running
+        // Act
         cut.Find("#slow-command").Click();
-        await Task.Delay(20);
+        cut.WaitForState(() => viewModel.SlowCommand.IsRunning);
 
         Action disposeAction = () => viewModel.Dispose();
 
         // Assert
-        disposeAction.Should().NotThrow();
+        Should.NotThrow(disposeAction);
+        await viewModel.SlowCommand.ExecutionTask.ShouldNotBeNull();
     }
 
     /// <summary>
@@ -255,31 +247,25 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenButtonClickedRapidly_ThenButtonIsDisabledWhileRunning()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var button = cut.Find("#slow-command");
         var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
-        // Act - Click once to start execution
+        // Act
         button.Click();
-        await Task.Delay(20); // Let command start
 
-        // Verify button is disabled while running
-        var isDisabledWhileRunning = button.HasAttribute("disabled");
-        var canExecuteWhileRunning = viewModel.SlowCommand.CanExecute(null);
+        // Assert - During execution
+        cut.WaitForAssertion(() =>
+        {
+            button.HasAttribute("disabled").ShouldBeTrue("Button should be disabled while command is running");
+            viewModel.SlowCommand.CanExecute(null).ShouldBeFalse("CanExecute should be false while command is running");
+        });
 
-        // Wait for command to complete
-        await Task.Delay(250);
-        viewModel = GetViewModel<AsyncCommandTestViewModel>();
-        cut.WaitForState(() => !viewModel.SlowCommand.IsRunning, timeout: TimeSpan.FromSeconds(2));
+        // Assert - After execution
+        await viewModel.SlowCommand.ExecutionTask.ShouldNotBeNull();
 
-        // Verify button is re-enabled after completion
-        var isEnabledAfterCompletion = !button.HasAttribute("disabled");
-
-        // Assert
-        using var _ = new AssertionScope();
-        isDisabledWhileRunning.Should().BeTrue("Button should be disabled while command is running");
-        canExecuteWhileRunning.Should().BeFalse("CanExecute should be false while command is running");
-        isEnabledAfterCompletion.Should().BeTrue("Button should be re-enabled after command completes");
+        cut.WaitForAssertion(() =>
+            button.HasAttribute("disabled").ShouldBeFalse("Button should be re-enabled after command completes"));
     }
 
     /// <summary>
@@ -289,27 +275,33 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
     public async Task WhenCommandExecutes_ThenButtonEnabledStateMatchesCanExecute()
     {
         // Arrange
-        var cut = RenderComponent<AsyncCommandTestView>();
+        var cut = Render<AsyncCommandTestView>();
         var button = cut.Find("#load-data");
         var viewModel = GetViewModel<AsyncCommandTestViewModel>();
 
         // Act & Assert - Before execution
-        button.HasAttribute("disabled").Should().BeFalse();
-        viewModel.LoadDataCommand.CanExecute(null).Should().BeTrue();
+        button.HasAttribute("disabled").ShouldBeFalse();
+        viewModel.LoadDataCommand.CanExecute(null).ShouldBeTrue();
 
         // Execute
         button.Click();
-        await Task.Delay(20);
 
         // During execution
-        button.HasAttribute("disabled").Should().BeTrue();
-        viewModel.LoadDataCommand.CanExecute(null).Should().BeFalse();
+        cut.WaitForAssertion(() =>
+        {
+            button.HasAttribute("disabled").ShouldBeTrue();
+            viewModel.LoadDataCommand.IsRunning.ShouldBeTrue();
+            viewModel.LoadDataCommand.CanExecute(null).ShouldBeFalse();
+        });
 
         // After execution
-        await Task.Delay(200);
-        cut.WaitForState(() => !viewModel.LoadDataCommand.IsRunning, timeout: TimeSpan.FromSeconds(2));
+        await viewModel.LoadDataCommand.ExecutionTask.ShouldNotBeNull();
 
-        button.HasAttribute("disabled").Should().BeFalse();
-        viewModel.LoadDataCommand.CanExecute(null).Should().BeTrue();
+        cut.WaitForAssertion(() =>
+        {
+            button.HasAttribute("disabled").ShouldBeFalse();
+            viewModel.LoadDataCommand.IsRunning.ShouldBeFalse();
+            viewModel.LoadDataCommand.CanExecute(null).ShouldBeTrue();
+        });
     }
 }

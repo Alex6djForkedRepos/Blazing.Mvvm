@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Collections.Concurrent;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp;
@@ -21,40 +20,20 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
         context.EnableConcurrentExecution();
-        
+
         context.RegisterCompilationStartAction(compilationContext =>
         {
-            var validViewModels = new ConcurrentBag<INamedTypeSymbol>();
+            var viewModelBaseTypes = ImmutableArray.Create(
+                    compilationContext.Compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.ViewModelBase),
+                    compilationContext.Compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.RecipientViewModelBase),
+                    compilationContext.Compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.ValidatorViewModelBase))
+                .OfType<INamedTypeSymbol>()
+                .ToImmutableArray();
 
-            // Collect all valid ViewModels (those that inherit from ViewModelBase and have [ViewModelDefinition])
-            compilationContext.RegisterSymbolAction(symbolContext =>
+            if (viewModelBaseTypes.IsEmpty)
             {
-                var namedType = (INamedTypeSymbol)symbolContext.Symbol;
-                
-                if (!namedType.Name.EndsWith(AnalyzerConstants.Naming.ViewModelSuffix))
-                {
-                    return;
-                }
-
-                if (namedType.TypeKind != TypeKind.Class || namedType.IsAbstract)
-                {
-                    return;
-                }
-
-                // Check if it inherits from ViewModelBase (like BLAZMVVM0001 does)
-                var inheritsBase = InheritsFromViewModelBase(namedType, symbolContext.Compilation);
-                
-                // Check if it has ViewModelDefinition attribute (required for DI registration)
-                var hasDefinition = namedType.GetAttributes().Any(attr =>
-                    attr.AttributeClass?.Name == AnalyzerConstants.AttributeNames.ViewModelDefinition ||
-                    attr.AttributeClass?.Name == (AnalyzerConstants.AttributeNames.ViewModelDefinition + "Attribute"));
-
-                // ViewModel is valid if it inherits from base AND has definition attribute
-                if (inheritsBase && hasDefinition)
-                {
-                    validViewModels.Add(namedType);
-                }
-            }, SymbolKind.NamedType);
+                return;
+            }
 
             // Analyze GenericNameSyntax nodes to find MvvmNavLink<TViewModel> usages
             compilationContext.RegisterSyntaxNodeAction(syntaxContext =>
@@ -67,7 +46,7 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
 
                 // Get semantic info
                 var typeInfo = syntaxContext.SemanticModel.GetTypeInfo(genericName, syntaxContext.CancellationToken);
-                
+
                 if (typeInfo.Type is not INamedTypeSymbol namedType)
                     return;
 
@@ -88,9 +67,9 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
                 if (viewModelType.TypeKind == TypeKind.Interface)
                     return;
 
-                // Validate immediately
-                var validViewModelSet = new HashSet<INamedTypeSymbol>(validViewModels, SymbolEqualityComparer.Default);
-                if (!validViewModelSet.Contains(viewModelType, SymbolEqualityComparer.Default))
+                // Validate the referenced symbol directly. Syntax and symbol analyzer actions can run
+                // concurrently, so relying on a separately populated collection creates a race.
+                if (!IsValidViewModel(viewModelType, viewModelBaseTypes))
                 {
                     var diagnostic = Diagnostic.Create(
                         DiagnosticDescriptors.MvvmNavLinkInvalidViewModel,
@@ -99,14 +78,14 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
 
                     syntaxContext.ReportDiagnostic(diagnostic);
                 }
-                
+
             }, SyntaxKind.GenericName);
 
             // Also check ObjectCreationExpressionSyntax for direct C# usage
             compilationContext.RegisterSyntaxNodeAction(syntaxContext =>
             {
                 var creation = (ObjectCreationExpressionSyntax)syntaxContext.Node;
-                
+
                 // Check if the type is a GenericNameSyntax (e.g., new MvvmNavLink<TViewModel>())
                 if (creation.Type is not GenericNameSyntax genericType)
                     return;
@@ -117,7 +96,7 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
 
                 // Get semantic info
                 var typeInfo = syntaxContext.SemanticModel.GetTypeInfo(creation, syntaxContext.CancellationToken);
-                
+
                 if (typeInfo.Type is not INamedTypeSymbol namedType)
                     return;
 
@@ -138,9 +117,7 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
                 if (viewModelType.TypeKind == TypeKind.Interface)
                     return;
 
-                // Validate immediately
-                var validViewModelSet = new HashSet<INamedTypeSymbol>(validViewModels, SymbolEqualityComparer.Default);
-                if (!validViewModelSet.Contains(viewModelType, SymbolEqualityComparer.Default))
+                if (!IsValidViewModel(viewModelType, viewModelBaseTypes))
                 {
                     var diagnostic = Diagnostic.Create(
                         DiagnosticDescriptors.MvvmNavLinkInvalidViewModel,
@@ -149,27 +126,40 @@ public class MvvmNavLinkTypeSafetyAnalyzer : DiagnosticAnalyzer
 
                     syntaxContext.ReportDiagnostic(diagnostic);
                 }
-                
+
             }, SyntaxKind.ObjectCreationExpression);
         });
+    }
+
+    private static bool IsValidViewModel(
+        INamedTypeSymbol typeSymbol,
+        ImmutableArray<INamedTypeSymbol> viewModelBaseTypes)
+    {
+        if (!typeSymbol.Name.EndsWith(AnalyzerConstants.Naming.ViewModelSuffix) ||
+            typeSymbol.TypeKind != TypeKind.Class ||
+            typeSymbol.IsAbstract ||
+            !InheritsFromViewModelBase(typeSymbol, viewModelBaseTypes))
+        {
+            return false;
+        }
+
+        return typeSymbol.GetAttributes().Any(attribute =>
+            attribute.AttributeClass?.Name == AnalyzerConstants.AttributeNames.ViewModelDefinition ||
+            attribute.AttributeClass?.Name == AnalyzerConstants.AttributeNames.ViewModelDefinition + "Attribute");
     }
 
     /// <summary>
     /// Checks if a type inherits from ViewModelBase (same logic as BLAZMVVM0001)
     /// </summary>
-    private static bool InheritsFromViewModelBase(INamedTypeSymbol typeSymbol, Compilation compilation)
+    private static bool InheritsFromViewModelBase(
+        INamedTypeSymbol typeSymbol,
+        ImmutableArray<INamedTypeSymbol> viewModelBaseTypes)
     {
-        var viewModelBaseTypes = new[]
-        {
-            compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.ViewModelBase),
-            compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.RecipientViewModelBase),
-            compilation.GetTypeByMetadataName(AnalyzerConstants.TypeNames.ValidatorViewModelBase)
-        };
-
         var baseType = typeSymbol.BaseType;
         while (baseType != null)
         {
-            if (viewModelBaseTypes.Any(vb => vb != null && SymbolEqualityComparer.Default.Equals(baseType, vb)))
+            if (viewModelBaseTypes.Any(viewModelBaseType =>
+                    SymbolEqualityComparer.Default.Equals(baseType, viewModelBaseType)))
             {
                 return true;
             }

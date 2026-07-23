@@ -38,7 +38,7 @@ public class ViewModelResolverTests
         var result = ViewModelResolver.Resolve(view, serviceProvider);
 
         // Assert
-        result.Should().BeSameAs(testViewModel);
+        result.ShouldBeSameAs(testViewModel);
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public class ViewModelResolverTests
         var result = ViewModelResolver.Resolve(view, serviceProvider);
 
         // Assert
-        result.Should().BeSameAs(testViewModel);
+        result.ShouldBeSameAs(testViewModel);
     }
 
     /// <summary>
@@ -79,10 +79,9 @@ public class ViewModelResolverTests
         var result2 = ViewModelResolver.Resolve(view2, serviceProvider);
 
         // Assert - Both should be resolved with the same key (different instances due to Transient)
-        using var _ = new AssertionScope();
-        result1.Should().NotBeNull();
-        result2.Should().NotBeNull();
-        result1.Should().NotBeSameAs(result2); // Transient services create new instances
+        result1.ShouldNotBeNull();
+        result2.ShouldNotBeNull();
+        result1.ShouldNotBeSameAs(result2); // Transient services create new instances
     }
 
     /// <summary>
@@ -101,7 +100,7 @@ public class ViewModelResolverTests
         var result = ViewModelResolver.Resolve(view, serviceProvider);
 
         // Assert
-        result.Should().BeSameAs(testViewModel);
+        result.ShouldBeSameAs(testViewModel);
     }
 
     /// <summary>
@@ -118,8 +117,8 @@ public class ViewModelResolverTests
         var act = () => ViewModelResolver.Resolve(view, serviceProvider);
 
         // Assert
-        act.Should().Throw<InvalidOperationException>()
-           .WithMessage("*ITestViewModel*");
+        act.ShouldThrow<InvalidOperationException>()
+            .Message.ShouldContain("ITestViewModel");
     }
 
     /// <summary>
@@ -136,8 +135,7 @@ public class ViewModelResolverTests
         var act = () => ViewModelResolver.Resolve(view, serviceProvider);
 
         // Assert
-        act.Should().Throw<InvalidOperationException>()
-           .WithMessage("*TestKey*");
+        act.ShouldThrow<InvalidOperationException>().Message.ShouldContain("TestKey");
     }
 
     /// <summary>
@@ -161,9 +159,8 @@ public class ViewModelResolverTests
         var keyedResult = ViewModelResolver.Resolve(keyedView, serviceProvider);
 
         // Assert
-        using var _ = new AssertionScope();
-        regularResult.Should().BeSameAs(testViewModel);
-        keyedResult.Should().BeSameAs(testKeyedViewModel);
+        regularResult.ShouldBeSameAs(testViewModel);
+        keyedResult.ShouldBeSameAs(testKeyedViewModel);
     }
 
     /// <summary>
@@ -183,7 +180,7 @@ public class ViewModelResolverTests
         var result2 = ViewModelResolver.Resolve(view2, serviceProvider);
 
         // Assert
-        result1.Should().NotBeSameAs(result2); // Transient should create new instances
+        result1.ShouldNotBeSameAs(result2); // Transient should create new instances
     }
 
     /// <summary>
@@ -203,7 +200,7 @@ public class ViewModelResolverTests
         var result2 = ViewModelResolver.Resolve(view2, serviceProvider);
 
         // Assert
-        result1.Should().BeSameAs(result2); // Singleton should return same instance
+        result1.ShouldBeSameAs(result2); // Singleton should return same instance
     }
 
     /// <summary>
@@ -222,18 +219,18 @@ public class ViewModelResolverTests
         var result = ViewModelResolver.Resolve(view, serviceProvider);
 
         // Assert
-        result.Should().BeSameAs(testViewModel);
+        result.ShouldBeSameAs(testViewModel);
     }
 
     // Test classes and interfaces
     public interface ITestViewModel : IViewModelBase { }
-    
+
     public class TestViewModel : ViewModelBase, ITestViewModel { }
 
     public class TestView : MvvmComponentBase<ITestViewModel> { }
 
     public interface ITestKeyedViewModel : IViewModelBase { }
-    
+
     public class TestKeyedViewModel : ViewModelBase, ITestKeyedViewModel { }
 
     [ViewModelKey("TestKey")]

@@ -20,8 +20,8 @@ public class ViewModelBaseTests
         viewModel.OnAfterRender(firstRender: true);
 
         // Assert
-        viewModel.OnAfterRenderCalled.Should().BeTrue();
-        viewModel.OnAfterRenderFirstRender.Should().BeTrue();
+        viewModel.OnAfterRenderCalled.ShouldBeTrue();
+        viewModel.OnAfterRenderFirstRender.ShouldBeTrue();
     }
 
     /// <summary>
@@ -37,8 +37,8 @@ public class ViewModelBaseTests
         viewModel.OnAfterRender(firstRender: false);
 
         // Assert
-        viewModel.OnAfterRenderCalled.Should().BeTrue();
-        viewModel.OnAfterRenderFirstRender.Should().BeFalse();
+        viewModel.OnAfterRenderCalled.ShouldBeTrue();
+        viewModel.OnAfterRenderFirstRender.ShouldBeFalse();
     }
 
     /// <summary>
@@ -54,8 +54,8 @@ public class ViewModelBaseTests
         await viewModel.OnAfterRenderAsync(firstRender: true);
 
         // Assert
-        viewModel.OnAfterRenderAsyncCalled.Should().BeTrue();
-        viewModel.OnAfterRenderAsyncFirstRender.Should().BeTrue();
+        viewModel.OnAfterRenderAsyncCalled.ShouldBeTrue();
+        viewModel.OnAfterRenderAsyncFirstRender.ShouldBeTrue();
     }
 
     /// <summary>
@@ -71,8 +71,8 @@ public class ViewModelBaseTests
         await viewModel.OnAfterRenderAsync(firstRender: false);
 
         // Assert
-        viewModel.OnAfterRenderAsyncCalled.Should().BeTrue();
-        viewModel.OnAfterRenderAsyncFirstRender.Should().BeFalse();
+        viewModel.OnAfterRenderAsyncCalled.ShouldBeTrue();
+        viewModel.OnAfterRenderAsyncFirstRender.ShouldBeFalse();
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public class ViewModelBaseTests
         viewModel.OnInitialized();
 
         // Assert
-        viewModel.OnInitializedCalled.Should().BeTrue();
+        viewModel.OnInitializedCalled.ShouldBeTrue();
     }
 
     /// <summary>
@@ -104,7 +104,7 @@ public class ViewModelBaseTests
         await viewModel.OnInitializedAsync();
 
         // Assert
-        viewModel.OnInitializedAsyncCalled.Should().BeTrue();
+        viewModel.OnInitializedAsyncCalled.ShouldBeTrue();
     }
 
     /// <summary>
@@ -120,7 +120,7 @@ public class ViewModelBaseTests
         viewModel.OnParametersSet();
 
         // Assert
-        viewModel.OnParametersSetCalled.Should().BeTrue();
+        viewModel.OnParametersSetCalled.ShouldBeTrue();
     }
 
     /// <summary>
@@ -136,7 +136,7 @@ public class ViewModelBaseTests
         await viewModel.OnParametersSetAsync();
 
         // Assert
-        viewModel.OnParametersSetAsyncCalled.Should().BeTrue();
+        viewModel.OnParametersSetAsyncCalled.ShouldBeTrue();
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ public class ViewModelBaseTests
         var result = viewModel.ShouldRender();
 
         // Assert
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     /// <summary>
@@ -169,7 +169,7 @@ public class ViewModelBaseTests
         var result = viewModel.ShouldRender();
 
         // Assert
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     /// <summary>
@@ -191,7 +191,7 @@ public class ViewModelBaseTests
         viewModel.NotifyStateChanged();
 
         // Assert
-        propertyChangedTriggered.Should().BeTrue();
+        propertyChangedTriggered.ShouldBeTrue();
     }
 
     /// <summary>
@@ -204,7 +204,7 @@ public class ViewModelBaseTests
         var viewModel = new TestViewModelBase();
 
         // Act & Assert
-        viewModel.Should().BeAssignableTo<IViewModelBase>();
+        viewModel.ShouldBeAssignableTo<IViewModelBase>();
     }
 
     /// <summary>
@@ -217,7 +217,7 @@ public class ViewModelBaseTests
         var viewModel = new TestViewModelBase();
 
         // Act & Assert
-        viewModel.Should().BeAssignableTo<System.ComponentModel.INotifyPropertyChanged>();
+        viewModel.ShouldBeAssignableTo<System.ComponentModel.INotifyPropertyChanged>();
     }
 
     /// <summary>
@@ -233,7 +233,7 @@ public class ViewModelBaseTests
         var task = viewModel.OnAfterRenderAsync(true);
 
         // Assert
-        task.Should().Be(Task.CompletedTask);
+        task.ShouldBe(Task.CompletedTask);
         await task; // Should complete without throwing
     }
 
@@ -250,7 +250,7 @@ public class ViewModelBaseTests
         var task = viewModel.OnInitializedAsync();
 
         // Assert
-        task.Should().Be(Task.CompletedTask);
+        task.ShouldBe(Task.CompletedTask);
         await task; // Should complete without throwing
     }
 
@@ -267,7 +267,7 @@ public class ViewModelBaseTests
         var task = viewModel.OnParametersSetAsync();
 
         // Assert
-        task.Should().Be(Task.CompletedTask);
+        task.ShouldBe(Task.CompletedTask);
         await task; // Should complete without throwing
     }
 
@@ -286,10 +286,9 @@ public class ViewModelBaseTests
         viewModel.OnAfterRender(true);
 
         // Assert
-        using var _ = new AssertionScope();
-        viewModel.OnInitializedCalled.Should().BeTrue();
-        viewModel.OnParametersSetCalled.Should().BeTrue();
-        viewModel.OnAfterRenderCalled.Should().BeTrue();
+        viewModel.OnInitializedCalled.ShouldBeTrue();
+        viewModel.OnParametersSetCalled.ShouldBeTrue();
+        viewModel.OnAfterRenderCalled.ShouldBeTrue();
     }
 
     /// <summary>
@@ -312,10 +311,9 @@ public class ViewModelBaseTests
         await Task.WhenAll(tasks);
 
         // Assert
-        using var _ = new AssertionScope();
-        viewModel.OnInitializedAsyncCalled.Should().BeTrue();
-        viewModel.OnParametersSetAsyncCalled.Should().BeTrue();
-        viewModel.OnAfterRenderAsyncCalled.Should().BeTrue();
+        viewModel.OnInitializedAsyncCalled.ShouldBeTrue();
+        viewModel.OnParametersSetAsyncCalled.ShouldBeTrue();
+        viewModel.OnAfterRenderAsyncCalled.ShouldBeTrue();
     }
 
     // Test classes

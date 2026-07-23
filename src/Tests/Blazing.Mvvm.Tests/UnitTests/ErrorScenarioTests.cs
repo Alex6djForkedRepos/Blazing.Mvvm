@@ -41,7 +41,7 @@ public class ErrorScenarioTests
 
         // Act & Assert
         var act = () => mvvmNavigationManager.NavigateTo<TestViewModel>(null!, false, false);
-        act.Should().Throw<ArgumentNullException>().WithParameterName("relativeUri");
+        act.ShouldThrow<ArgumentNullException>().ParamName.ShouldBe("relativeUri");
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class ErrorScenarioTests
 
         // Act & Assert
         var act = () => mvvmNavigationManager.NavigateTo((object)null!, false, false);
-        act.Should().Throw<ArgumentNullException>().WithParameterName("key");
+        act.ShouldThrow<ArgumentNullException>().ParamName.ShouldBe("key");
     }
 
     /// <summary>
@@ -78,18 +78,18 @@ public class ErrorScenarioTests
         // Arrange
         var loggerMock = new Mock<ILogger<ViewModelRouteCache>>();
         var configuration = new LibraryConfiguration();
-        
+
         // Create a mock assembly that throws ReflectionTypeLoadException
         var mockAssembly = new Mock<Assembly>();
         var loaderExceptions = new Exception[] { new FileNotFoundException("Test exception") };
         var reflectionException = new ReflectionTypeLoadException(new Type[0], loaderExceptions);
-        
+
         mockAssembly.Setup(a => a.GetTypes()).Throws(reflectionException);
         configuration.ViewModelAssemblies.Add(mockAssembly.Object);
 
         // Act & Assert - Should not throw
         var act = () => new ViewModelRouteCache(loggerMock.Object, configuration);
-        act.Should().NotThrow();
+        act.ShouldNotThrow();
     }
 
     /// <summary>
@@ -101,7 +101,7 @@ public class ErrorScenarioTests
         // Arrange
         var loggerMock = new Mock<ILogger<ViewModelRouteCache>>();
         var configuration = new LibraryConfiguration();
-        
+
         var mockAssembly = new Mock<Assembly>();
         mockAssembly.Setup(a => a.GetTypes()).Throws<InvalidOperationException>();
         mockAssembly.Setup(a => a.FullName).Returns("TestAssembly");
@@ -109,7 +109,7 @@ public class ErrorScenarioTests
 
         // Act & Assert - Should not throw
         var act = () => new ViewModelRouteCache(loggerMock.Object, configuration);
-        act.Should().NotThrow();
+        act.ShouldNotThrow();
     }
 
     /// <summary>
@@ -119,13 +119,13 @@ public class ErrorScenarioTests
     public void ParameterResolver_GivenNullView_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var resolver = new global::Blazing.Mvvm.Components.Parameter.ParameterResolver(ParameterResolutionMode.ViewModel);
+        var resolver = new Mvvm.Components.Parameter.ParameterResolver(ParameterResolutionMode.ViewModel);
         var viewModel = new TestViewModel();
         var parameters = ParameterView.Empty;
 
         // Act & Assert
-        var act = () => resolver.SetParameters<IView<TestViewModel>, TestViewModel>(null!, viewModel, parameters);
-        act.Should().Throw<ArgumentNullException>().WithParameterName("view");
+        Action act = () => resolver.SetParameters<IView<TestViewModel>, TestViewModel>(null!, viewModel, parameters);
+        act.ShouldThrow<ArgumentNullException>().ParamName.ShouldBe("view");
     }
 
     /// <summary>
@@ -135,13 +135,13 @@ public class ErrorScenarioTests
     public void ParameterResolver_GivenNullViewModel_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var resolver = new global::Blazing.Mvvm.Components.Parameter.ParameterResolver(ParameterResolutionMode.ViewModel);
+        var resolver = new Mvvm.Components.Parameter.ParameterResolver(ParameterResolutionMode.ViewModel);
         var view = new Mock<IView<TestViewModel>>().Object;
         var parameters = ParameterView.Empty;
 
         // Act & Assert
-        var act = () => resolver.SetParameters(view, (TestViewModel)null!, parameters);
-        act.Should().Throw<ArgumentNullException>().WithParameterName("viewModel");
+        Action act = () => resolver.SetParameters(view, (TestViewModel)null!, parameters);
+        act.ShouldThrow<ArgumentNullException>().ParamName.ShouldBe("viewModel");
     }
 
     /// <summary>
@@ -155,9 +155,10 @@ public class ErrorScenarioTests
         var propertyInfo = type.GetProperty(nameof(TestViewModelWithReadOnlyProperty.ReadOnlyProperty))!;
 
         // Act & Assert
-        var act = () => new global::Blazing.Mvvm.Components.Parameter.PropertySetter(type, propertyInfo);
-        act.Should().Throw<InvalidOperationException>()
-           .WithMessage("*ReadOnlyProperty*does not have a setter*");
+        var act = () => new Mvvm.Components.Parameter.PropertySetter(type, propertyInfo);
+        var exception = act.ShouldThrow<InvalidOperationException>();
+        exception.Message.ShouldContain("ReadOnlyProperty");
+        exception.Message.ShouldContain("does not have a setter");
     }
 
     /// <summary>
@@ -180,7 +181,7 @@ public class ErrorScenarioTests
             });
         };
 
-        act.Should().NotThrow();
+        act.ShouldNotThrow();
     }
 
     /// <summary>
@@ -207,7 +208,7 @@ public class ErrorScenarioTests
 
         // Act & Assert - Should handle internal URI creation gracefully
         var act = () => mvvmNavigationManager.NavigateTo<TestViewModel>();
-        act.Should().NotThrow();
+        act.ShouldNotThrow();
     }
 
     /// <summary>
@@ -226,7 +227,7 @@ public class ErrorScenarioTests
         var cache = new ViewModelRouteCache(loggerMock.Object, configuration);
 
         // Assert
-        cache.ViewModelRoutes[typeof(TestViewModel)].Should().Be("/test");
+        cache.ViewModelRoutes[typeof(TestViewModel)].ShouldBe("/test");
     }
 
     /// <summary>
@@ -245,7 +246,7 @@ public class ErrorScenarioTests
         var cache = new ViewModelRouteCache(loggerMock.Object, configuration);
 
         // Assert
-        cache.ViewModelRoutes[typeof(TestViewModel)].Should().Be("/test");
+        cache.ViewModelRoutes[typeof(TestViewModel)].ShouldBe("/test");
     }
 
     /// <summary>
@@ -264,7 +265,7 @@ public class ErrorScenarioTests
         var cache = new ViewModelRouteCache(loggerMock.Object, configuration);
 
         // Assert
-        cache.ViewModelRoutes[typeof(TestViewModel)].Should().Be("/test");
+        cache.ViewModelRoutes[typeof(TestViewModel)].ShouldBe("/test");
     }
 
     /// <summary>
@@ -292,7 +293,7 @@ public class ErrorScenarioTests
         mvvmNavigationManager.NavigateTo<TestViewModel>("");
 
         // Assert - Should contain the full URI including protocol and host
-        navigationManager.LastNavigatedUri.Should().Contain("test");
+        navigationManager.LastNavigatedUri!.ShouldContain("test");
     }
 
     /// <summary>
@@ -307,7 +308,7 @@ public class ErrorScenarioTests
 
         // Act & Assert
         var act = () => ViewModelResolver.Resolve(view, serviceProvider);
-        act.Should().Throw<InvalidOperationException>();
+        act.ShouldThrow<InvalidOperationException>();
     }
 
     /// <summary>
@@ -335,8 +336,8 @@ public class ErrorScenarioTests
         mvvmNavigationManager.NavigateTo<TestViewModel>("details?param1=value1?param2=value2");
 
         // Assert - Should handle query string (even malformed) and append to base route
-        navigationManager.LastNavigatedUri.Should().Contain("test");
-        navigationManager.LastNavigatedUri.Should().Contain("param1=value1");
+        navigationManager.LastNavigatedUri!.ShouldContain("test");
+        navigationManager.LastNavigatedUri!.ShouldContain("param1=value1");
     }
 
     // Test classes

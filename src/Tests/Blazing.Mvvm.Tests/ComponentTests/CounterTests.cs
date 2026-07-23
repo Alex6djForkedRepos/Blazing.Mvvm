@@ -36,7 +36,7 @@ public class CounterTests : ComponentTestBase
         logger.Setup(x => x.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
 
         // Act
-        RenderComponent<Counter>();
+        Render<Counter>();
 
         // Assert
         logger.VerifyLog(LogLevel.Information, expectedLogMessage, Times.Once());
@@ -54,7 +54,7 @@ public class CounterTests : ComponentTestBase
         var logger = GetMock<ILogger<CounterViewModel>>();
         logger.Setup(x => x.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
 
-        var cut = RenderComponent<Counter>();
+        var cut = Render<Counter>();
 
         // Act
         cut.Render();
@@ -74,16 +74,15 @@ public class CounterTests : ComponentTestBase
         const int expectedCount = 1;
         var expectedParagraphContent = $"Current count: {expectedCount}";
 
-        var cut = RenderComponent<Counter>();
+        var cut = Render<Counter>();
         var cutViewModel = GetViewModel<CounterViewModel>();
 
         // Act
         cut.Find(clickMeButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        cut.Find(ParagraphSelector).TextContent.Should().Be(expectedParagraphContent);
-        cutViewModel.CurrentCount.Should().Be(expectedCount);
+        cut.Find(ParagraphSelector).TextContent.ShouldBe(expectedParagraphContent);
+        cutViewModel.CurrentCount.ShouldBe(expectedCount);
     }
 
     /// <summary>
@@ -97,7 +96,7 @@ public class CounterTests : ComponentTestBase
         const int expectedCount = 0;
         var expectedParagraphContent = $"Current count: {expectedCount}";
 
-        var cut = RenderComponent<Counter>();
+        var cut = Render<Counter>();
         var cutViewModel = GetViewModel<CounterViewModel>();
         cutViewModel.CurrentCount = 5;
 
@@ -105,8 +104,7 @@ public class CounterTests : ComponentTestBase
         cut.Find(resetButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        cut.Find(ParagraphSelector).TextContent.Should().Be(expectedParagraphContent);
-        cutViewModel.CurrentCount.Should().Be(expectedCount);
+        cut.Find(ParagraphSelector).TextContent.ShouldBe(expectedParagraphContent);
+        cutViewModel.CurrentCount.ShouldBe(expectedCount);
     }
 }

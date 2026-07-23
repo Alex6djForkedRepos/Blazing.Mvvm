@@ -13,14 +13,14 @@ public class FetchDataTests : ComponentTestBase
 {
     private const string TableSelector = "table";
 
-    private readonly FakePersistentComponentState _fakeState;
+    private readonly BunitPersistentComponentState _persistentComponentState;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FetchDataTests"/> class and registers the <see cref="FetchDataViewModel"/>.
     /// </summary>
     public FetchDataTests()
     {
-        _fakeState = this.AddFakePersistentComponentState();
+        _persistentComponentState = AddBunitPersistentComponentState();
 
         // Add a view model to Services because the IScopedFactory created by BUnit does not fall back to AutoMocker.
         Services.AddScoped(_ => CreateInstance<FetchDataViewModel>(true));
@@ -42,10 +42,10 @@ public class FetchDataTests : ComponentTestBase
             .Returns(taskCompletionSource.Task);
 
         // Act
-        var cut = RenderComponent<FetchData>();
+        var cut = Render<FetchData>();
 
         // Assert
-        cut.FindByLabelText(loadingParagraphAriaLabel).TextContent.Should().Be(expectedParagraphContent);
+        cut.FindByLabelText(loadingParagraphAriaLabel).TextContent.ShouldBe(expectedParagraphContent);
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public class FetchDataTests : ComponentTestBase
             .ReturnsAsync([]);
 
         // Act
-        var cut = RenderComponent<FetchData>();
+        var cut = Render<FetchData>();
 
         // Assert
         cut.WaitForAssertion(() => cut.Find(TableSelector).MarkupMatches(expectedTableHtml));
@@ -107,7 +107,7 @@ public class FetchDataTests : ComponentTestBase
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{weatherForecast.Date.ToShortDateString()}</td>
+                        <td>{weatherForecast.Date:d}</td>
                         <td>{weatherForecast.TemperatureC}</td>
                         <td>{weatherForecast.TemperatureF}</td>
                         <td>{weatherForecast.Summary}</td>
@@ -122,12 +122,13 @@ public class FetchDataTests : ComponentTestBase
             .ReturnsAsync([weatherForecast]);
 
         // Act
-        var cut = RenderComponent<FetchData>();
+        var cut = Render<FetchData>();
 
         // Assert
-        using var _ = new AssertionScope();
         cut.WaitForAssertion(() => cut.Find(TableSelector).MarkupMatches(expectedTableHtml));
-        cutViewModel.WeatherForecasts.Should().BeEquivalentTo([weatherForecast]);
+        cutViewModel.WeatherForecasts.ShouldNotBeNull()
+            .ToArray()
+            .ShouldBeEquivalentTo(new[] { weatherForecast });
     }
 
     /// <summary>
@@ -156,7 +157,7 @@ public class FetchDataTests : ComponentTestBase
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{weatherForecast.Date.ToShortDateString()}</td>
+                        <td>{weatherForecast.Date:d}</td>
                         <td>{weatherForecast.TemperatureC}</td>
                         <td>{weatherForecast.TemperatureF}</td>
                         <td>{weatherForecast.Summary}</td>
@@ -167,15 +168,16 @@ public class FetchDataTests : ComponentTestBase
 
         var cutViewModel = GetViewModel<FetchDataViewModel>();
         var weatherServiceMock = GetMock<IWeatherService>();
-        _fakeState.Persist<IEnumerable<WeatherForecast>>(nameof(cutViewModel.WeatherForecasts), [weatherForecast]);
+        _persistentComponentState.Persist<IEnumerable<WeatherForecast>>(nameof(cutViewModel.WeatherForecasts), [weatherForecast]);
 
         // Act
-        var cut = RenderComponent<FetchData>();
+        var cut = Render<FetchData>();
 
         // Assert
-        using var _ = new AssertionScope();
         cut.WaitForAssertion(() => cut.Find(TableSelector).MarkupMatches(expectedTableHtml));
-        cutViewModel.WeatherForecasts.Should().BeEquivalentTo([weatherForecast]);
+        cutViewModel.WeatherForecasts
+            .ShouldNotBeNull().ToArray()
+            .ShouldBeEquivalentTo(new[] { weatherForecast });
         weatherServiceMock.Verify(x => x.GetForecastAsync(It.IsAny<CancellationToken>()), Times.Never());
     }
 
@@ -186,33 +188,34 @@ public class FetchDataTests : ComponentTestBase
     public void GivenComponent_WhenRegisterOnPersistingIsTriggered_ThenShouldPersistState()
     {
         // Arrange
-        RenderComponent<FetchData>();
+        Render<FetchData>();
         var cutViewModel = GetViewModel<FetchDataViewModel>();
         cutViewModel.WeatherForecasts = [new WeatherForecast { Date = DateTime.Now, TemperatureC = 30, Summary = "Hot" }];
 
         // Act
-        _fakeState.TriggerOnPersisting();
+        _persistentComponentState.TriggerOnPersisting();
 
         // Assert
-        using var _ = new AssertionScope();
-        _fakeState.TryTake<IEnumerable<WeatherForecast>>(nameof(cutViewModel.WeatherForecasts), out var weatherForecasts).Should().BeTrue();
-        weatherForecasts.Should().BeEquivalentTo(cutViewModel.WeatherForecasts);
+        _persistentComponentState.TryTake<IEnumerable<WeatherForecast>>(nameof(cutViewModel.WeatherForecasts), out var weatherForecasts).ShouldBeTrue();
+        weatherForecasts
+            .ShouldNotBeNull().ToArray()
+            .ShouldBeEquivalentTo(cutViewModel.WeatherForecasts.ShouldNotBeNull().ToArray());
     }
 
     /// <summary>
     /// Verifies that the view model is disposed when the component is disposed.
     /// </summary>
     [Fact]
-    public void GivenComponent_WhenDisposed_ThenShouldDisposeViewModel()
+    public async Task GivenComponent_WhenDisposed_ThenShouldDisposeViewModel()
     {
         // Arrange
         const string expectedLogMessage = "Disposing FetchDataViewModel.";
 
-        RenderComponent<FetchData>();
+        Render<FetchData>();
         var loggerMock = GetMock<ILogger<FetchDataViewModel>>();
 
         // Act
-        DisposeComponents();
+        await DisposeComponentsAsync();
 
         // Assert
         loggerMock.VerifyLog(LogLevel.Information, expectedLogMessage, Times.Once());

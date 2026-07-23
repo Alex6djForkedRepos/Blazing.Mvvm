@@ -1,4 +1,5 @@
 using Blazing.Mvvm.Analyzers.Analyzers;
+using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
 using Xunit;
 using VerifyCS = Blazing.Mvvm.Analyzers.Tests.CSharpAnalyzerVerifier<
@@ -18,6 +19,44 @@ public class MvvmNavLinkTypeSafetyAnalyzerTests
     {
         const string test = "";
         await VerifyCS.VerifyAnalyzerAsync(test);
+    }
+
+    [Fact]
+    public async Task MissingViewModelBaseTypes_NoDiagnostic()
+    {
+        const string test = """
+            namespace Blazing.Mvvm.Components.Routing
+            {
+                public class MvvmNavLink<TViewModel>
+                {
+                }
+            }
+
+            namespace TestNamespace
+            {
+                using Blazing.Mvvm.Components.Routing;
+
+                public class MyComponent
+                {
+                    public void RenderLink()
+                    {
+                        var link = new MvvmNavLink<ProductViewModel>();
+                    }
+                }
+
+                public class ProductViewModel
+                {
+                }
+            }
+            """;
+
+        var testRunner = new CSharpAnalyzerTest<MvvmNavLinkTypeSafetyAnalyzer, DefaultVerifier>
+        {
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            TestCode = test,
+        };
+
+        await testRunner.RunAsync();
     }
 
     [Fact]

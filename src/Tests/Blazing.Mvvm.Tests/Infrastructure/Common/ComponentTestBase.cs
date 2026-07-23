@@ -8,7 +8,7 @@ namespace Blazing.Mvvm.Tests.Infrastructure.Common;
 /// <summary>
 /// Base class for component tests providing common setup and helper methods for dependency injection and mocking.
 /// </summary>
-public abstract class ComponentTestBase : TestContext
+public abstract class ComponentTestBase : BunitContext
 {
     private readonly AutoMocker _autoMocker;
 
@@ -55,7 +55,8 @@ public abstract class ComponentTestBase : TestContext
         where T : class
     {
         // Register PersistentComponentState from Services if available
-        if (Services.GetService(typeof(PersistentComponentState)) is PersistentComponentState persistentState)
+        if (Services.GetService<PersistentComponentState>() is PersistentComponentState persistentState
+            && !_autoMocker.ResolvedObjects.ContainsKey(typeof(PersistentComponentState)))
         {
             _autoMocker.Use(persistentState);
         }
@@ -100,6 +101,11 @@ public abstract class ComponentTestBase : TestContext
     protected T GetViewModel<T>(object? key = null)
         where T : IViewModelBase
     {
+        if (key is null && _autoMocker.ResolvedObjects.ContainsKey(typeof(T)))
+        {
+            return _autoMocker.Get<T>();
+        }
+
         return key is null
             ? Services.GetRequiredService<T>()
             : Services.GetRequiredKeyedService<T>(key);

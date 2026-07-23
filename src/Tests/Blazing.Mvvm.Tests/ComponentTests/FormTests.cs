@@ -39,7 +39,7 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedName = "Lorem Ipsum";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var nameInput = cut.FindByLabelText(NameInputAriaLabel);
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
@@ -47,9 +47,8 @@ public class FormTests : ComponentTestBase
         nameInput.Change(new ChangeEventArgs { Value = expectedName });
 
         // Assert
-        using var _ = new AssertionScope();
-        nameInput.GetAttribute(AttributeNames.Value).Should().Be(expectedName);
-        cutViewModel.Contact.Name.Should().Be(expectedName);
+        nameInput.GetAttribute(AttributeNames.Value).ShouldBe(expectedName);
+        cutViewModel.Contact.Name.ShouldBe(expectedName);
     }
 
     /// <summary>
@@ -61,7 +60,7 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedEmail = "lorem@ipsum.io";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var emailInput = cut.FindByLabelText(EmailInputAriaLabel);
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
@@ -69,9 +68,8 @@ public class FormTests : ComponentTestBase
         emailInput.Change(new ChangeEventArgs { Value = expectedEmail });
 
         // Assert
-        using var _ = new AssertionScope();
-        emailInput.GetAttribute(AttributeNames.Value).Should().Be(expectedEmail);
-        cutViewModel.Contact.Email.Should().Be(expectedEmail);
+        emailInput.GetAttribute(AttributeNames.Value).ShouldBe(expectedEmail);
+        cutViewModel.Contact.Email.ShouldBe(expectedEmail);
     }
 
     /// <summary>
@@ -83,7 +81,7 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedPhoneNumber = "+12345678";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var phoneNumberInput = cut.FindByLabelText(PhoneNumberInputAriaLabel);
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
@@ -91,9 +89,8 @@ public class FormTests : ComponentTestBase
         phoneNumberInput.Change(new ChangeEventArgs { Value = expectedPhoneNumber });
 
         // Assert
-        using var _ = new AssertionScope();
-        phoneNumberInput.GetAttribute(AttributeNames.Value).Should().Be(expectedPhoneNumber);
-        cutViewModel.Contact.PhoneNumber.Should().Be(expectedPhoneNumber);
+        phoneNumberInput.GetAttribute(AttributeNames.Value).ShouldBe(expectedPhoneNumber);
+        cutViewModel.Contact.PhoneNumber.ShouldBe(expectedPhoneNumber);
     }
 
     /// <summary>
@@ -105,14 +102,14 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedName = "Lorem Ipsum";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
         // Act
         cutViewModel.Contact.Name = expectedName;
 
         // Assert
-        cut.FindByLabelText(NameInputAriaLabel).GetAttribute(AttributeNames.Value).Should().Be(expectedName);
+        cut.FindByLabelText(NameInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBe(expectedName);
     }
 
     /// <summary>
@@ -124,14 +121,14 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedEmail = "lorem@ipsum.io";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
         // Act
         cutViewModel.Contact.Email = expectedEmail;
 
         // Assert
-        cut.FindByLabelText(EmailInputAriaLabel).GetAttribute(AttributeNames.Value).Should().Be(expectedEmail);
+        cut.FindByLabelText(EmailInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBe(expectedEmail);
     }
 
     /// <summary>
@@ -143,14 +140,14 @@ public class FormTests : ComponentTestBase
         // Arrange
         const string expectedPhoneNumber = "+12345678";
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var cutViewModel = GetViewModel<EditContactViewModel>();
 
         // Act
         cutViewModel.Contact.PhoneNumber = expectedPhoneNumber;
 
         // Assert
-        cut.FindByLabelText(PhoneNumberInputAriaLabel).GetAttribute(AttributeNames.Value).Should().Be(expectedPhoneNumber);
+        cut.FindByLabelText(PhoneNumberInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBe(expectedPhoneNumber);
     }
 
     /// <summary>
@@ -163,7 +160,7 @@ public class FormTests : ComponentTestBase
         const string expectedLogMessage = "Form is valid and submitted!";
         Services.AddSingleton(_ => GetMock<ILogger<EditContactViewModel>>().Object);
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         cut.FindByLabelText(NameInputAriaLabel).Change(new ChangeEventArgs { Value = "Lorem Ipsum" });
         cut.FindByLabelText(EmailInputAriaLabel).Change(new ChangeEventArgs { Value = "lorem@ipsum.io" });
         cut.FindByLabelText(PhoneNumberInputAriaLabel).Change(new ChangeEventArgs { Value = "+12345678" });
@@ -174,8 +171,7 @@ public class FormTests : ComponentTestBase
         cut.Find(SubmitButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        cutViewModel.Contact.HasErrors.Should().BeFalse();
+        cutViewModel.Contact.HasErrors.ShouldBeFalse();
         loggerMock.VerifyLog(LogLevel.Information, expectedLogMessage);
     }
 
@@ -198,19 +194,18 @@ public class FormTests : ComponentTestBase
             </ul>
             """;
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
         var submitButton = cut.Find(SubmitButtonSelector);
 
         // Act
         submitButton.Click();
 
         // Assert
-        using var _ = new AssertionScope();
         cut.FindByLabelText(ErrorSummaryAriaLabel).MarkupMatches(expectedErrorSummaryHtml);
-        cut.FindByLabelText(NameValidationMessageAriaLabel).TextContent.Should().Be(expectedNameErrorMsg);
-        cut.FindByLabelText(EmailValidationMessageAriaLabel).TextContent.Should().Be(expectedEmailErrorMsg);
-        cut.FindByLabelText(PhoneNumberValidationMessageAriaLabel).TextContent.Should().Be(expectedPhoneNumberErrorMsg);
-        submitButton.IsDisabled().Should().BeTrue();
+        cut.FindByLabelText(NameValidationMessageAriaLabel).TextContent.ShouldBe(expectedNameErrorMsg);
+        cut.FindByLabelText(EmailValidationMessageAriaLabel).TextContent.ShouldBe(expectedEmailErrorMsg);
+        cut.FindByLabelText(PhoneNumberValidationMessageAriaLabel).TextContent.ShouldBe(expectedPhoneNumberErrorMsg);
+        submitButton.IsDisabled().ShouldBeTrue();
     }
 
     /// <summary>
@@ -232,7 +227,7 @@ public class FormTests : ComponentTestBase
             </ul>
             """;
 
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
 
         // Act
         cut.FindByLabelText(NameInputAriaLabel).Change(new ChangeEventArgs { Value = "L" });
@@ -240,12 +235,11 @@ public class FormTests : ComponentTestBase
         cut.FindByLabelText(PhoneNumberInputAriaLabel).Change(new ChangeEventArgs { Value = "+" });
 
         // Assert
-        using var _ = new AssertionScope();
         cut.FindByLabelText(ErrorSummaryAriaLabel).MarkupMatches(expectedErrorSummaryHtml);
-        cut.FindByLabelText(NameValidationMessageAriaLabel).TextContent.Should().Be(expectedNameErrorMsg);
-        cut.FindByLabelText(EmailValidationMessageAriaLabel).TextContent.Should().Be(expectedEmailErrorMsg);
-        cut.FindByLabelText(PhoneNumberValidationMessageAriaLabel).TextContent.Should().Be(expectedPhoneNumberErrorMsg);
-        cut.Find(SubmitButtonSelector).IsDisabled().Should().BeTrue();
+        cut.FindByLabelText(NameValidationMessageAriaLabel).TextContent.ShouldBe(expectedNameErrorMsg);
+        cut.FindByLabelText(EmailValidationMessageAriaLabel).TextContent.ShouldBe(expectedEmailErrorMsg);
+        cut.FindByLabelText(PhoneNumberValidationMessageAriaLabel).TextContent.ShouldBe(expectedPhoneNumberErrorMsg);
+        cut.Find(SubmitButtonSelector).IsDisabled().ShouldBeTrue();
     }
 
     /// <summary>
@@ -255,16 +249,15 @@ public class FormTests : ComponentTestBase
     public void GivenFormIsInvalid_WhenClearButtonIsClicked_ThenFormShouldBeCleared()
     {
         // Arrange
-        var cut = RenderComponent<Form>();
+        var cut = Render<Form>();
 
         // Act
         cut.Find(ClearButtonSelector).Click();
 
         // Assert
-        using var _ = new AssertionScope();
-        cut.FindByLabelText(NameInputAriaLabel).GetAttribute(AttributeNames.Value).Should().BeNull();
-        cut.FindByLabelText(EmailInputAriaLabel).GetAttribute(AttributeNames.Value).Should().BeNull();
-        cut.FindByLabelText(PhoneNumberInputAriaLabel).GetAttribute(AttributeNames.Value).Should().BeNull();
-        cut.Find(SubmitButtonSelector).IsEnabled().Should().BeTrue();
+        cut.FindByLabelText(NameInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBeNull();
+        cut.FindByLabelText(EmailInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBeNull();
+        cut.FindByLabelText(PhoneNumberInputAriaLabel).GetAttribute(AttributeNames.Value).ShouldBeNull();
+        cut.Find(SubmitButtonSelector).IsEnabled().ShouldBeTrue();
     }
 }

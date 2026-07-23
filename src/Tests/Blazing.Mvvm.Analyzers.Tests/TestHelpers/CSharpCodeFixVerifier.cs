@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -21,14 +19,7 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
     {
         return new CSharpCodeFixTest<TAnalyzer, TCodeFix, DefaultVerifier>
         {
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80
-                .AddPackages(ImmutableArray.Create(
-                    new PackageIdentity("Microsoft.AspNetCore.Components", "8.0.0"),
-                    new PackageIdentity("Microsoft.AspNetCore.Components.Web", "8.0.0"),
-                    new PackageIdentity("CommunityToolkit.Mvvm", "8.3.2"),
-                    new PackageIdentity("Microsoft.Extensions.DependencyInjection.Abstractions", "8.0.0"),
-                    new PackageIdentity("Microsoft.EntityFrameworkCore", "8.0.0")
-                )),
+            ReferenceAssemblies = AnalyzerTestReferenceAssemblies.Net80,
             TestState =
             {
                 // Add Blazing.Mvvm type stubs to every test
@@ -50,8 +41,6 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
         var test = CreateTest();
         test.TestCode = NormalizeLineEndings(source);
         test.FixedCode = NormalizeLineEndings(fixedSource);
-        AddAspNetCoreComponentsReferenceIfNeeded(test.TestState.AdditionalReferences, source);
-        AddAspNetCoreComponentsReferenceIfNeeded(test.FixedState.AdditionalReferences, fixedSource);
         test.ExpectedDiagnostics.AddRange(expected);
         return test.RunAsync();
     }
@@ -63,70 +52,10 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
     {
         var test = CreateTest();
         test.TestCode = NormalizeLineEndings(source);
-        AddAspNetCoreComponentsReferenceIfNeeded(test.TestState.AdditionalReferences, source);
         test.ExpectedDiagnostics.AddRange(expected);
         return test.RunAsync();
     }
 
     private static string NormalizeLineEndings(string text)
         => text.Replace("\r\n", "\n");
-
-    private static void AddAspNetCoreComponentsReferenceIfNeeded(ICollection<MetadataReference> references, string source)
-    {
-        if (!source.Contains("EventCallback", StringComparison.Ordinal))
-            return;
-
-        references.Add(MetadataReference.CreateFromFile(
-            ResolveFrameworkAssembly("Microsoft.AspNetCore.App.Ref", "net8.0", "Microsoft.AspNetCore.Components.dll")));
-    }
-
-    private static string ResolveFrameworkAssembly(string packName, string targetFramework, string assemblyName)
-    {
-        var packRoot = Path.Combine(GetDotNetPacksRoot(), packName);
-        if (!Directory.Exists(packRoot))
-            throw new InvalidOperationException(
-                $"dotnet packs directory not found: '{packRoot}'. " +
-                $"Install the matching .NET SDK or set the DOTNET_ROOT environment variable.");
-
-        var packDirs = Directory.GetDirectories(packRoot)
-            .OrderByDescending(static directory => directory, StringComparer.OrdinalIgnoreCase)
-            .ToArray();
-
-        var exactMatch = packDirs.FirstOrDefault(d => File.Exists(Path.Combine(d, "ref", targetFramework, assemblyName)));
-        if (exactMatch is not null)
-            return Path.Combine(exactMatch, "ref", targetFramework, assemblyName);
-
-        foreach (var packDir in packDirs)
-        {
-            var refRoot = Path.Combine(packDir, "ref");
-            if (!Directory.Exists(refRoot))
-                continue;
-
-            var fallback = Directory.GetDirectories(refRoot)
-                .OrderByDescending(static d => d, StringComparer.OrdinalIgnoreCase)
-                .Select(tfmDir => Path.Combine(tfmDir, assemblyName))
-                .FirstOrDefault(File.Exists);
-
-            if (fallback is not null)
-                return fallback;
-        }
-
-        throw new InvalidOperationException($"Could not find '{assemblyName}' for '{targetFramework}' in '{packRoot}'");
-    }
-    private static string GetDotNetPacksRoot()
-    {
-        var dotnetRoot = Environment.GetEnvironmentVariable("DOTNET_ROOT");
-        if (!string.IsNullOrEmpty(dotnetRoot))
-            return Path.Combine(dotnetRoot, "packs");
-
-        if (Path.DirectorySeparatorChar == '\\')
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "dotnet", "packs");
-
-        // macOS official installer and Homebrew location
-        if (Directory.Exists("/usr/local/share/dotnet/packs"))
-            return "/usr/local/share/dotnet/packs";
-
-        // Linux default install location
-        return "/usr/share/dotnet/packs";
-    }
 }

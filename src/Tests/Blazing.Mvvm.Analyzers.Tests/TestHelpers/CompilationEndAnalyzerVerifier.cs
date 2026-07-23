@@ -94,8 +94,8 @@ public static class CompilationEndAnalyzerVerifier<TAnalyzer>
         var additionalAssemblies = new[]
         {
             ResolveFrameworkAssembly("Microsoft.AspNetCore.App.Ref", "net8.0", "Microsoft.AspNetCore.Components.dll"),
-            ResolvePackageAssembly("microsoft.extensions.dependencyinjection.abstractions", "8.0.0", "lib", "net8.0", "Microsoft.Extensions.DependencyInjection.Abstractions.dll"),
-            ResolvePackageAssembly("communitytoolkit.mvvm", "8.3.2", "lib", "net8.0", "CommunityToolkit.Mvvm.dll"),
+            ResolveFrameworkAssembly("Microsoft.AspNetCore.App.Ref", "net8.0", "Microsoft.Extensions.DependencyInjection.Abstractions.dll"),
+            ResolvePackageAssembly("communitytoolkit.mvvm", "8.4.2", "lib", "net8.0", "CommunityToolkit.Mvvm.dll"),
             typeof(Enumerable).Assembly.Location,
             typeof(PropertyChangedEventHandler).Assembly.Location,
         };

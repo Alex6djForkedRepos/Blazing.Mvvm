@@ -172,13 +172,13 @@
     <value>The [ViewModelKey] attribute value must exactly match the name of a registered ViewModel type to ensure proper ViewModel resolution at runtime.</value>
   </data>
   <data name="BLAZMVVM0007_Title" xml:space="preserve">
-    <value>Consider overriding lifecycle methods in ViewModel</value>
+    <value>Lifecycle method should use override</value>
   </data>
   <data name="BLAZMVVM0007_MessageFormat" xml:space="preserve">
-    <value>Component '{0}' overrides lifecycle method '{1}' - consider moving logic to ViewModel lifecycle methods</value>
+    <value>Lifecycle method '{0}' on ViewModel '{1}' should use the override modifier</value>
   </data>
   <data name="BLAZMVVM0007_Description" xml:space="preserve">
-    <value>Business logic in component lifecycle methods should be moved to corresponding ViewModel lifecycle methods to maintain proper separation of concerns in MVVM architecture.</value>
+    <value>ViewModel lifecycle methods must override their virtual base methods so the Blazing.Mvvm lifecycle invokes them.</value>
   </data>
   <data name="BLAZMVVM0008_Title" xml:space="preserve">
     <value>Property should use ObservableProperty attribute</value>
@@ -262,10 +262,10 @@
     <value>Messenger registrations should be unregistered in Dispose(bool disposing) to prevent memory leaks. Consider using RecipientViewModelBase which handles registration lifetime automatically.</value>
   </data>
   <data name="BLAZMVVM0017_Title" xml:space="preserve">
-    <value>Async method should use AsyncRelayCommand</value>
+    <value>Async RelayCommand method should return Task</value>
   </data>
   <data name="BLAZMVVM0017_MessageFormat" xml:space="preserve">
-    <value>Async method '{0}' with [RelayCommand] should use AsyncRelayCommand instead of async void to properly handle exceptions</value>
+    <value>Async method '{0}' with [RelayCommand] should return Task instead of void</value>
   </data>
   <data name="BLAZMVVM0017_Description" xml:space="preserve">
     <value>Asynchronous command methods should return Task and use AsyncRelayCommand instead of async void to enable proper exception handling, cancellation support, and execution state tracking.</value>

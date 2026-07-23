@@ -112,14 +112,14 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void FullNavigationFlow_GivenCompleteSetup_ShouldNavigateSuccessfully()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
 
         // Act - Navigate using MVVM navigation manager
         mvvmNavigationManager.NavigateTo<IHomeViewModel>();
 
         // Assert
-        navigationManager.Uri.Should().Be("http://localhost/");
+        navigationManager.Uri.ShouldBe("http://localhost/");
     }
 
     /// <summary>
@@ -129,14 +129,14 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void FullNavigationFlow_GivenParameterizedRoute_ShouldNavigateWithParameters()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
 
         // Act - Navigate with relative URI
         mvvmNavigationManager.NavigateTo<IProductViewModel>("123");
 
         // Assert
-        navigationManager.Uri.Should().Be("http://localhost/products/123");
+        navigationManager.Uri.ShouldBe("http://localhost/products/123");
     }
 
     /// <summary>
@@ -146,14 +146,14 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void FullNavigationFlow_GivenQueryParameters_ShouldNavigateWithQuery()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
 
         // Act - Navigate with query string
         mvvmNavigationManager.NavigateTo<IProductViewModel>("?category=electronics&sort=name");
 
         // Assert
-        navigationManager.Uri.Should().Be("http://localhost/products?category=electronics&sort=name");
+        navigationManager.Uri.ShouldBe("http://localhost/products?category=electronics&sort=name");
     }
 
     /// <summary>
@@ -163,14 +163,14 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void FullNavigationFlow_GivenKeyedNavigation_ShouldNavigateSuccessfully()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
 
         // Act - Navigate using key
         mvvmNavigationManager.NavigateTo("Admin");
 
         // Assert
-        navigationManager.Uri.Should().Be("http://localhost/admin");
+        navigationManager.Uri.ShouldBe("http://localhost/admin");
     }
 
     /// <summary>
@@ -181,7 +181,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     {
         // Arrange
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
 
         // Act - Test that the navigation manager can get URIs that NavLink would use
         var homeUri = mvvmNavigationManager.GetUri<IHomeViewModel>();
@@ -189,10 +189,9 @@ public class NavigationIntegrationTests : ComponentTestBase
         var adminUri = mvvmNavigationManager.GetUri("Admin");
 
         // Assert
-        using var _ = new AssertionScope();
-        homeUri.Should().Be("/");
-        productUri.Should().Be("products");
-        adminUri.Should().Be("admin");
+        homeUri.ShouldBe("/");
+        productUri.ShouldBe("products");
+        adminUri.ShouldBe("admin");
     }
 
     /// <summary>
@@ -203,7 +202,7 @@ public class NavigationIntegrationTests : ComponentTestBase
     {
         // Arrange
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
 
         // Act - Test the navigation that NavLink would perform
         mvvmNavigationManager.NavigateTo<IHomeViewModel>();
@@ -213,9 +212,8 @@ public class NavigationIntegrationTests : ComponentTestBase
         var productUri = navigationManager.Uri;
 
         // Assert
-        using var _ = new AssertionScope();
-        homeUri.Should().Be("http://localhost/");
-        productUri.Should().Be("http://localhost/products");
+        homeUri.ShouldBe("http://localhost/");
+        productUri.ShouldBe("http://localhost/products");
     }
 
     /// <summary>
@@ -225,31 +223,31 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void CompleteUserJourney_MultipleNavigations_ShouldWorkCorrectly()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         var mvvmNavigationManager = Services.GetRequiredService<IMvvmNavigationManager>();
 
         // Act - Simulate user journey
         // 1. Start at home
         mvvmNavigationManager.NavigateTo<IHomeViewModel>();
-        navigationManager.Uri.Should().Be("http://localhost/");
+        navigationManager.Uri.ShouldBe("http://localhost/");
 
         // 2. Navigate to products
         mvvmNavigationManager.NavigateTo<IProductViewModel>();
-        navigationManager.Uri.Should().Be("http://localhost/products");
+        navigationManager.Uri.ShouldBe("http://localhost/products");
 
         // 3. Navigate to specific product
         mvvmNavigationManager.NavigateTo<IProductViewModel>("123");
-        navigationManager.Uri.Should().Be("http://localhost/products/123");
+        navigationManager.Uri.ShouldBe("http://localhost/products/123");
 
         // 4. Navigate to admin (keyed)
         mvvmNavigationManager.NavigateTo("Admin");
-        navigationManager.Uri.Should().Be("http://localhost/admin");
+        navigationManager.Uri.ShouldBe("http://localhost/admin");
 
         // 5. Back to home
         mvvmNavigationManager.NavigateTo<IHomeViewModel>();
 
         // Assert final state
-        navigationManager.Uri.Should().Be("http://localhost/");
+        navigationManager.Uri.ShouldBe("http://localhost/");
     }
 
     /// <summary>
@@ -262,11 +260,10 @@ public class NavigationIntegrationTests : ComponentTestBase
         var routeCache = Services.GetRequiredService<IViewModelRouteCache>();
 
         // Act & Assert
-        using var _ = new AssertionScope();
-        routeCache.ViewModelRoutes.Should().ContainKey(typeof(IHomeViewModel));
-        routeCache.ViewModelRoutes.Should().ContainKey(typeof(IProductViewModel));
-        routeCache.ViewModelRoutes.Should().ContainKey(typeof(IAdminViewModel));
-        routeCache.KeyedViewModelRoutes.Should().ContainKey("Admin");
+        routeCache.ViewModelRoutes.ContainsKey(typeof(IHomeViewModel)).ShouldBeTrue();
+        routeCache.ViewModelRoutes.ContainsKey(typeof(IProductViewModel)).ShouldBeTrue();
+        routeCache.ViewModelRoutes.ContainsKey(typeof(IAdminViewModel)).ShouldBeTrue();
+        routeCache.KeyedViewModelRoutes.ContainsKey("Admin").ShouldBeTrue();
     }
 
     /// <summary>
@@ -279,14 +276,13 @@ public class NavigationIntegrationTests : ComponentTestBase
         Services.AddSingleton<TestIntegrationViewModel>();
 
         // Act
-        var cut = RenderComponent<TestIntegrationView>();
+        var cut = Render<TestIntegrationView>();
         var viewModel = Services.GetRequiredService<TestIntegrationViewModel>();
 
         // Assert
-        using var _ = new AssertionScope();
-        viewModel.OnInitializedCalled.Should().BeTrue();
-        viewModel.OnParametersSetCalled.Should().BeTrue();
-        viewModel.OnAfterRenderCalled.Should().BeTrue();
+        viewModel.OnInitializedCalled.ShouldBeTrue();
+        viewModel.OnParametersSetCalled.ShouldBeTrue();
+        viewModel.OnAfterRenderCalled.ShouldBeTrue();
     }
 
     /// <summary>
@@ -297,16 +293,16 @@ public class NavigationIntegrationTests : ComponentTestBase
     {
         // Arrange
         Services.AddSingleton<TestParameterViewModel>();
-        Services.AddSingleton<IParameterResolver>(_ => new global::Blazing.Mvvm.Components.Parameter.ParameterResolver(ParameterResolutionMode.ViewModel));
+        Services.AddSingleton<IParameterResolver>(_ => new Mvvm.Components.Parameter.ParameterResolver(ParameterResolutionMode.ViewModel));
 
         // Act
-        var cut = RenderComponent<TestParameterView>(parameters => parameters
+        var cut = Render<TestParameterView>(parameters => parameters
             .Add(p => p.TestParameter, "TestValue"));
 
         var viewModel = Services.GetRequiredService<TestParameterViewModel>();
 
         // Assert
-        viewModel.TestParameter.Should().Be("TestValue");
+        viewModel.TestParameter.ShouldBe("TestValue");
     }
 
     /// <summary>
@@ -322,8 +318,9 @@ public class NavigationIntegrationTests : ComponentTestBase
         var act = () => mvvmNavigationManager.NavigateTo<IInvalidViewModel>();
 
         // Assert
-        act.Should().Throw<ViewModelRouteNotFoundException>()
-           .WithMessage("*IInvalidViewModel*no associated page*");
+        var exception = act.ShouldThrow<ViewModelRouteNotFoundException>();
+        exception.Message.ShouldContain("IInvalidViewModel");
+        exception.Message.ShouldContain("no associated page");
     }
 
     /// <summary>
@@ -339,8 +336,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         var act = () => mvvmNavigationManager.NavigateTo("InvalidKey");
 
         // Assert
-        act.Should().Throw<ViewModelRouteNotFoundException>()
-           .WithMessage("*InvalidKey*");
+        act.ShouldThrow<ViewModelRouteNotFoundException>().Message.ShouldContain("InvalidKey");
     }
 
     // Test ViewModels and Views
@@ -411,13 +407,13 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_YarpStyleHosting_ShouldNavigateCorrectly()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         navigationManager.NavigateTo("http://localhost/api/v1/", false);
-        
+
         var routeCache = new Mock<IViewModelRouteCache>();
         var routes = new Dictionary<Type, string> { [typeof(IProductViewModel)] = "/api/v1/products" };
         routeCache.Setup(x => x.ViewModelRoutes).Returns(routes);
-        
+
         // Setup multi-route templates
         var routeTemplates = new Dictionary<Type, RouteTemplateCollection>
         {
@@ -425,7 +421,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         };
         routeCache.Setup(x => x.ViewModelRouteTemplates).Returns(routeTemplates);
         routeCache.Setup(x => x.KeyedViewModelRouteTemplates).Returns(new Dictionary<object, RouteTemplateCollection>());
-        
+
         // Enable multi-route templates
         var config = Options.Create(new LibraryConfiguration { EnableMultiRouteTemplates = true });
         var logger = new Mock<ILogger<MvvmNavigationManager>>();
@@ -437,7 +433,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         mvvmNavManager.NavigateTo<IProductViewModel>();
 
         // Assert - Should detect "api/v1" from NavigationManager and navigate to "products"
-        navigationManager.Uri.Should().Be("http://localhost/api/v1/products");
+        navigationManager.Uri.ShouldBe("http://localhost/api/v1/products");
     }
 
     /// <summary>
@@ -447,13 +443,13 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_DeeplyNestedPath_ShouldNavigateCorrectly()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         navigationManager.NavigateTo("http://localhost/app/tenant/123/", false);
-        
+
         var routeCache = new Mock<IViewModelRouteCache>();
         var routes = new Dictionary<Type, string> { [typeof(IHomeViewModel)] = "/app/tenant/123/dashboard" };
         routeCache.Setup(x => x.ViewModelRoutes).Returns(routes);
-        
+
         // Setup multi-route templates
         var routeTemplates = new Dictionary<Type, RouteTemplateCollection>
         {
@@ -461,7 +457,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         };
         routeCache.Setup(x => x.ViewModelRouteTemplates).Returns(routeTemplates);
         routeCache.Setup(x => x.KeyedViewModelRouteTemplates).Returns(new Dictionary<object, RouteTemplateCollection>());
-        
+
         // Enable multi-route templates
         var config = Options.Create(new LibraryConfiguration { EnableMultiRouteTemplates = true });
         var logger = new Mock<ILogger<MvvmNavigationManager>>();
@@ -473,7 +469,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         mvvmNavManager.NavigateTo<IHomeViewModel>();
 
         // Assert - Should detect "app/tenant/123" and navigate to "dashboard"
-        navigationManager.Uri.Should().Be("http://localhost/app/tenant/123/dashboard");
+        navigationManager.Uri.ShouldBe("http://localhost/app/tenant/123/dashboard");
     }
 
     /// <summary>
@@ -483,13 +479,13 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_ConfiguredTakesPriority_ShouldUseConfigured()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         navigationManager.NavigateTo("http://localhost/detected/path/", false);
-        
+
         var routeCache = new Mock<IViewModelRouteCache>();
         var routes = new Dictionary<Type, string> { [typeof(IProductViewModel)] = "/configured/path/products" };
         routeCache.Setup(x => x.ViewModelRoutes).Returns(routes);
-        
+
         // Setup multi-route templates
         var routeTemplates = new Dictionary<Type, RouteTemplateCollection>
         {
@@ -497,7 +493,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         };
         routeCache.Setup(x => x.ViewModelRouteTemplates).Returns(routeTemplates);
         routeCache.Setup(x => x.KeyedViewModelRouteTemplates).Returns(new Dictionary<object, RouteTemplateCollection>());
-        
+
 #pragma warning disable CS0618 // Type or member is obsolete
         var config = Options.Create(new LibraryConfiguration { BasePath = "/configured/path/", EnableMultiRouteTemplates = true });
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -510,7 +506,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         mvvmNavManager.NavigateTo<IProductViewModel>();
 
         // Assert - Should use configured BasePath to strip "/configured/path" prefix, resulting in "products" relative navigation
-        navigationManager.Uri.Should().Be("http://localhost/products");
+        navigationManager.Uri.ShouldBe("http://localhost/products");
     }
 
     /// <summary>
@@ -520,9 +516,9 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_CompleteUserJourney_ShouldWorkCorrectly()
     {
         // Arrange - Simulating YARP reverse proxy scenario
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         navigationManager.NavigateTo("http://localhost/myapp/", false);
-        
+
         var routeCache = new Mock<IViewModelRouteCache>();
         var routes = new Dictionary<Type, string>
         {
@@ -532,7 +528,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         };
         routeCache.Setup(x => x.ViewModelRoutes).Returns(routes);
         routeCache.Setup(x => x.KeyedViewModelRoutes).Returns(new Dictionary<object, string>());
-        
+
         // Setup multi-route templates
         var routeTemplates = new Dictionary<Type, RouteTemplateCollection>
         {
@@ -542,7 +538,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         };
         routeCache.Setup(x => x.ViewModelRouteTemplates).Returns(routeTemplates);
         routeCache.Setup(x => x.KeyedViewModelRouteTemplates).Returns(new Dictionary<object, RouteTemplateCollection>());
-        
+
         // Enable multi-route templates
         var config = Options.Create(new LibraryConfiguration { EnableMultiRouteTemplates = true });
         var logger = new Mock<ILogger<MvvmNavigationManager>>();
@@ -553,19 +549,19 @@ public class NavigationIntegrationTests : ComponentTestBase
         // Act & Assert - Simulate user journey
         // 1. Navigate to home
         mvvmNavManager.NavigateTo<IHomeViewModel>();
-        navigationManager.Uri.Should().Be("http://localhost/myapp");
+        navigationManager.Uri.ShouldBe("http://localhost/myapp");
 
         // 2. Navigate to products
         mvvmNavManager.NavigateTo<IProductViewModel>();
-        navigationManager.Uri.Should().Be("http://localhost/myapp/products");
+        navigationManager.Uri.ShouldBe("http://localhost/myapp/products");
 
         // 3. Navigate with query parameters
         mvvmNavManager.NavigateTo<IProductViewModel>("?filter=active");
-        navigationManager.Uri.Should().Be("http://localhost/myapp/products?filter=active");
+        navigationManager.Uri.ShouldBe("http://localhost/myapp/products?filter=active");
 
         // 4. Navigate to admin
         mvvmNavManager.NavigateTo<IAdminViewModel>();
-        navigationManager.Uri.Should().Be("http://localhost/myapp/admin");
+        navigationManager.Uri.ShouldBe("http://localhost/myapp/admin");
     }
 
     /// <summary>
@@ -575,13 +571,13 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_RootHosting_ShouldNavigateCorrectly()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         // NavigationManager already at root: http://localhost/
-        
+
         var routeCache = new Mock<IViewModelRouteCache>();
         var routes = new Dictionary<Type, string> { [typeof(IProductViewModel)] = "/products" };
         routeCache.Setup(x => x.ViewModelRoutes).Returns(routes);
-        
+
         // Setup multi-route templates
         var routeTemplates = new Dictionary<Type, RouteTemplateCollection>
         {
@@ -589,7 +585,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         };
         routeCache.Setup(x => x.ViewModelRouteTemplates).Returns(routeTemplates);
         routeCache.Setup(x => x.KeyedViewModelRouteTemplates).Returns(new Dictionary<object, RouteTemplateCollection>());
-        
+
         // Enable multi-route templates
         var config = Options.Create(new LibraryConfiguration { EnableMultiRouteTemplates = true });
         var logger = new Mock<ILogger<MvvmNavigationManager>>();
@@ -601,7 +597,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         mvvmNavManager.NavigateTo<IProductViewModel>();
 
         // Assert - Should detect no base path and navigate normally
-        navigationManager.Uri.Should().Be("http://localhost/products");
+        navigationManager.Uri.ShouldBe("http://localhost/products");
     }
 
     /// <summary>
@@ -611,14 +607,14 @@ public class NavigationIntegrationTests : ComponentTestBase
     public void DynamicBasePath_KeyedNavigation_ShouldNavigateCorrectly()
     {
         // Arrange
-        var navigationManager = Services.GetService<FakeNavigationManager>()!;
+        var navigationManager = Services.GetService<BunitNavigationManager>()!;
         navigationManager.NavigateTo("http://localhost/app/", false);
-        
+
         var routeCache = new Mock<IViewModelRouteCache>();
         var keyedRoutes = new Dictionary<object, string> { ["AdminKey"] = "/app/admin" };
         routeCache.Setup(x => x.ViewModelRoutes).Returns(new Dictionary<Type, string>());
         routeCache.Setup(x => x.KeyedViewModelRoutes).Returns(keyedRoutes);
-        
+
         // Setup multi-route templates
         var keyedRouteTemplates = new Dictionary<object, RouteTemplateCollection>
         {
@@ -626,7 +622,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         };
         routeCache.Setup(x => x.ViewModelRouteTemplates).Returns(new Dictionary<Type, RouteTemplateCollection>());
         routeCache.Setup(x => x.KeyedViewModelRouteTemplates).Returns(keyedRouteTemplates);
-        
+
         // Enable multi-route templates
         var config = Options.Create(new LibraryConfiguration { EnableMultiRouteTemplates = true });
         var logger = new Mock<ILogger<MvvmNavigationManager>>();
@@ -638,7 +634,7 @@ public class NavigationIntegrationTests : ComponentTestBase
         mvvmNavManager.NavigateTo("AdminKey");
 
         // Assert - Should detect "app" and navigate to "admin"
-        navigationManager.Uri.Should().Be("http://localhost/app/admin");
+        navigationManager.Uri.ShouldBe("http://localhost/app/admin");
     }
 
     #endregion

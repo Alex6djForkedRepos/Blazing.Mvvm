@@ -169,7 +169,7 @@ public sealed class EventCallbackTwoWayBindingCodeFixProvider : CodeFixProvider
         var newType = SyntaxFactory.GenericName("EventCallback")
             .WithTypeArgumentList(
                 SyntaxFactory.TypeArgumentList(
-                    SyntaxFactory.SingletonSeparatedList<TypeSyntax>(SyntaxFactory.ParseTypeName(requiredType))));
+                    SyntaxFactory.SingletonSeparatedList(SyntaxFactory.ParseTypeName(requiredType))));
 
         var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
         editor.ReplaceNode(callbackProperty.Type, newType);

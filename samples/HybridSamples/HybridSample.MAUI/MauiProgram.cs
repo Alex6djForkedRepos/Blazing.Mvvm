@@ -47,7 +47,7 @@ public static class MauiProgram
                 options.ParameterResolutionMode = ParameterResolutionMode.ViewAndViewModel;
                 options.HostingModelType = BlazorHostingModelType.HybridMaui;
                 options.RegisterViewModelsFromAssemblyContaining<SamplePageViewModel>();
-                options.RegisterViewModelsFromAssemblyContaining<HybridSample.Blazor.Core.Pages.IntroductionPage>();
+                options.RegisterViewModelsFromAssemblyContaining<Blazor.Core.Pages.IntroductionPage>();
             });
 
         return builder.Build();

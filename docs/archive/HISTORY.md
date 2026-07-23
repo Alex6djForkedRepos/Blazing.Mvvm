@@ -142,7 +142,7 @@ This is a major release with new features and enhancements.
 
 ## V2.0.0 30 November, 2024
 
-This is a major release with breaking changes, migration notes can be found [here](docs/migration-notes/v1.4_to_v2.md).
+This is a major release with breaking changes, migration notes can be found [here](migration-notes/v1.4_to_v2.md).
 
 - Added auto registration and discovery of view models. [@mishael-o](https://github.com/mishael-o)
 - Added support for keyed view models. [@mishael-o](https://github.com/mishael-o)

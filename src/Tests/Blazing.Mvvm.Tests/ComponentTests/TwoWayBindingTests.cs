@@ -23,15 +23,15 @@ public class TwoWayBindingTests : ComponentTestBase
         var viewModel = new TwoWayBindingTestViewModel();
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<TwoWayBindingTestComponent>();
+        var parentComponent = Render<TwoWayBindingTestComponent>();
         var childComponent = parentComponent.FindComponent<TwoWayBindingChildComponent>();
 
         // Act - Change ViewModel property
         viewModel.Counter = 42;
 
         // Assert - EventCallback should have been invoked
-        parentComponent.Instance.CallbackInvokedCount.Should().Be(1);
-        parentComponent.Instance.LastCallbackValue.Should().Be(42);
+        parentComponent.Instance.CallbackInvokedCount.ShouldBe(1);
+        parentComponent.Instance.LastCallbackValue.ShouldBe(42);
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class TwoWayBindingTests : ComponentTestBase
         // Arrange
         Services.AddScoped<TwoWayBindingTestViewModel>();
 
-        var parentComponent = RenderComponent<TwoWayBindingOwningTestComponent>();
+        var parentComponent = Render<TwoWayBindingOwningTestComponent>();
         var childComponent = parentComponent.FindComponent<TwoWayBindingOwningChildComponent>();
         var viewModel = childComponent.Instance.GetViewModel();
 
@@ -51,8 +51,8 @@ public class TwoWayBindingTests : ComponentTestBase
         viewModel.Counter = 99;
 
         // Assert - EventCallback should have been invoked
-        parentComponent.Instance.CallbackInvokedCount.Should().Be(1);
-        parentComponent.Instance.LastCallbackValue.Should().Be(99);
+        parentComponent.Instance.CallbackInvokedCount.ShouldBe(1);
+        parentComponent.Instance.LastCallbackValue.ShouldBe(99);
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public class TwoWayBindingTests : ComponentTestBase
         var viewModel = new TwoWayBindingTestViewModel();
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<TwoWayBindingNoCallbackTestComponent>();
+        var parentComponent = Render<TwoWayBindingNoCallbackTestComponent>();
         var childComponent = parentComponent.FindComponent<TwoWayBindingNoCallbackChildComponent>();
 
         // Act - Change ViewModel property
@@ -73,7 +73,7 @@ public class TwoWayBindingTests : ComponentTestBase
 
         // Assert - No callback should have been invoked (component doesn't track callbacks)
         // The test passes if no exception is thrown
-        viewModel.Counter.Should().Be(42);
+        viewModel.Counter.ShouldBe(42);
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public class TwoWayBindingTests : ComponentTestBase
         var viewModel = new MultiPropertyTestViewModel();
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<MultiPropertyTestComponent>();
+        var parentComponent = Render<MultiPropertyTestComponent>();
         var childComponent = parentComponent.FindComponent<MultiPropertyChildComponent>();
 
         // Act - Change multiple ViewModel properties
@@ -94,10 +94,10 @@ public class TwoWayBindingTests : ComponentTestBase
         viewModel.Name = "Test";
 
         // Assert - Both EventCallbacks should have been invoked
-        parentComponent.Instance.CounterCallbackInvoked.Should().BeTrue();
-        parentComponent.Instance.NameCallbackInvoked.Should().BeTrue();
-        parentComponent.Instance.LastCounterValue.Should().Be(10);
-        parentComponent.Instance.LastNameValue.Should().Be("Test");
+        parentComponent.Instance.CounterCallbackInvoked.ShouldBeTrue();
+        parentComponent.Instance.NameCallbackInvoked.ShouldBeTrue();
+        parentComponent.Instance.LastCounterValue.ShouldBe(10);
+        parentComponent.Instance.LastNameValue.ShouldBe("Test");
     }
 
     /// <summary>
@@ -110,14 +110,14 @@ public class TwoWayBindingTests : ComponentTestBase
         var viewModel = new TwoWayBindingTestViewModel();
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<IncorrectNamingTestComponent>();
+        var parentComponent = Render<IncorrectNamingTestComponent>();
         var childComponent = parentComponent.FindComponent<IncorrectNamingChildComponent>();
 
         // Act - Change ViewModel property
         viewModel.Counter = 42;
 
         // Assert - Callback with incorrect name should not be invoked
-        parentComponent.Instance.IncorrectCallbackInvoked.Should().BeFalse();
+        parentComponent.Instance.IncorrectCallbackInvoked.ShouldBeFalse();
     }
 
     /// <summary>
@@ -131,16 +131,16 @@ public class TwoWayBindingTests : ComponentTestBase
         viewModel.Counter = 5;
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<TwoWayBindingTestComponent>(parameters => parameters
+        var parentComponent = Render<TwoWayBindingTestComponent>(parameters => parameters
             .Add(p => p.Counter, 5));
-        
+
         var initialCount = parentComponent.Instance.CallbackInvokedCount;
 
         // Act - Set to same value
         viewModel.Counter = 5;
 
         // Assert - Callback should not be invoked again
-        parentComponent.Instance.CallbackInvokedCount.Should().Be(initialCount);
+        parentComponent.Instance.CallbackInvokedCount.ShouldBe(initialCount);
     }
 
     /// <summary>
@@ -153,10 +153,10 @@ public class TwoWayBindingTests : ComponentTestBase
         var viewModel = new TwoWayBindingTestViewModel();
         Services.AddSingleton(_ => viewModel);
 
-        var parentComponent = RenderComponent<TwoWayBindingTestComponent>();
-        
+        var parentComponent = Render<TwoWayBindingTestComponent>();
+
         // Verify component was created and is functioning
-        parentComponent.Instance.Should().NotBeNull();
+        parentComponent.Instance.ShouldNotBeNull();
 
         // Act - Dispose the component
         parentComponent.Dispose();
@@ -165,10 +165,10 @@ public class TwoWayBindingTests : ComponentTestBase
         // We verify that property changes after disposal don't throw exceptions
         // which would happen if handlers weren't properly cleaned up
         var action = () => viewModel.Counter = 42;
-        action.Should().NotThrow("property changes after disposal should not throw");
-        
+        action.ShouldNotThrow("property changes after disposal should not throw");
+
         // Verify the value actually changed (ViewModel still works after component disposal)
-        viewModel.Counter.Should().Be(42);
+        viewModel.Counter.ShouldBe(42);
     }
 
     /// <summary>
@@ -176,10 +176,10 @@ public class TwoWayBindingTests : ComponentTestBase
     /// </summary>
     private static bool HasPropertyChangedHandlers(INotifyPropertyChanged obj)
     {
-        var field = obj.GetType().GetField("PropertyChanged", 
-            System.Reflection.BindingFlags.Instance | 
+        var field = obj.GetType().GetField("PropertyChanged",
+            System.Reflection.BindingFlags.Instance |
             System.Reflection.BindingFlags.NonPublic);
-        
+
         var eventDelegate = field?.GetValue(obj) as Delegate;
         return eventDelegate?.GetInvocationList().Length > 0;
     }
@@ -230,7 +230,7 @@ public class TwoWayBindingTestComponent : ComponentBase
     {
         builder.OpenComponent<TwoWayBindingChildComponent>(0);
         builder.AddAttribute(1, nameof(TwoWayBindingChildComponent.Counter), Counter);
-        builder.AddAttribute(2, nameof(TwoWayBindingChildComponent.CounterChanged), 
+        builder.AddAttribute(2, nameof(TwoWayBindingChildComponent.CounterChanged),
             EventCallback.Factory.Create<int>(this, value =>
             {
                 CallbackInvokedCount++;
@@ -307,7 +307,7 @@ public class TwoWayBindingOwningTestComponent : ComponentBase
     {
         builder.OpenComponent<TwoWayBindingOwningChildComponent>(0);
         builder.AddAttribute(1, nameof(TwoWayBindingOwningChildComponent.Counter), Counter);
-        builder.AddAttribute(2, nameof(TwoWayBindingOwningChildComponent.CounterChanged), 
+        builder.AddAttribute(2, nameof(TwoWayBindingOwningChildComponent.CounterChanged),
             EventCallback.Factory.Create<int>(this, value =>
             {
                 CallbackInvokedCount++;
@@ -361,7 +361,7 @@ public class MultiPropertyTestComponent : ComponentBase
     {
         builder.OpenComponent<MultiPropertyChildComponent>(0);
         builder.AddAttribute(1, nameof(MultiPropertyChildComponent.Counter), Counter);
-        builder.AddAttribute(2, nameof(MultiPropertyChildComponent.CounterChanged), 
+        builder.AddAttribute(2, nameof(MultiPropertyChildComponent.CounterChanged),
             EventCallback.Factory.Create<int>(this, value =>
             {
                 CounterCallbackInvoked = true;
@@ -369,7 +369,7 @@ public class MultiPropertyTestComponent : ComponentBase
                 Counter = value;
             }));
         builder.AddAttribute(3, nameof(MultiPropertyChildComponent.Name), Name);
-        builder.AddAttribute(4, nameof(MultiPropertyChildComponent.NameChanged), 
+        builder.AddAttribute(4, nameof(MultiPropertyChildComponent.NameChanged),
             EventCallback.Factory.Create<string>(this, value =>
             {
                 NameCallbackInvoked = true;
@@ -421,7 +421,7 @@ public class IncorrectNamingTestComponent : ComponentBase
     {
         builder.OpenComponent<IncorrectNamingChildComponent>(0);
         builder.AddAttribute(1, nameof(IncorrectNamingChildComponent.Counter), Counter);
-        builder.AddAttribute(2, nameof(IncorrectNamingChildComponent.OnCounterUpdate), 
+        builder.AddAttribute(2, nameof(IncorrectNamingChildComponent.OnCounterUpdate),
             EventCallback.Factory.Create<int>(this, value =>
             {
                 IncorrectCallbackInvoked = true;

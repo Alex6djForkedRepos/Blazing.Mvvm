@@ -6,8 +6,8 @@ This document explains how to run the sample projects targeting different versio
 
 1. [Available Target Frameworks](#available-target-frameworks)
 2. [How to Select Framework Versions](#how-to-select-framework-versions)
-   - [Method 1: Using Visual Studio (Recommended)](#method-1-using-visual-studio-recommended)
-   - [Method 2: Using .NET CLI](#method-2-using-net-cli-alternative-method)
+   - [Method 1: Using Visual Studio](#method-1-using-visual-studio)
+   - [Method 2: Using .NET CLI (Alternative Method)](#method-2-using-net-cli-alternative-method)
 3. [Running Different Project Types](#running-different-project-types)
    - [Blazor Web Applications](#blazor-web-applications)
    - [Desktop Hybrid Applications](#desktop-hybrid-applications)

@@ -1,0 +1,428 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* Blazing.Mvvm DocFX modern-theme customization — developer-doc aesthetic */
+
+:root {
+    --bm-accent: #512bd4;
+    --bm-accent-2: #7c4ddb;
+    --bm-surface: rgba(81, 43, 212, 0.05);
+    --bm-code-bg: #f6f8fa;
+    --bm-tag-bg: #eceff3;
+    --bm-line-hl: rgba(81, 43, 212, 0.10);
+    /* CaskaydiaMono Nerd Font preferred (installed locally); JetBrains Mono web fallback */
+    --bm-mono: 'CaskaydiaMono Nerd Font', 'CaskaydiaMono NF', 'CaskaydiaCove Nerd Font',
+        'Cascadia Code', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+}
+
+[data-bs-theme="dark"] {
+    --bm-accent: #a78bfa;
+    --bm-accent-2: #c4b5fd;
+    --bm-surface: rgba(167, 139, 250, 0.08);
+    --bm-code-bg: #0d1117;
+    --bm-tag-bg: rgba(255, 255, 255, 0.05);
+    --bm-line-hl: rgba(167, 139, 250, 0.14);
+}
+
+/* ---------- Navbar / branding ---------- */
+
+.nav-item.dropdown .dropdown-menu.show {
+    width: 18rem;
+}
+
+#logo {
+    width: 36px;
+    margin-right: 0.5rem;
+    border-radius: 8px;
+}
+
+.navbar .container-xxl {
+    flex-wrap: wrap !important;
+}
+
+.navbar-nav .nav-link {
+    font-family: var(--bm-mono);
+    font-size: 0.9rem;
+}
+
+/* ---------- Hero (kept) ---------- */
+
+.hero {
+    margin: 1.5rem 0 2.5rem;
+}
+
+.hero-copy {
+    padding: 2.25rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 12px;
+    background:
+        radial-gradient(circle at top right, rgba(249, 115, 22, 0.14), transparent 26rem),
+        radial-gradient(circle at left bottom, rgba(81, 43, 212, 0.16), transparent 24rem),
+        var(--bs-body-bg);
+}
+
+.hero-kicker {
+    margin-bottom: 0.75rem;
+    font-family: var(--bm-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--bm-accent);
+}
+
+.hero-copy .hero-title {
+    margin-bottom: 1rem;
+    font-size: clamp(1.9rem, 3vw, 3rem);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+    border: 0;
+    padding: 0;
+    text-wrap: balance;
+}
+
+.hero-copy > p:last-of-type {
+    max-width: 60rem;
+    font-size: 1.05rem;
+    color: var(--bs-secondary-color);
+    text-wrap: pretty;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+}
+
+/* ---------- Buttons / link rows ---------- */
+
+.doc-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 1rem;
+    border-radius: 6px;
+    text-decoration: none !important;
+    font-weight: 500;
+    font-size: 0.92rem;
+    border: 1px solid var(--bs-border-color);
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.doc-button.primary {
+    color: #fff !important;
+    border-color: transparent;
+    background: var(--bm-accent);
+}
+
+[data-bs-theme="dark"] .doc-button.primary {
+    color: #1a1130 !important;
+}
+
+.doc-button.primary:hover {
+    background: var(--bm-accent-2);
+}
+
+.doc-button.secondary {
+    color: var(--bs-body-color) !important;
+    background: var(--bs-body-bg);
+}
+
+.doc-button.secondary:hover {
+    border-color: var(--bm-accent);
+    color: var(--bm-accent) !important;
+}
+
+.next-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin: 1.5rem 0 0;
+}
+
+/* ---------- Get started steps ---------- */
+
+.get-started ol {
+    list-style: none;
+    counter-reset: step;
+    padding-left: 0;
+    margin: 0;
+}
+
+.get-started ol > li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 2.85rem;
+    margin-bottom: 1.6rem;
+}
+
+.get-started ol > li::before {
+    content: "0" counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    font-family: var(--bm-mono);
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--bm-accent);
+    background: var(--bm-surface);
+    border: 1px solid var(--bm-accent);
+}
+
+.get-started ol > li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 0.97rem;
+    top: 2.3rem;
+    bottom: -1.3rem;
+    width: 1px;
+    background: var(--bs-border-color);
+}
+
+.get-started ol > li > p:first-child {
+    margin: 0.15rem 0 0.55rem;
+    font-weight: 600;
+    font-size: 1.02rem;
+}
+
+/* ---------- Highlights (bento grid) ---------- */
+
+.bento {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin: 1.25rem 0 2rem;
+}
+
+.bento .cell {
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+    padding: 1.1rem 1.2rem;
+    background: var(--bm-surface);
+    transition: border-color 0.15s ease;
+}
+
+.bento .cell:hover {
+    border-color: var(--bm-accent);
+}
+
+.bento .cell h4 {
+    margin: 0 0 0.4rem;
+    font-family: var(--bm-mono);
+    color: var(--bm-accent);
+    font-size: 0.9rem;
+}
+
+.bento .cell p {
+    margin: 0;
+    color: var(--bs-secondary-color);
+    font-size: 0.87rem;
+    line-height: 1.55;
+}
+
+.bento .cell p code {
+    white-space: nowrap;
+}
+
+.bento .span2 {
+    grid-column: span 2;
+}
+
+@media screen and (max-width: 700px) {
+    .bento {
+        grid-template-columns: 1fr;
+    }
+
+    .bento .span2 {
+        grid-column: auto;
+    }
+}
+
+/* ---------- Content readability ---------- */
+
+.content h2 {
+    margin-top: 2.4rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--bs-border-color);
+    letter-spacing: -0.01em;
+}
+
+.content h3 {
+    margin-top: 1.7rem;
+}
+
+.content article a:not(.doc-button) {
+    color: var(--bm-accent);
+    text-underline-offset: 0.15em;
+}
+
+.content article a:not(.doc-button):hover {
+    color: var(--bm-accent-2);
+}
+
+/* Inline code */
+.content :not(pre) > code {
+    font-family: var(--bm-mono);
+    font-size: 0.84em;
+    padding: 0.12em 0.36em;
+    border-radius: 4px;
+    background: var(--bm-tag-bg);
+    color: var(--bm-accent);
+}
+
+[data-bs-theme="dark"] .content :not(pre) > code {
+    color: var(--bm-accent-2);
+}
+
+/* Code blocks — single-surface terminal panel with a language tag (top-left) */
+.content pre {
+    position: relative;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+    background: var(--bm-code-bg);
+    padding: 1rem;
+    font-family: var(--bm-mono);
+    font-size: 0.86rem;
+    line-height: 1.55;
+}
+
+/* Kill the highlight.js code background so only the panel surface shows */
+.content pre > code,
+.content pre > code.hljs {
+    background: transparent !important;
+    border: 0;
+    padding: 0;
+    font-family: var(--bm-mono);
+}
+
+/* Make room for the language tag (top-left) and the copy button (top-right) */
+.content pre:has(code[class*="lang-"]) {
+    padding-top: 2.5rem;
+}
+
+.content pre:has(code[class*="lang-"])::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.14rem 0.6rem;
+    font-family: var(--bm-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
+    background: var(--bm-tag-bg);
+    border-right: 1px solid var(--bs-border-color);
+    border-bottom: 1px solid var(--bs-border-color);
+    border-radius: 8px 0 6px 0;
+}
+
+.content pre:has(code.lang-csharp)::before { content: "C#"; }
+.content pre:has(code.lang-razor)::before { content: "razor"; }
+.content pre:has(code.lang-cshtml)::before { content: "razor"; }
+.content pre:has(code.lang-xml)::before { content: "xml"; }
+.content pre:has(code.lang-bash)::before { content: "bash"; }
+.content pre:has(code.lang-powershell)::before { content: "powershell"; }
+.content pre:has(code.lang-json)::before { content: "json"; }
+
+/* Line highlighting (docfx `.line-highlight`) — subtle accent instead of yellow */
+.content pre > code .line-highlight {
+    background-color: var(--bm-line-hl) !important;
+    box-shadow: inset 3px 0 0 var(--bm-accent);
+}
+
+/* Tables */
+.content table.table thead th {
+    background: var(--bm-surface);
+    border-bottom: 2px solid var(--bm-accent);
+    font-family: var(--bm-mono);
+    font-size: 0.85rem;
+}
+
+/* Alerts / admonitions */
+.content .alert {
+    border: 1px solid var(--bs-border-color);
+    border-left-width: 3px;
+    border-radius: 6px;
+}
+
+/* ---------- Sidebar / TOC ---------- */
+
+.toc .nav-link.active,
+.toc li.active > a {
+    color: var(--bm-accent) !important;
+    font-weight: 600;
+}
+
+/* ---------- Responsive ---------- */
+
+@media screen and (max-width: 768px) {
+    .nav-item.dropdown .dropdown-menu.show .nav-item {
+        margin-left: 0.5rem;
+    }
+
+    .hero-copy {
+        padding: 1.5rem;
+    }
+}
+
+/* ---------- View transitions ---------- */
+
+/* Enable cross-document (page-to-page) view transitions for same-origin nav. */
+@view-transition {
+    navigation: auto;
+}
+
+/* Snappy expo-out easing so pages arrive with confidence, then settle. */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: both;
+    mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+    animation-name: bm-page-out;
+    animation-duration: 0.28s;
+}
+
+::view-transition-new(root) {
+    animation-name: bm-page-in;
+    animation-duration: 0.42s;
+}
+
+/* Outgoing page recedes: slides left, dips back, blurs out of focus. */
+@keyframes bm-page-out {
+    to {
+        opacity: 0;
+        transform: translateX(-3.5%) scale(0.97);
+        filter: blur(3px);
+    }
+}
+
+/* Incoming page rushes in from the right, focus-pulls sharp, overshoots home. */
+@keyframes bm-page-in {
+    from {
+        opacity: 0;
+        transform: translateX(4.5%) scale(0.985);
+        filter: blur(6px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+}
+
+/* Respect users who ask for less motion. */
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none;
+    }
+}

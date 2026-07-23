@@ -60,7 +60,7 @@ internal static class Program
             {
                 options.HostingModelType = BlazorHostingModelType.Hybrid;
                 options.RegisterViewModelsFromAssemblyContaining<SamplePageViewModel>();
-                options.RegisterViewModelsFromAssemblyContaining<HybridSample.Blazor.Core.Pages.IntroductionPage>();
+                options.RegisterViewModelsFromAssemblyContaining<Blazor.Core.Pages.IntroductionPage>();
                 options.RegisterViewModelsFromAssemblyContaining<MainFormViewModel>();
             });
 
@@ -72,10 +72,10 @@ internal static class Program
         services.AddScoped<MainForm>();
 
         using var host = builder.Build();
-        
+
         // Create logger for Program class
         var logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Program");
-        
+
         ProgramLogger.LogApplicationStarting(logger);
         ProgramLogger.LogConsoleWindowVisible(logger);
         ProgramLogger.LogDebugLoggingEnabled(logger);
@@ -88,22 +88,22 @@ internal static class Program
             using var scope = host.Services.CreateScope();
 
             ProgramLogger.LogServiceProviderCreated(logger);
-            
+
             var mainForm = scope.ServiceProvider.GetRequiredService<MainForm>();
-            
+
             ProgramLogger.LogMainFormObtained(logger);
             ProgramLogger.LogInstructionsForUser(logger);
-            
+
             // Handle proper cleanup on application exit
             Application.ApplicationExit += (sender, e) =>
             {
                 logger.LogInformation("Application exit requested, performing cleanup...");
-                
+
                 try
                 {
                     // Dispose the main form using sync dispose method
                     mainForm?.Dispose();
-                    
+
                     // Stop the host synchronously
                     host.StopAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
                 }
@@ -112,9 +112,9 @@ internal static class Program
                     logger.LogError(ex, "Error during application cleanup");
                 }
             };
-            
+
             Application.Run(mainForm);
-            
+
             ProgramLogger.LogApplicationExited(logger);
         }
         catch (Exception ex)

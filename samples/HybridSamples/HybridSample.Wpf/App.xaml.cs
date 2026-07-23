@@ -32,9 +32,9 @@ public partial class App
             .AddSingleton(RestService.For<IRedditService>("https://www.reddit.com/"))
             .AddServicesWpf()
             .AddMvvm(options =>
-            { 
+            {
                 options.RegisterViewModelsFromAssemblyContaining<SamplePageViewModel>();
-                options.RegisterViewModelsFromAssemblyContaining<HybridSample.Blazor.Core.Pages.IntroductionPage>();
+                options.RegisterViewModelsFromAssemblyContaining<Blazor.Core.Pages.IntroductionPage>();
             });
 
 #if DEBUG

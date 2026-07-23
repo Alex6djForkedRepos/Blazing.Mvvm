@@ -23,20 +23,22 @@ public static class MauiProgram
         builder.Services.AddMauiBlazorWebView();
 
         builder.Services.AddSingleton<IMessenger>(_ => WeakReferenceMessenger.Default);
-    
-    // Add application services
-    builder.Services.AddScoped<IWeatherService, WeatherService>();
-    builder.Services.AddScoped<IUsersService, UsersService>();
-    builder.Services.AddScoped<IPostsService, PostsService>();
+
+        // Add application services
+        builder.Services.AddScoped<IWeatherService, WeatherService>();
+        builder.Services.AddScoped<IUsersService, UsersService>();
+        builder.Services.AddScoped<IPostsService, PostsService>();
 
         builder.Services.AddMvvm(options =>
-        { 
+        {
             options.ParameterResolutionMode = ParameterResolutionMode.ViewAndViewModel;
             options.HostingModelType = BlazorHostingModelType.HybridMaui;
-            
+
             // Register Shared ViewModels
-            options.RegisterViewModelsFromAssembly(typeof(Blazing.Mvvm.Sample.Shared.ViewModels.MainLayoutViewModel).Assembly);
-        });            
+
+            options.RegisterViewModelsFromAssembly(typeof(Sample.Shared.ViewModels.MainLayoutViewModel).Assembly);
+            options.RegisterViewModelsFromAssembly(typeof(Shared.ViewModels.MainLayoutViewModel).Assembly);
+        });
 
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();

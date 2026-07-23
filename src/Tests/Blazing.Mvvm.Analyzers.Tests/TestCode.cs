@@ -47,23 +47,14 @@ namespace Blazing.Mvvm.ComponentModel
             return true;
         }
 
-        // Lifecycle methods remain protected so existing analyzer tests can override them,
-        // while explicit interface implementations satisfy the IViewModelBase contract.
-        protected virtual void OnInitialized() { }
-        protected virtual Task OnInitializedAsync() => Task.CompletedTask;
-        protected virtual void OnParametersSet() { }
-        protected virtual Task OnParametersSetAsync() => Task.CompletedTask;
-        protected virtual void OnAfterRender(bool firstRender) { }
-        protected virtual Task OnAfterRenderAsync(bool firstRender) => Task.CompletedTask;
-        protected virtual bool ShouldRender() => true;
-
-        void IViewModelBase.OnInitialized() => OnInitialized();
-        Task IViewModelBase.OnInitializedAsync() => OnInitializedAsync();
-        void IViewModelBase.OnParametersSet() => OnParametersSet();
-        Task IViewModelBase.OnParametersSetAsync() => OnParametersSetAsync();
-        void IViewModelBase.OnAfterRender(bool firstRender) => OnAfterRender(firstRender);
-        Task IViewModelBase.OnAfterRenderAsync(bool firstRender) => OnAfterRenderAsync(firstRender);
-        bool IViewModelBase.ShouldRender() => ShouldRender();
+        // Lifecycle methods mirror the public virtual members on the production base classes.
+        public virtual void OnInitialized() { }
+        public virtual Task OnInitializedAsync() => Task.CompletedTask;
+        public virtual void OnParametersSet() { }
+        public virtual Task OnParametersSetAsync() => Task.CompletedTask;
+        public virtual void OnAfterRender(bool firstRender) { }
+        public virtual Task OnAfterRenderAsync(bool firstRender) => Task.CompletedTask;
+        public virtual bool ShouldRender() => true;
 
         protected virtual void Dispose(bool disposing)
         {

@@ -26,36 +26,36 @@ This package includes **21 analyzers** to help you write better Blazing.Mvvm cod
 
 ### Phase 1: Core MVVM Pattern (High Priority)
 
-- **[BLAZMVVM0001](../../../docs/analyzers/BLAZMVVM0001.md)**: ViewModelBase Inheritance - Ensures ViewModels inherit from the correct base class
-- **[BLAZMVVM0002](../../../docs/analyzers/BLAZMVVM0002.md)**: ViewModelDefinition Attribute - Ensures proper ViewModel registration for DI
-- **[BLAZMVVM0003](../../../docs/analyzers/BLAZMVVM0003.md)**: MvvmComponentBase Usage - Ensures proper View-ViewModel binding in components
-- **[BLAZMVVM0005](../../../docs/analyzers/BLAZMVVM0005.md)**: Navigation Type Safety - Validates NavigateTo<TViewModel> calls reference valid routes
-- **[BLAZMVVM0013](../../../docs/analyzers/BLAZMVVM0013.md)**: MvvmOwningComponentBase Usage - Detects when scoped services require owned scope
-- **[BLAZMVVM0017](../../../docs/analyzers/BLAZMVVM0017.md)**: RelayCommand Async Pattern - Prevents async void methods with [RelayCommand]
+- **[BLAZMVVM0001](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0001.html)**: ViewModelBase Inheritance - Ensures ViewModels inherit from the correct base class
+- **[BLAZMVVM0002](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0002.html)**: ViewModelDefinition Attribute - Ensures proper ViewModel registration for DI
+- **[BLAZMVVM0003](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0003.html)**: MvvmComponentBase Usage - Ensures proper View-ViewModel binding in components
+- **[BLAZMVVM0005](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0005.html)**: Navigation Type Safety - Validates NavigateTo<TViewModel> calls reference valid routes
+- **[BLAZMVVM0013](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0013.html)**: MvvmOwningComponentBase Usage - Detects when scoped services require owned scope
 
 ### Phase 2: Best Practices (Medium Priority)
 
-- **[BLAZMVVM0004](../../../docs/analyzers/BLAZMVVM0004.md)**: ViewParameter Attribute - Validates ViewParameter and Parameter property matching
-- **[BLAZMVVM0008](../../../docs/analyzers/BLAZMVVM0008.md)**: Observable Property - Ensures proper usage of [ObservableProperty] and SetProperty
-- **[BLAZMVVM0015](../../../docs/analyzers/BLAZMVVM0015.md)**: Dispose Pattern - Detects ViewModels requiring IDisposable implementation
-- **[BLAZMVVM0016](../../../docs/analyzers/BLAZMVVM0016.md)**: Messenger Registration Lifetime - Detects messenger registrations without cleanup
-- **[BLAZMVVM0018](../../../docs/analyzers/BLAZMVVM0018.md)**: NotifyPropertyChangedFor - Suggests notifications for computed properties
-- **[BLAZMVVM0020](../../../docs/analyzers/BLAZMVVM0020.md)**: Route Parameter Binding - Validates route parameters have corresponding properties
-- **[BLAZMVVM0021](../../../docs/analyzers/BLAZMVVM0021.md)**: EventCallback Two-Way Binding - Detects obsolete manual bindings, missing callbacks, and callback type mismatches
+- **[BLAZMVVM0004](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0004.html)**: ViewParameter Attribute - Validates ViewParameter and Parameter property matching
+- **[BLAZMVVM0007](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0007.html)**: Lifecycle Method Override - Ensures ViewModel lifecycle methods override their virtual base methods
+- **[BLAZMVVM0008](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0008.html)**: Observable Property - Ensures proper usage of [ObservableProperty] and SetProperty
+- **[BLAZMVVM0015](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0015.html)**: Dispose Pattern - Detects ViewModels requiring IDisposable implementation
+- **[BLAZMVVM0016](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0016.html)**: Messenger Registration Lifetime - Detects messenger registrations without cleanup
+- **[BLAZMVVM0017](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0017.html)**: RelayCommand Async Pattern - Ensures asynchronous RelayCommand methods return Task
+- **[BLAZMVVM0018](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0018.html)**: NotifyPropertyChangedFor - Suggests notifications for computed properties
+- **[BLAZMVVM0020](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0020.html)**: Route Parameter Binding - Validates route parameters have corresponding properties
+- **[BLAZMVVM0021](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0021.html)**: EventCallback Two-Way Binding - Detects obsolete manual bindings, missing callbacks, and callback type mismatches
 
 ### Phase 3: Code Quality (Info Level)
 
-- **[BLAZMVVM0007](../../../docs/analyzers/BLAZMVVM0007.md)**: Lifecycle Method Override - Suggests proper lifecycle method usage
-- **[BLAZMVVM0010](../../../docs/analyzers/BLAZMVVM0010.md)**: Route-ViewModel Mapping - Ensures Pages have corresponding ViewModels
-- **[BLAZMVVM0012](../../../docs/analyzers/BLAZMVVM0012.md)**: Command Pattern - Encourages proper [RelayCommand] usage over public methods
-- **[BLAZMVVM0014](../../../docs/analyzers/BLAZMVVM0014.md)**: StateHasChanged Overuse - Detects unnecessary StateHasChanged() calls
-- **[BLAZMVVM0019](../../../docs/analyzers/BLAZMVVM0019.md)**: CascadingParameter vs Inject - Suggests [Inject] for DI services
+- **[BLAZMVVM0010](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0010.html)**: Route-ViewModel Mapping - Ensures Pages have corresponding ViewModels
+- **[BLAZMVVM0012](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0012.html)**: Command Pattern - Encourages proper [RelayCommand] usage over public methods
+- **[BLAZMVVM0014](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0014.html)**: StateHasChanged Overuse - Detects unnecessary StateHasChanged() calls
+- **[BLAZMVVM0019](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0019.html)**: CascadingParameter vs Inject - Suggests [Inject] for DI services
 
 ### Phase 4: Advanced (Specialized)
 
-- **[BLAZMVVM0006](../../../docs/analyzers/BLAZMVVM0006.md)**: ViewModelKey Consistency - Ensures ViewModelKey values match navigation keys
-- **[BLAZMVVM0009](../../../docs/analyzers/BLAZMVVM0009.md)**: Service Injection - Validates constructor parameters are registered services
-- **[BLAZMVVM0011](../../../docs/analyzers/BLAZMVVM0011.md)**: MvvmNavLink Type Safety - Validates MvvmNavLink TViewModel parameter
+- **[BLAZMVVM0006](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0006.html)**: ViewModelKey Consistency - Ensures ViewModelKey values match navigation keys
+- **[BLAZMVVM0009](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0009.html)**: Service Injection - Flags `[Inject]` properties in ViewModels and recommends constructor injection
+- **[BLAZMVVM0011](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/BLAZMVVM0011.html)**: MvvmNavLink Type Safety - Validates MvvmNavLink TViewModel parameter
 
 ## Code Fix Providers
 
@@ -67,7 +67,6 @@ The package includes **14 code fix providers** for automatic corrections:
 2. **ViewModelDefinitionAttributeCodeFixProvider** - Adds [ViewModelDefinition] attribute
 3. **MvvmComponentBaseUsageCodeFixProvider** - Replaces ComponentBase with MvvmComponentBase<TViewModel>
 4. **MvvmOwningComponentBaseUsageCodeFixProvider** - Replaces MvvmComponentBase with MvvmOwningComponentBase
-5. **RelayCommandAsyncPatternCodeFixProvider** - Converts async void to async Task
 
 ### Best Practices Fixes
 
@@ -75,21 +74,22 @@ The package includes **14 code fix providers** for automatic corrections:
 2. **DisposePatternCodeFixProvider** - Adds IDisposable implementation with cleanup
 3. **MessengerRegistrationLifetimeCodeFixProvider** - Adds Dispose with Unregister or OnActivated pattern
 4. **NotifyPropertyChangedForCodeFixProvider** - Adds [NotifyPropertyChangedFor] attribute
+5. **LifecycleMethodOverrideCodeFixProvider** - Adds the override modifier to lifecycle methods
+6. **RelayCommandAsyncCodeFixProvider** - Changes async RelayCommand methods to return Task
 
 ### Code Quality Fixes
 
-1. **LifecycleMethodOverrideCodeFixProvider** - Adds OnInitializedAsync override method
-2. **CommandPatternCodeFixProvider** - Adds [RelayCommand] attribute and makes method private
-3. **StateHasChangedOveruseCodeFixProvider** - Removes unnecessary StateHasChanged() calls
-4. **CascadingParameterVsInjectCodeFixProvider** - Replaces [CascadingParameter] with [Inject]
-5. **EventCallbackTwoWayBindingCodeFixProvider** - Removes canonical manual two-way binding code and fixes EventCallback two-way binding parameters
+1. **CommandPatternCodeFixProvider** - Adds [RelayCommand] attribute and makes method private
+2. **StateHasChangedOveruseCodeFixProvider** - Removes unnecessary StateHasChanged() calls
+3. **CascadingParameterVsInjectCodeFixProvider** - Replaces [CascadingParameter] with [Inject]
+4. **EventCallbackTwoWayBindingCodeFixProvider** - Removes canonical manual two-way binding code and fixes EventCallback two-way binding parameters
 
 ## Severity Levels
 
 - **Error**: Must be fixed (BLAZMVVM0003, 0005, 0011)
-- **Warning**: Should be addressed (BLAZMVVM0001, 0002, 0004, 0013, 0015, 0016, 0017, 0020)
-- **Info**: Consider improvements (BLAZMVVM0006, 0007, 0008, 0009, 0010, 0012, 0014, 0018, 0019, 0021 manual/missing callback)
-- **Warning**: Type mismatch validation also applies to BLAZMVVM0021 when the EventCallback generic argument does not match the component parameter type
+- **Warning**: Should be addressed (BLAZMVVM0001, 0002, 0004, 0006, 0008, 0009, 0013, 0015, 0016, 0017, 0020)
+- **Info**: Consider improvements (BLAZMVVM0007, 0010, 0012, 0014, 0018, 0019, and the manual/missing-callback patterns of BLAZMVVM0021)
+- **Warning**: The type-mismatch pattern of BLAZMVVM0021 is reported as a Warning when the EventCallback generic argument does not match the component parameter type
 
 ## Quick Start
 
@@ -142,7 +142,7 @@ dotnet_diagnostic.BLAZMVVM0012.severity = none
 
 ## Documentation
 
-For detailed information about each analyzer, click the links above or visit the [analyzers documentation folder](../../../docs/analyzers/).
+For detailed information about each analyzer, click the links above or visit the [analyzers documentation folder](https://gragra33.github.io/Blazing.Mvvm/site/analyzers/index.html).
 
 For more information about Blazing.Mvvm, see the [main documentation](https://github.com/gragra33/Blazing.Mvvm).
 

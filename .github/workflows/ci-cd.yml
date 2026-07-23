@@ -1,0 +1,308 @@
+name: Continuous integration and delivery
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+    paths:
+      - ".github/workflows/**"
+      - "src/**"
+  pull_request:
+    branches:
+      - develop
+      - master
+  workflow_dispatch:
+    inputs:
+      publish_docs:
+        description: "Build and publish DocFX site to GitHub Pages"
+        default: false
+        required: false
+        type: boolean
+
+permissions:
+  contents: read
+
+env:
+  configuration: Release
+  solution_path: src/Blazing.Mvvm.slnx
+  artifacts_dir: ${{ github.workspace }}/artifacts
+
+jobs:
+  build-test-package:
+    name: Build, Test & Package
+    runs-on: ubuntu-latest
+    outputs:
+      package_version: ${{ steps.get_version.outputs.package_version }}
+      should_publish: ${{ steps.should_publish.outputs.value }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Restore
+        run: dotnet restore ${{ env.solution_path }}
+
+      - name: Build
+        run: dotnet build ${{ env.solution_path }} --no-restore --configuration ${{ env.configuration }} -p:GeneratePackageOnBuild=false
+
+      - name: Test
+        run: |
+          dotnet test src/Tests/Blazing.Mvvm.Tests/Blazing.Mvvm.Tests.csproj \
+            --no-build \
+            --configuration ${{ env.configuration }} \
+            --logger "trx;LogFilePrefix=test-results"
+          dotnet test src/Tests/Blazing.Mvvm.Analyzers.Tests/Blazing.Mvvm.Analyzers.Tests.csproj \
+            --no-build \
+            --configuration ${{ env.configuration }} \
+            --logger "trx;LogFilePrefix=analyzer-test-results"
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        continue-on-error: true
+        with:
+          name: test-results
+          path: "**/*.trx"
+
+      - name: Get version
+        id: get_version
+        shell: bash
+        run: |
+          if [[ -z "$GitBuildVersionSimple" ]]; then
+            echo "::error::Nerdbank.GitVersioning did not populate GitBuildVersionSimple"
+            exit 1
+          fi
+          package_version="$GitBuildVersionSimple"
+          if [[ "${{ github.ref_name }}" == "develop" ]]; then
+            package_version+="-beta"
+          fi
+          echo "package_version=$package_version" >> "$GITHUB_OUTPUT"
+
+      - name: Check for versioned source changes
+        id: should_publish
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          # Compare the commits before and after this push, then ignore changes under src/Tests.
+          # Publish only when at least one changed production file remains under src.
+          if git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- src |
+            grep -Ev '^src/Tests(/|$)' |
+            grep . >/dev/null; then
+            echo "value=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pack NuGet packages
+        if: steps.should_publish.outputs.value == 'true'
+        run: |
+          mkdir -p "${{ env.artifacts_dir }}"
+          dotnet pack src/Libraries/Blazing.Mvvm.Analyzers/Blazing.Mvvm.Analyzers.csproj \
+            --no-build \
+            --no-restore \
+            --configuration ${{ env.configuration }} \
+            --output "${{ env.artifacts_dir }}"
+          dotnet pack src/Libraries/Blazing.Mvvm.Base/Blazing.Mvvm.Base.csproj \
+            --no-build \
+            --no-restore \
+            --configuration ${{ env.configuration }} \
+            --output "${{ env.artifacts_dir }}"
+          dotnet pack src/Libraries/Blazing.Mvvm/Blazing.Mvvm.csproj \
+            --no-build \
+            --no-restore \
+            --configuration ${{ env.configuration }} \
+            --output "${{ env.artifacts_dir }}"
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        if: steps.should_publish.outputs.value == 'true'
+        with:
+          name: packages-${{ steps.get_version.outputs.package_version }}
+          path: |
+            ${{ env.artifacts_dir }}/*.nupkg
+            ${{ env.artifacts_dir }}/*.snupkg
+          retention-days: 7
+
+  publish:
+    name: Publish Packages and Release
+    if: needs.build-test-package.outputs.should_publish == 'true'
+    needs: build-test-package
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download package artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: packages-${{ needs.build-test-package.outputs.package_version }}
+          path: ${{ env.artifacts_dir }}
+
+      - name: NuGet login (OIDC)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push packages to NuGet.org
+        run: |
+          dotnet nuget push "${{ env.artifacts_dir }}/*.nupkg" \
+            --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+
+      - name: Create GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          if gh release view "v${{ needs.build-test-package.outputs.package_version }}" >/dev/null 2>&1; then
+            echo "Release v${{ needs.build-test-package.outputs.package_version }} already exists."
+            exit 0
+          fi
+
+          if [[ "${{ github.ref_name }}" == "master" ]]; then
+            gh release create "v${{ needs.build-test-package.outputs.package_version }}" \
+              --target "${GITHUB_SHA}" \
+              --title "Release ${{ needs.build-test-package.outputs.package_version }}" \
+              --generate-notes \
+              --latest \
+              "${{ env.artifacts_dir }}"/*.nupkg
+          else
+            gh release create "v${{ needs.build-test-package.outputs.package_version }}" \
+              --target "${GITHUB_SHA}" \
+              --title "Release ${{ needs.build-test-package.outputs.package_version }}" \
+              --generate-notes \
+              --prerelease \
+              --latest=false \
+              "${{ env.artifacts_dir }}"/*.nupkg
+          fi
+
+  publish-docs:
+    name: Publish Docs
+    if: github.ref_name == 'master' && github.event_name == 'workflow_dispatch' && inputs.publish_docs == true
+    needs: build-test-package
+    runs-on: ubuntu-latest
+    env:
+      docfx_version: 2.78.5
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install DocFX
+        run: dotnet tool update -g docfx --version ${{ env.docfx_version }}
+
+      - name: Clean generated docs
+        run: rm -rf docs/github-pages/api-docs docs/github-pages/_site docs/github-pages/_xref-gen docs/github-pages/xrefs
+
+      - name: Inject Google Analytics tag
+        if: vars.GA_TAG_ID != ''
+        run: |
+          jq --arg gaId "${{ vars.GA_TAG_ID }}" '.build.globalMetadata._googleAnalyticsTagId = $gaId' docs/github-pages/docfx.json > temp.json
+          mv temp.json docs/github-pages/docfx.json
+
+      - name: Generate xref map
+        run: bash docs/github-pages/_scripts/generate-xrefmap.sh /Blazing.Mvvm/
+
+      - name: Generate metadata
+        run: docfx metadata docs/github-pages/docfx.json
+
+      - name: Fix apiPage source links
+        run: bash docs/github-pages/_scripts/fix-apipage-src.sh
+
+      - name: Build docs
+        run: docfx build docs/github-pages/docfx.json
+
+      - name: Upload Doc Artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/github-pages/_site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  create-sync-pr:
+    name: Create Sync PR
+    if: github.ref_name == 'master' && needs.publish.result == 'success'
+    needs:
+      - build-test-package
+      - publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create or update master-to-develop sync PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          EXISTING_PR="$(gh pr list --base develop --head master --state open --json url --jq '.[0].url')"
+
+          if [[ -n "$EXISTING_PR" && "$EXISTING_PR" != "null" ]]; then
+            echo "Sync PR already exists: $EXISTING_PR"
+            gh pr merge --auto --merge "$EXISTING_PR"
+            exit 0
+          fi
+
+          AHEAD_BY="$(gh api \
+            "repos/${GITHUB_REPOSITORY}/compare/develop...master" \
+            --jq '.ahead_by')"
+
+          if [[ "$AHEAD_BY" == "0" ]]; then
+            echo "master has no commits to synchronize into develop."
+            exit 0
+          fi
+
+          label_args=()
+          if gh label view "ignore-for-release" >/dev/null 2>&1; then
+            label_args+=(--label "ignore-for-release")
+          fi
+
+          PR_URL="$(gh pr create \
+            --base develop \
+            --head master \
+            --title "master to develop sync" \
+            --body "Automated PR to sync master into develop after package publish." \
+            "${label_args[@]}")"
+
+          echo "Created PR: $PR_URL"
+          gh pr merge --auto --merge "$PR_URL"

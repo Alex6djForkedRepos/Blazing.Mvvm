@@ -1,0 +1,6 @@
+- name: Sample Projects
+  href: sample-projects.md
+- name: Running Different .NET Versions
+  href: running-different-net-versions.md
+- name: User Management Sample
+  href: user-management.md
