@@ -18,7 +18,7 @@
     <Title>Blazing.Mvvm Roslyn Analyzers</Title>
     <Description>Roslyn analyzers for Blazing.Mvvm to help developers follow MVVM best practices and catch common mistakes at compile time.</Description>
     <PackageTags>blazor;mvvm;analyzers;roslyn;code-analysis;blazing-mvvm</PackageTags>
-    <!-- Authors, Copyright, PackageProjectUrl, RepositoryUrl, RepositoryType inherited from Directory.Build.props -->
+    <!-- Authors, Copyright, PackageProjectUrl, RepositoryUrl, RepositoryType, PackageLicenseExpression inherited from Directory.Build.props -->
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
