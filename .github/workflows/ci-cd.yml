@@ -37,12 +37,12 @@ jobs:
       should_publish: ${{ steps.should_publish.outputs.value }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
             8.0.x
@@ -67,7 +67,7 @@ jobs:
             --logger "trx;LogFilePrefix=analyzer-test-results"
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         continue-on-error: true
         with:
@@ -124,7 +124,7 @@ jobs:
             --output "${{ env.artifacts_dir }}"
 
       - name: Upload packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: steps.should_publish.outputs.value == 'true'
         with:
           name: packages-${{ steps.get_version.outputs.package_version }}
@@ -145,12 +145,12 @@ jobs:
 
     steps:
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
 
       - name: Download package artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: packages-${{ needs.build-test-package.outputs.package_version }}
           path: ${{ env.artifacts_dir }}
@@ -171,6 +171,7 @@ jobs:
       - name: Create GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
         shell: bash
         run: |
           if gh release view "v${{ needs.build-test-package.outputs.package_version }}" >/dev/null 2>&1; then
@@ -214,12 +215,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
 
@@ -248,13 +249,13 @@ jobs:
         run: docfx build docs/github-pages/docfx.json
 
       - name: Upload Doc Artifacts
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: docs/github-pages/_site
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   create-sync-pr:
     name: Create Sync PR
@@ -268,7 +269,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Create or update master-to-develop sync PR
         env:

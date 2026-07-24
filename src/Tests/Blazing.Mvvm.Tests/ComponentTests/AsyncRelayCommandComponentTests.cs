@@ -210,11 +210,10 @@ public class AsyncRelayCommandComponentTests : ComponentTestBase
 
         // Act
         cut.Find("#slow-command").Click();
-        cut.WaitForState(() => viewModel.SlowCommand.IsRunning);
+        cut.WaitForState(() =>
+            viewModel.SlowCommand.IsRunning &&
+            !viewModel.LoadDataCommand.IsRunning);
 
-        // Assert
-        viewModel.SlowCommand.IsRunning.ShouldBeTrue("Slow command should be running");
-        viewModel.LoadDataCommand.IsRunning.ShouldBeFalse("Load command should not be running");
         await viewModel.SlowCommand.ExecutionTask.ShouldNotBeNull();
     }
 
