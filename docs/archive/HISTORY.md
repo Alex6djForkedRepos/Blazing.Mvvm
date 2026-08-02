@@ -1,0 +1,200 @@
+# Version History
+
+<!-- TOC -->
+## Table of Contents
+
+- [Version History](#version-history)
+  - [Table of Contents](#table-of-contents)
+  - [V3.2.1 - 2 February 2026](#v321---2-february-2026)
+  - [V3.2.0 - 7 January 2026](#v320---7-january-2026)
+  - [V3.1.0 - 3 December 2025](#v310---3-december-2025)
+  - [V3.0.0 - 18 November 2025](#v300---18-november-2025)
+  - [V2.2.0 7 December, 2024](#v220-7-december-2024)
+  - [V2.1.1 4 December, 2024](#v211-4-december-2024)
+  - [V2.1.0 3 December, 2024](#v210-3-december-2024)
+  - [V2.0.0 30 November, 2024](#v200-30-november-2024)
+  - [v1.4.0 21 November, 2023](#v140-21-november-2023)
+  - [v1.3.0 (beta) 1 November, 2023](#v130-beta-1-november-2023)
+  - [v1.2.1 1 November, 2023](#v121-1-november-2023)
+  - [26 October, 2023](#26-october-2023)
+  - [v1.1.0 9 October, 2023](#v110-9-october-2023)
+  - [v1.0.2 27 July, 2023](#v102-27-july-2023)
+  - [v1.0.2 25 July, 2023](#v102-25-july-2023)
+  - [v1.0.1 19 May, 2023](#v101-19-may-2023)
+  - [v1.0.0 10 May, 2023](#v100-10-may-2023)
+
+<!-- TOC -->
+
+## V3.2.1 - 2 February 2026
+
+This maintenance release focuses on improvements to the sample project and bug fixes.
+
+**Improvements:**
+
+- **IAsyncRelayCommand Edge Case Fix:** ([Issue #65](https://github.com/gragra33/Blazing.Mvvm/issues/65)) Improved support for edge cases where `PropertyChanged` events were blocked when `ExecutionTask` is awaited, particularly when `AllowConcurrentExecutions` is set to `false`. This ensures UI updates propagate correctly even when awaiting long-running async commands. [@gragra33](https://github.com/gragra33) & [@teunlielu](https://github.com/teunlielu)
+
+> [!WARNING]
+> Updates to `ViewModelBase` and `ValidatorViewModelBase` now implement `IDisposable` for `PropertyChanged` event tracking. This may cause build errors when `IDisposable` is implemented manually. Use `protected override void Dispose(bool disposing)` to handle manual disposal in derived classes.
+
+**Sample Project Refactoring:**
+
+- **Major Consolidation:** Refactored `Blazing.Mvvm.Sample.Server`, `Blazing.Mvvm.Sample.Wasm`, `Blazing.Mvvm.Sample.WebApp`, `Blazing.Mvvm.Sample.HybridMaui`, and `Blazing.SubpathHosting.Server` to use a centralized **`Blazing.Mvvm.Sample.Shared`** library. [@gragra33](https://github.com/gragra33)
+- **Integrated Standalone Samples:** Moved content from `ParameterResolution.Sample.Wasm` and `Blazing.Mvvm.ParentChildSample` into the shared library, making these patterns available across all sample applications. [@gragra33](https://github.com/gragra33)
+- **New RelayCommand Sample Page:** Added comprehensive `RelayCommands` page demonstrating synchronous and asynchronous command patterns, `AllowConcurrentExecutions` behavior, command parameters, and `CanExecute` validation. [@gragra33](https://github.com/gragra33)
+
+**Component Libraries:**
+
+- **MvvmButton Component:** New MVVM-aware button component (`Blazing.Buttons`) with integrated command binding and automatic state management. [@gragra33](https://github.com/gragra33)
+- **Bootstrap Components:** Added production-ready Bootstrap 5 wrapper components, including `BootstrapAccordion`, `BootstrapBreadcrumbs`, `BootstrapCard`, `BootstrapNavMenu`, and `BootstrapRowGroup` to `Blazing.Mvvm.Sample.Shared`. [@gragra33](https://github.com/gragra33)
+- **ConditionalSwitch Component:** Added declarative conditional rendering components (`ConditionalSwitch`, `When`, `Otherwise`) to `Blazing.Common` library. [@gragra33](https://github.com/gragra33)
+
+**Documentation:**
+
+- Updated `Blazing.SubpathHosting.Server` readme with comprehensive information about sample architecture, component libraries, and recent updates. [@gragra33](https://github.com/gragra33)
+- Added reference to **[Subpath_Hosting_Guidance.md](https://github.com/gragra33/Blazing.Mvvm/tree/master/samples/Blazing.SubpathHosting.Server/Subpath_Hosting_Guidance.md)** for detailed subpath hosting best practices. [@gragra33](https://github.com/gragra33)
+
+**Benefits of Refactoring:**
+
+- Demonstrates best practices for code sharing across Blazor hosting models (Server, WebAssembly, Web App, Hybrid MAUI)
+- Reduces code duplication and maintenance overhead
+- Provides consistent examples across all hosting models
+- Easier to add new features that work everywhere
+
+## V3.2.0 - 7 January 2026
+
+This release adds support for:
+
+- automatic two-way binding support, eliminating the need for manual PropertyChanged event handling in components. [@gragra33](https://github.com/gragra33)
+- complex route patterns with multiple parameters and query strings. [@gragra33](https://github.com/gragra33)
+
+**New Features:**
+
+- **Automatic Two-Way Binding:** Components with `EventCallback<T>` parameters following the `{PropertyName}Changed` convention and corresponding `[ViewParameter]` properties in ViewModels now automatically wire up two-way binding. [@gragra33](https://github.com/gragra33)
+- **Multi-Parameter Route Support:** Full support for routes with multiple parameters (e.g., `/users/{userId}/posts/{postId}`).
+- **Enhanced Route Parameter Substitution:** Smart substitution of route parameters with proper URL encoding and query string handling.
+- **Combined Parameters + Query Strings:** Navigate with both route parameters and query strings in a single call (e.g., `1/101?filter=recent&sort=desc`).
+- **Complex Multi-Level Routes:** Support for deeply nested routes with multiple segments and parameters.
+
+**New Sample:**
+
+- [ParameterResolution.Sample.Wasm](https://github.com/gragra33/Blazing.Mvvm/tree/master/samples/libs/Blazing.Mvvm.Sample.Shared/Pages/ParameterResolution) - Demonstrates parameter resolution between Views and ViewModels using `ViewParameter` attribute, and automatic two-way binding with `@bind-` syntax
+
+**Updated Samples:**
+
+- Updated sample projects to demonstrate complex route patterns:
+  - `Blazing.Mvvm.Sample.Server`, `Blazing.Mvvm.Sample.WebApp`, `Blazing.Mvvm.Sample.Wasm`, `Blazing.Mvvm.Sample.HybridMaui`
+
+## V3.1.0 - 3 December 2025
+
+This release adds automatic base path detection for YARP reverse proxy scenarios and simplifies configuration.
+
+**New Features:**
+
+- **Automatic Base Path Detection:** Base path is now automatically detected from `NavigationManager.BaseUri`, eliminating the need for manual `BasePath` configuration in most scenarios. [@gragra33](https://github.com/gragra33) & [@teunlielu](https://github.com/teunlielu)
+- **YARP Support:** Full support for YARP (Yet Another Reverse Proxy) with automatic detection of dynamically assigned paths via `PathBase`. [@gragra33](https://github.com/gragra33) & [@teunlielu](https://github.com/teunlielu)
+- **Dynamic Per-Request Base Paths:** Supports scenarios where different requests have different base paths, ideal for multi-tenant applications. [@gragra33](https://github.com/gragra33) & [@teunlielu](https://github.com/teunlielu)
+
+**Improvements:**
+
+- `BasePath` property is now marked as `[Obsolete]` but remains functional for backward compatibility. [@gragra33](https://github.com/gragra33)
+- Added new unit tests and integration tests for dynamic base path scenarios. [@gragra33](https://github.com/gragra33)
+- Enhanced logging for base path detection to aid in diagnostics. [@gragra33](https://github.com/gragra33)
+- Updated documentation with YARP configuration examples and best practices. [@gragra33](https://github.com/gragra33)
+- Updated `Blazing.SubpathHosting.Server` to support new base path detection features.[@gragra33](https://github.com/gragra33)
+
+**Configuration:**
+
+- **No configuration required** for most scenarios - base path is automatically detected
+- For YARP scenarios, simply use `app.UseForwardedHeaders()` and optionally handle `X-Forwarded-Prefix` header
+- Existing code using `BasePath` is now marked `obsolete`, but continues to work without changes. Will be removed in a future release.
+
+See the [Subpath Hosting](README.md#subpath-hosting) section in the readme for updated configuration examples.
+
+## V3.0.0 - 18 November 2025
+
+This is a major release with new features and enhancements.
+
+- Added support for .NET 10. [@gragra33](https://github.com/gragra33)
+- Added subpath hosting support for serving Blazor applications from URL subpaths. [@gragra33](https://github.com/gragra33)
+- Added new sample projects:
+  - `Blazing.Mvvm.ParentChildSample` - Demonstrates dynamic parent-child component communication
+  - `Blazing.SubpathHosting.Server` - Demonstrates subpath hosting configuration
+  - Hybrid samples for WinForms, WPF, MAUI, and Avalonia platforms
+- Added multi-targeting support across .NET 8, .NET 9, and .NET 10 for all sample projects. [@gragra33](https://github.com/gragra33)
+- Increased test coverage with an additional 128 unit tests (total 208 tests). [@gragra33](https://github.com/gragra33)
+- Enhanced documentation with comprehensive guides for:
+  - Subpath hosting configuration
+  - Complex multi-project ViewModel registration
+  - Running samples with different .NET target frameworks
+- Documentation updates and improvements. [@gragra33](https://github.com/gragra33)
+
+## V2.2.0 7 December, 2024
+
+- Added support for `ObservableRecipient` being set to inactive when disposing the `MvvmComponentBase`, `MvvmOwningComponentBase`, `MvvmLayoutComponentBase`, and `RecipientViewModelBase`. [@gragra33](https://github.com/gragra33) & [@teunlielu](https://github.com/teunlielu)
+
+## V2.1.1 4 December, 2024
+
+- Version bump to fix a nuget release issue
+
+## V2.1.0 3 December, 2024
+
+- Added MAUI Blazor Hybrid App support + sample HybridMaui app. [@hakakou](https://github.com/hakakou)
+
+## V2.0.0 30 November, 2024
+
+This is a major release with breaking changes, migration notes can be found [here](migration-notes/v1.4_to_v2.md).
+
+- Added auto registration and discovery of view models. [@mishael-o](https://github.com/mishael-o)
+- Added support for keyed view models. [@mishael-o](https://github.com/mishael-o)
+- Added support for keyed view models to `MvvmNavLink`, `MvvmKeyNavLink` (new component), `MvvmNavigationManager`, `MvvmComponentBase`, `MvvmOwningComponentBase`, & `MvvmLayoutComponentBase`. [@gragra33](https://github.com/gragra33)
+- Added a `MvvmObservableValidator` component which provides support for `ObservableValidator`. [@mishael-o](https://github.com/mishael-o)
+- Added parameter resolution in the ViewModel. [@mishael-o](https://github.com/mishael-o)
+- Added new `TestKeyedNavigation` samples for Keyed Navigation. [@gragra33](https://github.com/gragra33)
+- Added & Updated tests for all changes made. [@mishael-o](https://github.com/mishael-o) & [@gragra33](https://github.com/gragra33)
+- Added support for .NET 9. [@gragra33](https://github.com/gragra33)
+- Dropped support for .NET 7. [@mishael-o](https://github.com/mishael-o)
+- Documentation updates. [@mishael-o](https://github.com/mishael-o) & [@gragra33](https://github.com/gragra33)
+
+**BREAKING CHANGES:**
+
+- Renamed `BlazorHostingModel` to `BlazorHostingModelType` to avoid confusion
+
+## v1.4.0 21 November, 2023
+
+- Now officially supports .Net 8.0 & .Net 7.0
+
+## v1.3.0 (beta) 1 November, 2023
+
+- pre-release of .Net 8.0 RC2 `(Auto) Blazor WebApp` with new hosting model configuration support
+
+## v1.2.1 1 November, 2023
+
+- added .Net 7.0+ `Blazor Server App` support
+- new hosting model configuration support added. Special thanks to [@bbunderson](https://github.com/bbunderson) for implementation.
+
+## 26 October, 2023
+
+- pre-release of .Net 7.0+ `Blazor Server App` support
+- pre-release of .Net 8.0 RC2 `(Auto) Blazor WebApp` support
+
+## v1.1.0 9 October, 2023
+
+- Added `MvvmLayoutComponentBase` to support MVVM in the MainLayout.razor
+- Updated sample project with example of `MvvmLayoutComponentBase` usage
+
+## v1.0.2 27 July, 2023
+
+- Fixed rare crossthread issue in MvvmComponentBase
+
+## v1.0.2 25 July, 2023
+
+- Added Added logging at start and end of `MvvmNavigationManager` cache generation for improved debugging experience
+
+## v1.0.1 19 May, 2023
+
+- Added non-generic `RecipientViewModelBase`
+- Added `ValidatorViewModelBase`
+
+## v1.0.0 10 May, 2023
+
+- Initial release.

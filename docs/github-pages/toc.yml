@@ -1,0 +1,8 @@
+- name: Docs
+  href: site/
+- name: API Docs
+  items:
+    - name: Blazing.Mvvm
+      href: api-docs/blazing-mvvm/
+    - name: Blazing.Mvvm.Analyzers
+      href: api-docs/blazing-mvvm-analyzers/

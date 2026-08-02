@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://gragra33.github.io/Blazing.Mvvm/
+    about: Read the documentation, guides, samples, and API reference.
+  - name: ☕ Support the project
+    url: https://bmc.link/gragra33
+    about: If Blazing.Mvvm helps you, consider buying the maintainer a coffee.

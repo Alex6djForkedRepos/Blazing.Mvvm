@@ -1,0 +1,79 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "../../src/Libraries",
+          "files": [
+            "Blazing.Mvvm.Base/Blazing.Mvvm.Base.csproj",
+            "Blazing.Mvvm/Blazing.Mvvm.csproj"
+          ]
+        }
+      ],
+      "dest": "api-docs/blazing-mvvm",
+      "outputFormat": "apiPage",
+      "filter": "filters/filterConfig.yml",
+      "properties": {
+        "TargetFramework": "net10.0"
+      }
+    },
+    {
+      "src": [
+        {
+          "src": "../../src/Libraries/Blazing.Mvvm.Analyzers",
+          "files": ["Blazing.Mvvm.Analyzers.csproj"]
+        }
+      ],
+      "dest": "api-docs/blazing-mvvm-analyzers",
+      "outputFormat": "apiPage",
+      "filter": "filters/filterConfig.yml",
+      "properties": {
+        "TargetFramework": "netstandard2.0"
+      }
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "index.md",
+          "toc.yml",
+          "site/**/*.{md,yml}",
+          "api-docs/**/*.{md,yml}"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": ["images/**"],
+        "exclude": ["_site/**", "obj/**"]
+      }
+    ],
+    "xref": [
+      "xrefs/xrefmap.yml",
+      "https://learn.microsoft.com/en-us/dotnet/.xrefmap.json"
+    ],
+    "output": "_site",
+    "sitemap": {
+      "baseUrl": "https://gragra33.github.io/Blazing.Mvvm/",
+      "priority": 0.5,
+      "changefreq": "weekly"
+    },
+    "template": ["default", "modern", "template"],
+    "globalMetadata": {
+      "_appName": "Blazing.Mvvm",
+      "_appTitle": "Blazing.Mvvm",
+      "_appFooter": "Copyright © 2026 Graeme Grant. Built with <a href=\"https://dotnet.github.io/docfx\">DocFX</a>.",
+      "_appLogoPath": "images/logo.svg",
+      "_appFaviconPath": "images/favicon.svg",
+      "_enableSearch": true,
+      "_gitUrlPattern": "github",
+      "_gitContribute": {
+        "branch": "develop"
+      },
+      "_lang": "en",
+      "_googleAnalyticsTagId": "",
+      "pdf": false
+    }
+  }
+}

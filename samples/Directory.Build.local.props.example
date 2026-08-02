@@ -1,0 +1,6 @@
+<Project>
+  <!-- Copy this file to Directory.Build.local.props for local developer-only sample overrides; do not commit that file. -->
+  <PropertyGroup>
+    <!-- <TreatWarningsAsErrors>false</TreatWarningsAsErrors> -->
+  </PropertyGroup>
+</Project>
